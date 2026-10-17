@@ -147,4 +147,10 @@ class Release153Test {
         assertEquals(0xFF333333.toInt(), dot[2])
         assertEquals(0xFF000000.toInt(), dot[0])
     }
+
+    @Test fun `offline error is friendly even when wrapped by the repository`() {
+        val wrapped = PlaylistRepository.PlaylistException("Unable to resolve host", java.net.UnknownHostException("iptv-org.github.io"))
+        assertEquals("You're offline. Connect to the internet to load channels.", app.show.tv.ui.LoadMessages.friendlyMessage(wrapped))
+        assertEquals("Couldn't load channels.", app.show.tv.ui.LoadMessages.friendlyMessage(RuntimeException("java.lang.IllegalStateException: boom")))
+    }
 }

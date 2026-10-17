@@ -21,9 +21,10 @@
 * **Hero jumping after launch:** the featured channels are kept across the four load passes (cache, network, indexes, Free-TV)
   instead of being re-picked each time.
 * **Less network:** the countries/languages indexes and Free-TV are re-checked at most every 6 h instead of on every launch.
-* Tests: 102 (Release153Test: background, stall, network callback, final-error, release safety; fresh-index cache). New
+* **Offline message:** the empty screen says "You're offline…" instead of the raw "Unable to resolve host" text.
+* Tests: 104 (Release153Test: background, stall, network callback, final error, release safety, blur, offline message; fresh-index cache). New
   `.github/workflows/audit.yml` + `tools/device_audit.sh` measure frames, jank, CPU, memory, wake locks, audio focus and
-  screenshots on API 26/29/31/33/35 against the previous release, plus a LeakCanary pass. Results: `docs/AUDIT_1.5.3.md`.
+  screenshots on API 26/29/31/33/35 against the previous release, plus a LeakCanary pass (no leaks, 0 crashes). Results: `docs/AUDIT_1.5.3.md`.
 
 ## 1.5.2 (2026-10-17): Home overlay, real fix
 * **The grey panel over the Home hero is gone.** Real cause: the hero backdrop is zoomed ~1.65x and shifted for parallax,

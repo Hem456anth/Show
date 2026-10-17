@@ -246,11 +246,10 @@ class MainViewModel(
         if (now - s.updatedAt >= maxAgeMs) load()
     }
 
-    private fun friendly(t: Throwable): String = when (t) {
-        is java.net.UnknownHostException -> "You're offline. Connect to the internet to load channels."
-        is java.net.SocketTimeoutException -> "The channel list is taking too long. Pull down to retry."
-        else -> t.message ?: "Couldn't load channels."
-    }
+    // 1.5.3: look through the repository's PlaylistException wrapper, which used to leak the raw
+    // 'Unable to resolve host "iptv-org.github.io"' text onto the empty screen when offline.
+    private fun friendly(t: Throwable): String = LoadMessages.friendlyMessage(t)
+
 
     private fun relativeAge(at: Long): String {
         val mins = ((System.currentTimeMillis() - at) / 60_000).coerceAtLeast(0)
@@ -277,5 +276,18 @@ class MainViewModel(
         const val STALE_AFTER_MS = 6L * 60 * 60 * 1000
         /** Countries/languages indexes and Free-TV only add metadata; re-check them at most this often. */
         const val SECONDARY_MAX_AGE_MS = 6L * 60 * 60 * 1000
+    }
+}
+
+internal object LoadMessages {
+    fun friendlyMessage(t: Throwable): String {
+        val chain = generateSequence(t) { it.cause }.take(6).toList()
+        return when {
+            chain.any { it is java.net.UnknownHostException || it is java.net.ConnectException } ->
+                "You're offline. Connect to the internet to load channels."
+            chain.any { it is java.net.SocketTimeoutException } -> "The channel list is taking too long. Pull down to retry."
+            chain.any { it is javax.net.ssl.SSLException } -> "Couldn't make a secure connection to the channel list. Check the date and time, then retry."
+            else -> t.message?.takeIf { it.length < 120 && "Exception" !in it } ?: "Couldn't load channels."
+        }
     }
 }
