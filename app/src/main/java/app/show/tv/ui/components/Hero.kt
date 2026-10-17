@@ -122,7 +122,7 @@ fun HeroCarousel(
                             translationX = pageOffset * size.width * 0.45f // backdrop lags the swipe
                         },
                         logoPadding = 36.dp,
-                        backdrop = true, // tiny decode drawn large = soft, without a per-frame blur
+                        backdrop = true, // blurred once on decode (BackdropBlur), not every frame
                     )
                     Box(Modifier.fillMaxSize().background(ShowColors.TopScrim))
                     Box(Modifier.fillMaxSize().background(ShowColors.BottomScrim))

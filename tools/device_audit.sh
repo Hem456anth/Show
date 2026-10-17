@@ -72,17 +72,23 @@ tap "My List" && sleep 3 && shot 05-my-list
 tap "Home" && sleep 3
 tap "Settings" && sleep 3 && shot 06-settings && adb shell input keyevent KEYCODE_BACK && sleep 2
 
+has() { timeout 25 adb shell uiautomator dump /sdcard/ui.xml >/dev/null 2>&1; adb shell cat /sdcard/ui.xml 2>/dev/null | grep -q "text=\"$1\""; }
+
 log "player cycles (leak / memory growth check)"
 for cyc in 1 2 3; do
+  has "Play" || { adb shell input keyevent KEYCODE_BACK; sleep 3; }
   tap "Play" || tap "Home"
   sleep 25
+  tap "Got it" || true
   [ "$cyc" = 1 ] && { shot 07-player; adb shell dumpsys power | grep -iE "wake lock|PARTIAL|SCREEN|WIFI" > "$OUT/power-playing.txt"; adb shell dumpsys audio | grep -iE "focus|app.show" | head -40 > "$OUT/audio-focus-playing.txt"; }
-  adb shell input keyevent KEYCODE_BACK; sleep 5
+  adb shell input keyevent KEYCODE_BACK; sleep 3
+  has "Play" || { adb shell input keyevent KEYCODE_BACK; sleep 3; }
+  has "Play" && log "cycle $cyc: back on Home" || log "cycle $cyc: still in player"
 done
 adb shell dumpsys meminfo "$PKG" > "$OUT/meminfo-after-cycles.txt"
 
 log "background with the player open (screen off, no PiP)"
-tap "Play"; sleep 20
+tap "Play"; sleep 20; tap "Got it" || true
 adb shell input keyevent KEYCODE_SLEEP; sleep 5
 T0=$(ticks); sleep 60; T1=$(ticks)
 echo "$((T1 - T0))" > "$OUT/cpu-ticks-bg-60s.txt"
@@ -92,6 +98,8 @@ adb shell dumpsys audio | grep -iE "focus|app.show" | head -40 > "$OUT/audio-bac
 adb shell input keyevent KEYCODE_WAKEUP; sleep 2; adb shell wm dismiss-keyguard >/dev/null 2>&1; adb shell input keyevent 82; sleep 15
 shot 08-player-resumed
 adb shell input keyevent KEYCODE_BACK; sleep 3
+has "Play" || { adb shell input keyevent KEYCODE_BACK; sleep 3; }
+has "Play" && log "left the player" || log "still in player before HOME (PiP expected)"
 adb shell input keyevent KEYCODE_HOME; sleep 30
 T0=$(ticks); sleep 30; T1=$(ticks)
 echo "$((T1 - T0))" > "$OUT/cpu-ticks-app-in-background-30s.txt"

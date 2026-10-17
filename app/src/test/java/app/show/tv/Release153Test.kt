@@ -135,4 +135,16 @@ class Release153Test {
         c.release()
         c.onForeground(); c.onNetworkAvailable() // must not throw on a released player
     }
+
+    @Test fun `backdrop box blur keeps flat colour and spreads a bright pixel`() {
+        val w = 9; val h = 1
+        val flat = IntArray(w) { 0xFF336699.toInt() }
+        app.show.tv.ui.components.BackdropBlur.boxPass(flat, w, h, 2, horizontal = true)
+        assertTrue(flat.all { it == 0xFF336699.toInt() })
+        val dot = IntArray(w) { 0xFF000000.toInt() }.also { it[4] = 0xFFFFFFFF.toInt() }
+        app.show.tv.ui.components.BackdropBlur.boxPass(dot, w, h, 2, horizontal = true)
+        assertEquals(0xFF333333.toInt(), dot[4]) // 255 / 5 = 51 = 0x33 per channel
+        assertEquals(0xFF333333.toInt(), dot[2])
+        assertEquals(0xFF000000.toInt(), dot[0])
+    }
 }

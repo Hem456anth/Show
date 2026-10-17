@@ -64,8 +64,8 @@ val LocalUnavailableIds = compositionLocalOf { emptySet<String>() }
  *
  * 1.5.3: plain [AsyncImage] (SubcomposeAsyncImage ran a subcomposition per tile, the main cause of
  * scroll jank in rows of hundreds of cards) and decoded at the tile's measured size instead of a fixed
- * 480x270. [backdrop] decodes a tiny 48x27 copy: drawn full-bleed it is naturally soft, replacing the
- * per-frame RenderEffect blur the hero used to run.
+ * 480x270. [backdrop] gets a once-per-image [BackdropBlur] (cached by Coil), replacing the per-frame
+ * RenderEffect blur the hero used to run.
  */
 @Composable
 fun ChannelArtwork(channel: Channel, modifier: Modifier = Modifier, logoPadding: Dp = 14.dp, monogramSize: Int = 28, backdrop: Boolean = false) {
@@ -81,8 +81,8 @@ fun ChannelArtwork(channel: Channel, modifier: Modifier = Modifier, logoPadding:
             )
         } else {
             val request = remember(channel.logoUrl, backdrop) {
-                ImageRequest.Builder(ctx).data(channel.logoUrl).allowHardware(true)
-                    .apply { if (backdrop) size(48, 27) }
+                ImageRequest.Builder(ctx).data(channel.logoUrl)
+                    .apply { if (backdrop) size(160, 90).transformations(BackdropBlur()).allowHardware(false) else allowHardware(true) }
                     .build()
             }
             AsyncImage(
