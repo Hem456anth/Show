@@ -29,8 +29,9 @@ jobs:
           pip install pillow >/dev/null
           DEST=docs/audit/run-${{ inputs.run_id }}
           mkdir -p "$DEST"
-          cp -r raw/* "$DEST"/
-          python3 tools/audit_summary.py "$DEST" > "$DEST/SUMMARY.md"
+          ls -R raw | head -80 || true
+          cp -r raw/. "$DEST"/ || true
+          python3 tools/audit_summary.py "$DEST" > "$DEST/SUMMARY.md" 2> "$DEST/summary-errors.txt" || true
           cat "$DEST/SUMMARY.md"
           find "$DEST" -path '*baseline-*' -name '*.png' ! -name '01-home.png' -delete
           rm -rf docs/audit/latest && cp -r "$DEST" docs/audit/latest

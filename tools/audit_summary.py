@@ -38,7 +38,10 @@ def pss(text):
 def blue(path):
     if Image is None or not os.path.exists(path):
         return None
-    im = Image.open(path).convert("RGB")
+    try:
+        im = Image.open(path).convert("RGB")
+    except Exception:  # empty or partial screencap
+        return None
     w, h = im.size
     px = im.load()
     n = 0
