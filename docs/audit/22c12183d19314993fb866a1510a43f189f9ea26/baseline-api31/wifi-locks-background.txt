@@ -1,0 +1,20 @@
+mWifiLockStats:
+mWifiLockHighPerfAcqDurationSecHistogram:
+mWifiLockLowLatencyAcqDurationSecHistogram:
+mWifiLockHighPerfActiveSessionDurationSecHistogram:
+mWifiLockLowLatencyActiveSessionDurationSecHistogram:
+  {NetworkRequest [ REQUEST id=150, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED Uid: 10145 RequestorUid: 10145 RequestorPkg: app.show.tv] ], requested=true}
+  {NetworkRequest [ REQUEST id=150, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED Uid: 10145 RequestorUid: 10145 RequestorPkg: app.show.tv] ], requested=true}
+  {NetworkRequest [ REQUEST id=150, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED Uid: 10145 RequestorUid: 10145 RequestorPkg: app.show.tv] ], requested=true}
+10-17 16:21:51.178  2663  7528 E BufferQueueProducer: [SurfaceView[app.show.tv/app.show.tv.player.PlayerActivity]#12(BLAST Consumer)12](id:a670000000f,api:3,p:2663,c:2663) detachBuffer: slot 3 is not owned by the producer (state = FREE)
+10-17 16:21:51.178  2663  7528 E BufferQueueProducer: [SurfaceView[app.show.tv/app.show.tv.player.PlayerActivity]#12(BLAST Consumer)12](id:a670000000f,api:3,p:2663,c:2663) detachBuffer: slot 4 is not owned by the producer (state = FREE)
+10-17 16:21:51.178  2663  7528 E BufferQueueProducer: [SurfaceView[app.show.tv/app.show.tv.player.PlayerActivity]#12(BLAST Consumer)12](id:a670000000f,api:3,p:2663,c:2663) detachBuffer: slot 5 is not owned by the producer (state = FREE)
+10-17 16:21:51.178  2663  7528 E BufferQueueProducer: [SurfaceView[app.show.tv/app.show.tv.player.PlayerActivity]#12(BLAST Consumer)12](id:a670000000f,api:3,p:2663,c:2663) detachBuffer: slot 6 is not owned by the producer (state = FREE)
+10-17 16:21:51.178  2663  7528 E BufferQueueProducer: [SurfaceView[app.show.tv/app.show.tv.player.PlayerActivity]#12(BLAST Consumer)12](id:a670000000f,api:3,p:2663,c:2663) detachBuffer: slot 7 is not owned by the producer (state = FREE)
+10-17 16:21:51.178  2663  7528 E BufferQueueProducer: [SurfaceView[app.show.tv/app.show.tv.player.PlayerActivity]#12(BLAST Consumer)12](id:a670000000f,api:3,p:2663,c:2663) detachBuffer: slot 8 is not owned by the producer (state = FREE)
+10-17 16:21:51.179  2663  7528 E BufferQueueProducer: [SurfaceView[app.show.tv/app.show.tv.player.PlayerActivity]#12(BLAST Consumer)12](id:a670000000f,api:3,p:2663,c:2663) detachBuffer: slot 9 is not owned by the producer (state = FREE)
+10-17 16:21:51.179  2663  7528 E BufferQueueProducer: [SurfaceView[app.show.tv/app.show.tv.player.PlayerActivity]#12(BLAST Consumer)12](id:a670000000f,api:3,p:2663,c:2663) detachBuffer: slot 10 is not owned by the producer (state = FREE)
+10-17 16:21:51.179  2663  7528 E BufferQueueProducer: [SurfaceView[app.show.tv/app.show.tv.player.PlayerActivity]#12(BLAST Consumer)12](id:a670000000f,api:3,p:2663,c:2663) detachBuffer: slot 11 is not owned by the producer (state = FREE)
+10-17 16:21:51.179  2663  7528 E BufferQueueProducer: [SurfaceView[app.show.tv/app.show.tv.player.PlayerActivity]#12(BLAST Consumer)12](id:a670000000f,api:3,p:2663,c:2663) detachBuffer: slot 12 is not owned by the producer (state = FREE)
+10-17 16:21:51.179  2663  7528 E BufferQueueProducer: [SurfaceView[app.show.tv/app.show.tv.player.PlayerActivity]#12(BLAST Consumer)12](id:a670000000f,api:3,p:2663,c:2663) detachBuffer: slot 13 is not owned by the producer (state = FREE)
+10-17 16:21:51.179  2663  7528 E BufferQueueProducer: [SurfaceView[app.show.tv/app.show.tv.player.PlayerActivity]#12(BLAST Consumer)12](id:a670000000f,api:3,p:2663,c:2663) detachBuffer: slot 14 is not owned by the producer (state = FREE)

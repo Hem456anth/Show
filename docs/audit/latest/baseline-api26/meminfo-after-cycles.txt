@@ -1,45 +1,45 @@
 Applications Memory Usage (in Kilobytes):
-Uptime: 316747 Realtime: 316747
+Uptime: 337712 Realtime: 337712
 
-** MEMINFO in pid 4524 [app.show.tv] **
+** MEMINFO in pid 4420 [app.show.tv] **
                    Pss  Private  Private  SwapPss     Heap     Heap     Heap
                  Total    Dirty    Clean    Dirty     Size    Alloc     Free
                 ------   ------   ------   ------   ------   ------   ------
-  Native Heap    26883    26624        0        0   264192    27801   236390
-  Dalvik Heap    51138    51108        0        0    51382    45238     6144
- Dalvik Other     8677     8676        0        0                           
-        Stack     1012     1012        0        0                           
-       Ashmem    10084     4100        0        0                           
-    Other dev       60        0       60        0                           
-     .so mmap     8064      296     4688        0                           
-    .apk mmap      467        0       16        0                           
-    .ttf mmap      313        0      184        0                           
-    .dex mmap     8173        4     6372        0                           
-    .oat mmap     3524        0      912        0                           
-    .art mmap     1781      964      184        0                           
-   Other mmap      205        4       12        0                           
-      Unknown      629      604        0        0                           
-        TOTAL   121010    93392    12428        0   315574    73039   242534
+  Native Heap    24083    23812        0        0   241664    27022   214641
+  Dalvik Heap    29271    29240        0        0    31273    25129     6144
+ Dalvik Other     8093     8092        0        0                           
+        Stack      912      912        0        0                           
+       Ashmem     5050     2060        0        0                           
+    Other dev       48        0       48        0                           
+     .so mmap     8030      296     3716        0                           
+    .apk mmap      546        0       92        0                           
+    .ttf mmap      502        0      344        0                           
+    .dex mmap     8513        4     6500        0                           
+    .oat mmap     3852        0     1112        0                           
+    .art mmap     1896      940      260        0                           
+   Other mmap      191        4       64        0                           
+      Unknown      621      596        0        0                           
+        TOTAL    91608    65956    12136        0   272937    52151   220785
  
  App Summary
                        Pss(KB)
                         ------
-           Java Heap:    52256
-         Native Heap:    26624
-                Code:    12472
-               Stack:     1012
+           Java Heap:    30440
+         Native Heap:    23812
+                Code:    12064
+               Stack:      912
             Graphics:        0
-       Private Other:    13456
-              System:    15190
+       Private Other:    10864
+              System:    13516
  
-               TOTAL:   121010       TOTAL SWAP PSS:        0
+               TOTAL:    91608       TOTAL SWAP PSS:        0
  
  Objects
                Views:       57         ViewRootImpl:        2
          AppContexts:        5           Activities:        2
               Assets:        3        AssetManagers:        5
-       Local Binders:       24        Proxy Binders:       26
-       Parcel memory:        8         Parcel count:       34
+       Local Binders:       30        Proxy Binders:       26
+       Parcel memory:        9         Parcel count:       38
     Death Recipients:        0      OpenSSL Sockets:        6
             WebViews:        0
  
@@ -49,4 +49,4 @@ Uptime: 316747 Realtime: 316747
  
  
  Asset Allocations
-    zip:/data/app/app.show.tv-nE37e0Sa7irohMb-ZdIHHg==/base.apk:/res/RV.ttf: 3K
+    zip:/data/app/app.show.tv-6UiGxK38YrYiHGz1ZrBIEg==/base.apk:/res/RV.ttf: 3K

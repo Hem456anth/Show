@@ -1,25 +1,25 @@
 Applications Graphics Acceleration Info:
-Uptime: 163747 Realtime: 163747
+Uptime: 145348 Realtime: 145348
 
-** Graphics info for pid 4508 [app.show.tv] **
+** Graphics info for pid 4424 [app.show.tv] **
 
-Stats since: 148301202840ns
-Total frames rendered: 173
-Janky frames: 173 (100.00%)
-50th percentile: 89ms
-90th percentile: 150ms
-95th percentile: 150ms
-99th percentile: 250ms
-Number Missed Vsync: 109
-Number High input latency: 39
-Number Slow UI thread: 85
-Number Slow bitmap uploads: 9
-Number Slow issue draw commands: 173
-HISTOGRAM: 5ms=0 6ms=0 7ms=0 8ms=0 9ms=0 10ms=0 11ms=0 12ms=0 13ms=0 14ms=0 15ms=0 16ms=0 17ms=0 18ms=0 19ms=0 20ms=0 21ms=0 22ms=0 23ms=1 24ms=0 25ms=1 26ms=2 27ms=0 28ms=2 29ms=0 30ms=1 31ms=0 32ms=0 34ms=0 36ms=2 38ms=0 40ms=0 42ms=3 44ms=4 46ms=0 48ms=5 53ms=12 57ms=9 61ms=5 65ms=8 69ms=3 73ms=8 77ms=4 81ms=7 85ms=9 89ms=12 93ms=13 97ms=6 101ms=6 105ms=6 109ms=3 113ms=1 117ms=4 121ms=3 125ms=2 129ms=4 133ms=3 150ms=20 200ms=2 250ms=2 300ms=0 350ms=0 400ms=0 450ms=0 500ms=0 550ms=0 600ms=0 650ms=0 700ms=0 750ms=0 800ms=0 850ms=0 900ms=0 950ms=0 1000ms=0 1050ms=0 1100ms=0 1150ms=0 1200ms=0 1250ms=0 1300ms=0 1350ms=0 1400ms=0 1450ms=0 1500ms=0 1550ms=0 1600ms=0 1650ms=0 1700ms=0 1750ms=0 1800ms=0 1850ms=0 1900ms=0 1950ms=0 2000ms=0 2050ms=0 2100ms=0 2150ms=0 2200ms=0 2250ms=0 2300ms=0 2350ms=0 2400ms=0 2450ms=0 2500ms=0 2550ms=0 2600ms=0 2650ms=0 2700ms=0 2750ms=0 2800ms=0 2850ms=0 2900ms=0 2950ms=0 3000ms=0 3050ms=0 3100ms=0 3150ms=0 3200ms=0 3250ms=0 3300ms=0 3350ms=0 3400ms=0 3450ms=0 3500ms=0 3550ms=0 3600ms=0 3650ms=0 3700ms=0 3750ms=0 3800ms=0 3850ms=0 3900ms=0 3950ms=0 4000ms=0 4050ms=0 4100ms=0 4150ms=0 4200ms=0 4250ms=0 4300ms=0 4350ms=0 4400ms=0 4450ms=0 4500ms=0 4550ms=0 4600ms=0 4650ms=0 4700ms=0 4750ms=0 4800ms=0 4850ms=0 4900ms=0 4950ms=0
+Stats since: 130774123830ns
+Total frames rendered: 286
+Janky frames: 282 (98.60%)
+50th percentile: 65ms
+90th percentile: 101ms
+95th percentile: 113ms
+99th percentile: 150ms
+Number Missed Vsync: 190
+Number High input latency: 28
+Number Slow UI thread: 140
+Number Slow bitmap uploads: 5
+Number Slow issue draw commands: 282
+HISTOGRAM: 5ms=0 6ms=0 7ms=0 8ms=0 9ms=0 10ms=0 11ms=0 12ms=0 13ms=0 14ms=2 15ms=1 16ms=2 17ms=1 18ms=0 19ms=0 20ms=0 21ms=1 22ms=0 23ms=0 24ms=0 25ms=0 26ms=0 27ms=0 28ms=1 29ms=1 30ms=0 31ms=0 32ms=4 34ms=9 36ms=12 38ms=8 40ms=12 42ms=5 44ms=4 46ms=6 48ms=14 53ms=15 57ms=18 61ms=19 65ms=23 69ms=25 73ms=15 77ms=10 81ms=9 85ms=8 89ms=9 93ms=11 97ms=7 101ms=6 105ms=5 109ms=5 113ms=4 117ms=3 121ms=2 125ms=3 129ms=1 133ms=1 150ms=2 200ms=2 250ms=0 300ms=0 350ms=0 400ms=0 450ms=0 500ms=0 550ms=0 600ms=0 650ms=0 700ms=0 750ms=0 800ms=0 850ms=0 900ms=0 950ms=0 1000ms=0 1050ms=0 1100ms=0 1150ms=0 1200ms=0 1250ms=0 1300ms=0 1350ms=0 1400ms=0 1450ms=0 1500ms=0 1550ms=0 1600ms=0 1650ms=0 1700ms=0 1750ms=0 1800ms=0 1850ms=0 1900ms=0 1950ms=0 2000ms=0 2050ms=0 2100ms=0 2150ms=0 2200ms=0 2250ms=0 2300ms=0 2350ms=0 2400ms=0 2450ms=0 2500ms=0 2550ms=0 2600ms=0 2650ms=0 2700ms=0 2750ms=0 2800ms=0 2850ms=0 2900ms=0 2950ms=0 3000ms=0 3050ms=0 3100ms=0 3150ms=0 3200ms=0 3250ms=0 3300ms=0 3350ms=0 3400ms=0 3450ms=0 3500ms=0 3550ms=0 3600ms=0 3650ms=0 3700ms=0 3750ms=0 3800ms=0 3850ms=0 3900ms=0 3950ms=0 4000ms=0 4050ms=0 4100ms=0 4150ms=0 4200ms=0 4250ms=0 4300ms=0 4350ms=0 4400ms=0 4450ms=0 4500ms=0 4550ms=0 4600ms=0 4650ms=0 4700ms=0 4750ms=0 4800ms=0 4850ms=0 4900ms=0 4950ms=0
 
 Caches:
 Current memory usage / total memory usage (bytes):
-  TextureCache           147720 / 75497472
+  TextureCache          1601568 / 75497472
   Layers total          0 (numLayers = 0)
   RenderBufferCache           0 /  8388608
   GradientCache           32768 /  1048576
@@ -27,27 +27,27 @@ Current memory usage / total memory usage (bytes):
   TessellationCache       42360 /  1048576
   TextDropShadowCache         0 /  6291456
   PatchCache                  0 /   131072
-  FontRenderer A8        232103 /  1048576
-    A8   texture 0       232103 /  1048576
+  FontRenderer A8        237843 /  1048576
+    A8   texture 0       237843 /  1048576
   FontRenderer RGBA           0 /        0
-  FontRenderer total     232103 /  1048576
+  FontRenderer total     237843 /  1048576
 Other:
   FboCache                    0 /        0
 Total memory usage:
-  1271424 bytes, 1.21 MB
+  2725272 bytes, 2.60 MB
 
 
 Pipeline=FrameBuilder
 Profile data in ms:
 
-	app.show.tv/app.show.tv.MainActivity/android.view.ViewRootImpl@2ef0990 (visibility=0)
+	app.show.tv/app.show.tv.MainActivity/android.view.ViewRootImpl@4a92577 (visibility=0)
 View hierarchy:
 
-  app.show.tv/app.show.tv.MainActivity/android.view.ViewRootImpl@2ef0990
-  8 views, 9.49 kB of display lists
+  app.show.tv/app.show.tv.MainActivity/android.view.ViewRootImpl@4a92577
+  6 views, 7.52 kB of display lists
 
 
 Total ViewRootImpl: 1
-Total Views:        8
-Total DisplayList:  9.49 kB
+Total Views:        6
+Total DisplayList:  7.52 kB
 

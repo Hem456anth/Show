@@ -1,0 +1,7 @@
+Starting: Intent { cmp=app.show.tv/.MainActivity }
+Status: ok
+Activity: app.show.tv/.MainActivity
+ThisTime: 1382
+TotalTime: 1382
+WaitTime: 1440
+Complete

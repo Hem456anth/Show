@@ -1,0 +1,66 @@
+Applications Graphics Acceleration Info:
+Uptime: 158253 Realtime: 158253
+
+** Graphics info for pid 3679 [app.show.tv.leak] **
+
+Stats since: 152708255540ns
+Total frames rendered: 74
+Janky frames: 74 (100.00%)
+Janky frames (legacy): 74 (100.00%)
+50th percentile: 109ms
+90th percentile: 150ms
+95th percentile: 200ms
+99th percentile: 250ms
+Number Missed Vsync: 45
+Number High input latency: 0
+Number Slow UI thread: 56
+Number Slow bitmap uploads: 17
+Number Slow issue draw commands: 74
+Number Frame deadline missed: 74
+Number Frame deadline missed (legacy): 74
+HISTOGRAM: 5ms=0 6ms=0 7ms=0 8ms=0 9ms=0 10ms=0 11ms=0 12ms=0 13ms=0 14ms=0 15ms=0 16ms=0 17ms=0 18ms=0 19ms=0 20ms=0 21ms=0 22ms=0 23ms=0 24ms=0 25ms=0 26ms=0 27ms=0 28ms=0 29ms=0 30ms=0 31ms=0 32ms=0 34ms=0 36ms=0 38ms=1 40ms=0 42ms=1 44ms=1 46ms=0 48ms=3 53ms=1 57ms=0 61ms=2 65ms=2 69ms=2 73ms=4 77ms=1 81ms=2 85ms=1 89ms=4 93ms=2 97ms=3 101ms=4 105ms=2 109ms=2 113ms=3 117ms=3 121ms=1 125ms=1 129ms=1 133ms=4 150ms=17 200ms=5 250ms=1 300ms=0 350ms=0 400ms=0 450ms=0 500ms=0 550ms=0 600ms=0 650ms=0 700ms=0 750ms=0 800ms=0 850ms=0 900ms=0 950ms=0 1000ms=0 1050ms=0 1100ms=0 1150ms=0 1200ms=0 1250ms=0 1300ms=0 1350ms=0 1400ms=0 1450ms=0 1500ms=0 1550ms=0 1600ms=0 1650ms=0 1700ms=0 1750ms=0 1800ms=0 1850ms=0 1900ms=0 1950ms=0 2000ms=0 2050ms=0 2100ms=0 2150ms=0 2200ms=0 2250ms=0 2300ms=0 2350ms=0 2400ms=0 2450ms=0 2500ms=0 2550ms=0 2600ms=0 2650ms=0 2700ms=0 2750ms=0 2800ms=0 2850ms=0 2900ms=0 2950ms=0 3000ms=0 3050ms=0 3100ms=0 3150ms=0 3200ms=0 3250ms=0 3300ms=0 3350ms=0 3400ms=0 3450ms=0 3500ms=0 3550ms=0 3600ms=0 3650ms=0 3700ms=0 3750ms=0 3800ms=0 3850ms=0 3900ms=0 3950ms=0 4000ms=0 4050ms=0 4100ms=0 4150ms=0 4200ms=0 4250ms=0 4300ms=0 4350ms=0 4400ms=0 4450ms=0 4500ms=0 4550ms=0 4600ms=0 4650ms=0 4700ms=0 4750ms=0 4800ms=0 4850ms=0 4900ms=0 4950ms=0
+50th gpu percentile: 4950ms
+90th gpu percentile: 4950ms
+95th gpu percentile: 4950ms
+99th gpu percentile: 4950ms
+GPU HISTOGRAM: 1ms=0 2ms=0 3ms=0 4ms=0 5ms=0 6ms=0 7ms=0 8ms=0 9ms=0 10ms=0 11ms=0 12ms=0 13ms=0 14ms=0 15ms=0 16ms=0 17ms=0 18ms=0 19ms=0 20ms=0 21ms=0 22ms=0 23ms=0 24ms=0 25ms=0 4950ms=74
+
+Pipeline=Skia (OpenGL)
+Memory policy:
+  Max surface area: 2592000
+  Max resource usage: 124.42MB (x48)
+  Background retention: 50% (altUiHidden = true)
+  GPU Context timeout: 10
+Contexts: 1 (stopped = 0)
+CPU Caches:
+  Glyph Cache: 221.05 KB (1 entry)
+  Glyph Count: 28 
+Total CPU memory usage:
+  226356 bytes, 221.05 KB (0.00 bytes is purgeable)
+GPU Caches:
+  Other:
+    Other: 28.86 KB (1 entry)
+    Buffer Object: 2.50 KB (4 entries)
+    StencilAttachment: 21.00 KB (3 entries)
+  Image:
+    Texture: 320.18 KB (67 entries)
+  Scratch:
+    RenderTarget: 31.90 MB (8 entries)
+    Buffer Object: 144.00 KB (4 entries)
+    Texture: 2.03 MB (9 entries)
+Total GPU memory usage:
+  36104228 bytes, 34.43 MB (32.31 MB is purgeable)
+
+Profile data in ms:
+
+	app.show.tv.leak/app.show.tv.MainActivity/android.view.ViewRootImpl@67cfd63 (visibility=0)
+View hierarchy:
+
+  app.show.tv.leak/app.show.tv.MainActivity/android.view.ViewRootImpl@67cfd63
+  7 views, 11.96 kB of render nodes
+
+
+Total ViewRootImpl   : 1
+Total attached Views : 7
+Total RenderNode     : 11.96 kB (used) / 36.03 kB (capacity)
+

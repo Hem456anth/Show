@@ -1,0 +1,24 @@
+  mLastScreenBrightnessBoostTime=0 (220381 ms ago)
+  mScreenBrightnessBoostInProgress=false
+  mSuspendWhenScreenOffDueToProximityConfig=false
+  mDozeAfterScreenOff=false
+  mMinimumScreenOffTimeoutConfig=10000
+  mMaximumScreenDimDurationConfig=7000
+  mMaximumScreenDimRatioConfig=0.20000005
+  mScreenOffTimeoutSetting=2147483647
+  mMaximumScreenOffTimeoutFromDeviceAdmin=9223372036854775807 (enforced=false)
+  mScreenBrightnessSetting=0
+  mScreenBrightnessModeSetting=0
+  mScreenBrightnessOverrideFromWindowManager=-1
+  mDozeScreenStateOverrideFromDreamManager=0
+  mDozeScreenBrightnessOverrideFromDreamManager=-1
+  mScreenBrightnessSettingMinimum=10
+  mScreenBrightnessSettingMaximum=255
+  mScreenBrightnessSettingDefault=102
+Screen off timeout: 2147483647 ms
+Screen dim duration: 7000 ms
+Wake Locks: size=4
+  PARTIAL_WAKE_LOCK              '*job*/com.android.dialer/com.android.voicemail.impl.scheduling.TaskSchedulerJobService' ACQ=-3m2s378ms LONG (uid=1000 pid=1910 ws=WorkSource{10105})
+  PARTIAL_WAKE_LOCK              'AudioMix' ACQ=-2s727ms (uid=1041 ws=WorkSource{10146})
+  PARTIAL_WAKE_LOCK              'ExoPlayer:WakeLockManager' ACQ=-29s804ms (uid=10146 pid=5884)
+  SCREEN_BRIGHT_WAKE_LOCK        'WindowManager' ON_AFTER_RELEASE ACQ=-29s257ms (uid=1000 pid=1910 ws=WorkSource{10146})

@@ -1,4 +1,4 @@
-  mLastScreenBrightnessBoostTime=0 (233741 ms ago)
+  mLastScreenBrightnessBoostTime=0 (217115 ms ago)
   mScreenBrightnessBoostInProgress=false
   mSuspendWhenScreenOffDueToProximityConfig=false
   mDozeAfterScreenOffConfig=false
@@ -22,7 +22,9 @@
   mScreenBrightnessForVrSetting=86
 Screen off timeout: 2147483647 ms
 Screen dim duration: 7000 ms
-Wake Locks: size=3
-  PARTIAL_WAKE_LOCK              '*job*/com.google.android.dialer/com.android.voicemail.impl.scheduling.TaskSchedulerJobService' ACQ=-3m2s193ms LONG (uid=1000 pid=1665 ws=WorkSource{10020})
-  PARTIAL_WAKE_LOCK              '*job*/com.google.android.googlequicksearchbox/com.google.android.apps.gsa.tasks.BackgroundTasksJobService' ACQ=-27s817ms (uid=1000 pid=1665 ws=WorkSource{10030})
-  PARTIAL_WAKE_LOCK              'IntentOp:.chimera.container.InitConfigOperation' ACQ=-7s958ms (uid=10012 pid=2166 ws=WorkSource{10012 com.google.android.gms})
+Wake Locks: size=5
+  PARTIAL_WAKE_LOCK              '*job*/com.google.android.dialer/com.android.voicemail.impl.scheduling.TaskSchedulerJobService' ACQ=-2m46s973ms LONG (uid=1000 pid=1634 ws=WorkSource{10021})
+  PARTIAL_WAKE_LOCK              'AudioMix' ACQ=-24s720ms (uid=1041 ws=WorkSource{10077})
+  PARTIAL_WAKE_LOCK              'ExoPlayer:WakeLockManager' ACQ=-27s216ms (uid=10077 pid=4424)
+  SCREEN_BRIGHT_WAKE_LOCK        'WindowManager' ON_AFTER_RELEASE ACQ=-26s948ms (uid=1000 pid=1634 ws=WorkSource{10077})
+  PARTIAL_WAKE_LOCK              'IntentOp:.chimera.container.InitConfigOperation' ACQ=-11s510ms (uid=10013 pid=2151 ws=WorkSource{10013 com.google.android.gms})

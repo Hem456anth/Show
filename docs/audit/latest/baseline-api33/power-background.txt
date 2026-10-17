@@ -1,4 +1,10 @@
 Wake Locks: size=2
-  PARTIAL_WAKE_LOCK              '*job*/com.google.android.apps.messaging/androidx.work.impl.background.systemjob.SystemJobService#1015' ACQ=-3m42s479ms LONG (uid=1000 pid=486 ws=WorkSource{10110 com.google.android.apps.messaging})
-  PARTIAL_WAKE_LOCK              '*job*/com.google.android.dialer/com.android.voicemail.impl.scheduling.TaskSchedulerJobService#200' ACQ=-3m11s860ms LONG (uid=1000 pid=486 ws=WorkSource{10111 com.google.android.dialer})
+  PARTIAL_WAKE_LOCK              '*job*/com.google.android.dialer/com.android.voicemail.impl.scheduling.TaskSchedulerJobService#200' ACQ=-5m27s674ms LONG (uid=1000 pid=479 ws=WorkSource{10113 com.google.android.dialer})
+  PARTIAL_WAKE_LOCK              '*job*/com.google.android.apps.messaging/androidx.work.impl.background.systemjob.SystemJobService#1011' ACQ=-4m3s533ms LONG (uid=1000 pid=479 ws=WorkSource{10112 com.google.android.apps.messaging})
 Wake Lock Log
+  10-17 16:18:15.698 - 10174 - ACQ ExoPlayer:WakeLockManager (partial)
+  10-17 16:18:59.239 - 10174 - REL ExoPlayer:WakeLockManager
+  10-17 16:19:23.194 - 10174 - ACQ ExoPlayer:WakeLockManager (partial)
+  10-17 16:19:59.152 - 10174 - REL ExoPlayer:WakeLockManager
+  10-17 16:20:23.690 - 10174 - ACQ ExoPlayer:WakeLockManager (partial)
+  10-17 16:20:53.868 - 10174 - REL ExoPlayer:WakeLockManager

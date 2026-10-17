@@ -1,0 +1,10 @@
+Wake Locks: size=0
+Wake Lock Log
+  10-17 16:17:22.872 - 10145 - ACQ ExoPlayer:WakeLockManager (partial)
+  10-17 16:17:56.739 - 10145 - REL ExoPlayer:WakeLockManager
+  10-17 16:18:07.415 - 10145 - ACQ ExoPlayer:WakeLockManager (partial)
+  10-17 16:18:37.649 - 10145 - REL ExoPlayer:WakeLockManager
+  10-17 16:18:48.180 - 10145 - ACQ ExoPlayer:WakeLockManager (partial)
+  10-17 16:18:49.109 - 10145 - REL ExoPlayer:WakeLockManager
+  10-17 16:19:26.893 - 10145 - ACQ ExoPlayer:WakeLockManager (partial)
+  10-17 16:19:51.527 - 10145 - REL ExoPlayer:WakeLockManager

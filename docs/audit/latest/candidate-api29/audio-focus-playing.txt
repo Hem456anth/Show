@@ -1,6 +1,6 @@
-MediaFocusControl dump time: 2:55:03 PM
+MediaFocusControl dump time: 4:17:56 PM
 Audio Focus stack entries (last is top of stack):
-  source:android.os.BinderProxy@5236c8a -- pack: app.show.tv -- client: android.media.AudioManager@55e1063E1.d@19d5460 -- gain: GAIN -- flags:  -- loss: none -- notified: true -- uid: 10146 -- attr: AudioAttributes: usage=USAGE_MEDIA content=CONTENT_TYPE_MOVIE flags=0x800 tags= bundle=null -- sdk:35
+  source:android.os.BinderProxy@f69adea -- pack: app.show.tv -- client: android.media.AudioManager@918a865E1.d@5eca93a -- gain: GAIN -- flags:  -- loss: none -- notified: true -- uid: 10146 -- attr: AudioAttributes: usage=USAGE_MEDIA content=CONTENT_TYPE_MOVIE flags=0x800 tags= bundle=null -- sdk:35
 No external focus policy
 Audio event log: focus commands as seen by MediaFocusControl
-10-17 14:54:34:472 requestAudioFocus() from uid/pid 10146/5806 clientId=android.media.AudioManager@55e1063E1.d@19d5460 callingPack=app.show.tv req=1 flags=0x0 sdk=35
+10-17 16:17:26:449 requestAudioFocus() from uid/pid 10146/5884 clientId=android.media.AudioManager@918a865E1.d@5eca93a callingPack=app.show.tv req=1 flags=0x0 sdk=35

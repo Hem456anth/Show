@@ -1,11 +1,16 @@
-10-17 14:52:22.388  5806  5806 I Choreographer: Skipped 68 frames!  The application may be doing too much work on its main thread.
-10-17 14:52:31.562  5806  5806 I Choreographer: Skipped 34 frames!  The application may be doing too much work on its main thread.
-10-17 14:52:38.670  1910  1929 I DropBoxManagerService: add tag=system_server_strictmode isTagEnabled=true flags=0x2
-10-17 14:52:38.682  1910  1929 I DropBoxManagerService: add tag=system_server_strictmode isTagEnabled=true flags=0x2
-10-17 14:54:10.475  2504  2504 I Choreographer: Skipped 53 frames!  The application may be doing too much work on its main thread.
-10-17 14:54:36.940  1910  1928 I Choreographer: Skipped 52 frames!  The application may be doing too much work on its main thread.
-10-17 14:58:16.038  2792  2792 I Choreographer: Skipped 32 frames!  The application may be doing too much work on its main thread.
-10-17 14:58:16.708  2063  2063 I Choreographer: Skipped 68 frames!  The application may be doing too much work on its main thread.
-10-17 14:58:17.720  2792  2792 I Choreographer: Skipped 47 frames!  The application may be doing too much work on its main thread.
-10-17 14:58:18.203  2063  2063 I Choreographer: Skipped 88 frames!  The application may be doing too much work on its main thread.
-10-17 14:58:19.818  1910  1929 I DropBoxManagerService: add tag=system_server_strictmode isTagEnabled=true flags=0x2
+10-17 16:15:18.533  5884  5884 I Choreographer: Skipped 68 frames!  The application may be doing too much work on its main thread.
+10-17 16:15:28.046  5884  5884 I Choreographer: Skipped 46 frames!  The application may be doing too much work on its main thread.
+10-17 16:15:34.682  2981  3257 E ACS.ResponseHandler: #onFatalError: com.google.android.apps.gsa.shared.speech.c.n: errorCode: 13, engine: 2
+10-17 16:15:34.682  2981  3257 E ACS.ResponseHandler: com.google.android.apps.gsa.shared.util.b.e: ACS.ResponseHandler: #onFatalError: com.google.android.apps.gsa.shared.speech.c.n: errorCode: 13, engine: 2
+10-17 16:15:40.729  1910  1933 I DropBoxManagerService: add tag=system_server_strictmode isTagEnabled=true flags=0x2
+10-17 16:15:40.747  1910  1933 I DropBoxManagerService: add tag=system_server_strictmode isTagEnabled=true flags=0x2
+10-17 16:15:56.385  1910  1933 I DropBoxManagerService: add tag=system_server_strictmode isTagEnabled=true flags=0x2
+10-17 16:15:56.392  1910  1933 I DropBoxManagerService: add tag=system_server_strictmode isTagEnabled=true flags=0x2
+10-17 16:17:00.879  2514  2514 I Choreographer: Skipped 37 frames!  The application may be doing too much work on its main thread.
+10-17 16:17:28.689  1910  1932 I Choreographer: Skipped 48 frames!  The application may be doing too much work on its main thread.
+10-17 16:17:29.356  1910  1932 I Choreographer: Skipped 38 frames!  The application may be doing too much work on its main thread.
+10-17 16:17:58.131  2065  2065 I Choreographer: Skipped 42 frames!  The application may be doing too much work on its main thread.
+10-17 16:18:05.906  2065  2065 I Choreographer: Skipped 64 frames!  The application may be doing too much work on its main thread.
+10-17 16:18:33.436  2065  2065 I Choreographer: Skipped 33 frames!  The application may be doing too much work on its main thread.
+10-17 16:19:15.586  2065  2065 I Choreographer: Skipped 50 frames!  The application may be doing too much work on its main thread.
+10-17 16:21:05.584  2065  2065 I Choreographer: Skipped 44 frames!  The application may be doing too much work on its main thread.

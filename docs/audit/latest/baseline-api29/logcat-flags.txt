@@ -1,5 +1,14 @@
-10-17 14:52:10.192  5823  5823 I Choreographer: Skipped 32 frames!  The application may be doing too much work on its main thread.
-10-17 14:52:11.184  5823  5823 I Choreographer: Skipped 58 frames!  The application may be doing too much work on its main thread.
-10-17 14:53:24.066  1910  1929 I DropBoxManagerService: add tag=system_server_strictmode isTagEnabled=true flags=0x2
-10-17 14:53:24.138  1910  1929 I DropBoxManagerService: add tag=system_server_strictmode isTagEnabled=true flags=0x2
-10-17 14:54:07.701  2514  2514 I Choreographer: Skipped 46 frames!  The application may be doing too much work on its main thread.
+10-17 16:15:27.917  5785  5785 I Choreographer: Skipped 57 frames!  The application may be doing too much work on its main thread.
+10-17 16:15:37.478  5785  5785 I Choreographer: Skipped 38 frames!  The application may be doing too much work on its main thread.
+10-17 16:16:36.920  2792  3589 E ACS.ResponseHandler: #onFatalError: com.google.android.apps.gsa.shared.speech.c.n: errorCode: 13, engine: 2
+10-17 16:16:36.920  2792  3589 E ACS.ResponseHandler: com.google.android.apps.gsa.shared.util.b.e: ACS.ResponseHandler: #onFatalError: com.google.android.apps.gsa.shared.speech.c.n: errorCode: 13, engine: 2
+10-17 16:17:18.437  1908  1931 I DropBoxManagerService: add tag=system_server_strictmode isTagEnabled=true flags=0x2
+10-17 16:17:18.475  1908  1931 I DropBoxManagerService: add tag=system_server_strictmode isTagEnabled=true flags=0x2
+10-17 16:17:35.395  2515  2515 I Choreographer: Skipped 50 frames!  The application may be doing too much work on its main thread.
+10-17 16:18:44.220  2085  2085 I Choreographer: Skipped 40 frames!  The application may be doing too much work on its main thread.
+10-17 16:19:04.135  2085  2085 I Choreographer: Skipped 34 frames!  The application may be doing too much work on its main thread.
+10-17 16:19:32.458  2085  2085 I Choreographer: Skipped 30 frames!  The application may be doing too much work on its main thread.
+10-17 16:19:33.069  2085  2085 I Choreographer: Skipped 36 frames!  The application may be doing too much work on its main thread.
+10-17 16:20:24.731  2085  2085 I Choreographer: Skipped 43 frames!  The application may be doing too much work on its main thread.
+10-17 16:22:45.132  5785  5785 I Choreographer: Skipped 30 frames!  The application may be doing too much work on its main thread.
+10-17 16:22:45.845  2792  2792 I Choreographer: Skipped 47 frames!  The application may be doing too much work on its main thread.

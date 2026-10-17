@@ -1,6 +1,11 @@
-Wake Locks: size=2
-  PARTIAL_WAKE_LOCK              '*telephony-radio*' ACQ=-16s719ms (uid=1001 pid=1041 ws=WorkSource{1001 com.android.phone})
-  PARTIAL_WAKE_LOCK              '*job*/com.google.android.apps.messaging/androidx.work.impl.background.systemjob.SystemJobService#1013' ACQ=-4m39s888ms LONG (uid=1000 pid=521 ws=WorkSource{10130 com.google.android.apps.messaging})
+Wake Locks: size=1
+  PARTIAL_WAKE_LOCK              '*job*/com.google.android.apps.messaging/androidx.work.impl.background.systemjob.SystemJobService#1008' ACQ=-4m51s404ms LONG (uid=1000 pid=521 ws=WorkSource{10129 com.google.android.apps.messaging})
 Wake Lock Log
-  10-17 14:54:15.288 - 10192 - ACQ ExoPlayer:WakeLockManager (partial)
-  10-17 14:56:24.922 - 10192 - REL ExoPlayer:WakeLockManager
+  10-17 16:17:16.734 - 10192 - ACQ ExoPlayer:WakeLockManager (partial)
+  10-17 16:17:54.594 - 10192 - REL ExoPlayer:WakeLockManager
+  10-17 16:18:03.975 - 10192 - ACQ ExoPlayer:WakeLockManager (partial)
+  10-17 16:18:31.819 - 10192 - REL ExoPlayer:WakeLockManager
+  10-17 16:18:42.334 - 10192 - ACQ ExoPlayer:WakeLockManager (partial)
+  10-17 16:19:13.819 - 10192 - REL ExoPlayer:WakeLockManager
+  10-17 16:19:21.262 - 10192 - ACQ ExoPlayer:WakeLockManager (partial)
+  10-17 16:19:46.979 - 10192 - REL ExoPlayer:WakeLockManager

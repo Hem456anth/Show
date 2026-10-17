@@ -1,0 +1,53 @@
+Applications Memory Usage (in Kilobytes):
+Uptime: 297190 Realtime: 297190
+
+** MEMINFO in pid 5884 [app.show.tv] **
+                   Pss  Private  Private  SwapPss     Heap     Heap     Heap
+                 Total    Dirty    Clean    Dirty     Size    Alloc     Free
+                ------   ------   ------   ------   ------   ------   ------
+  Native Heap    52145    51968        0      155    85832    74308    11523
+  Dalvik Heap    28224    28180        0       21    25454    19310     6144
+ Dalvik Other     2638     2568        0       70                           
+        Stack      164      164        0        0                           
+       Ashmem      263      256        0        0                           
+    Other dev       12        0       12        0                           
+     .so mmap     6271      436     3024       14                           
+    .jar mmap     3033        0      316        0                           
+    .apk mmap      743        0      308        0                           
+    .ttf mmap      548        0      356        0                           
+    .dex mmap     4529        4     4524        0                           
+    .oat mmap     1424        0       80        0                           
+    .art mmap     2627     2164       16       33                           
+   Other mmap     5569     1672      104        0                           
+      Unknown     1764     1760        0        0                           
+        TOTAL   110247    89172     8740      293   111286    93618    17667
+ 
+ App Summary
+                       Pss(KB)
+                        ------
+           Java Heap:    30360
+         Native Heap:    51968
+                Code:     9048
+               Stack:      164
+            Graphics:        0
+       Private Other:     6372
+              System:    12335
+ 
+               TOTAL:   110247       TOTAL SWAP PSS:      293
+ 
+ Objects
+               Views:       57         ViewRootImpl:        2
+         AppContexts:        7           Activities:        2
+              Assets:       11        AssetManagers:        0
+       Local Binders:       20        Proxy Binders:       41
+       Parcel memory:        9         Parcel count:       36
+    Death Recipients:        0      OpenSSL Sockets:        6
+            WebViews:        0
+ 
+ SQL
+         MEMORY_USED:        0
+  PAGECACHE_OVERFLOW:        0          MALLOC_SIZE:        0
+ 
+ 
+ Asset Allocations
+    : 3K

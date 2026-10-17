@@ -1,3 +1,4 @@
-MediaFocusControl dump time: 2:54:49 PM
+MediaFocusControl dump time: 4:17:47 PM
 Audio Focus stack entries (last is top of stack):
+  source:android.os.BinderProxy@e427797 -- pack: app.show.tv -- client: android.media.AudioManager@199c2d8E1.d@2e5f631 -- gain: GAIN -- flags:  -- loss: none -- notified: true -- uid: 10077 -- attr: AudioAttributes: usage=1 content=3 flags=0x0 tags= bundle=null -- sdk:35
 No external focus policy

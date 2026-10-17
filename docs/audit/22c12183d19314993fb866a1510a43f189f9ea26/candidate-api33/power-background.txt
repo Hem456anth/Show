@@ -1,0 +1,4 @@
+Wake Locks: size=2
+  PARTIAL_WAKE_LOCK              '*job*/com.google.android.dialer/com.android.voicemail.impl.scheduling.TaskSchedulerJobService#200' ACQ=-4m5s663ms LONG (uid=1000 pid=480 ws=WorkSource{10112 com.google.android.dialer})
+  PARTIAL_WAKE_LOCK              '*job*/com.google.android.apps.messaging/androidx.work.impl.background.systemjob.SystemJobService#1012' ACQ=-3m29s910ms LONG (uid=1000 pid=480 ws=WorkSource{10110 com.google.android.apps.messaging})
+Wake Lock Log

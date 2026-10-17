@@ -1,0 +1,9 @@
+mWifiLockStats:
+mWifiLockHighPerfAcqDurationSecHistogram:
+mWifiLockLowLatencyAcqDurationSecHistogram:
+mWifiLockHighPerfActiveSessionDurationSecHistogram:
+mWifiLockLowLatencyActiveSessionDurationSecHistogram:
+  {NetworkRequest [ REQUEST id=155, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED Uid: 10192 RequestorUid: 10192 RequestorPkg: app.show.tv.leak UnderlyingNetworks: Null] ], requested=true}
+  {NetworkRequest [ REQUEST id=155, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED Uid: 10192 RequestorUid: 10192 RequestorPkg: app.show.tv.leak UnderlyingNetworks: Null] ], requested=true}
+  {NetworkRequest [ REQUEST id=155, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED Uid: 10192 RequestorUid: 10192 RequestorPkg: app.show.tv.leak UnderlyingNetworks: Null] ], requested=true}
+  {NetworkRequest [ REQUEST id=155, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED Uid: 10192 RequestorUid: 10192 RequestorPkg: app.show.tv.leak UnderlyingNetworks: Null] ], requested=false}

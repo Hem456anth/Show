@@ -1,0 +1,18 @@
+10-17 16:15:05.034  2667  2842 W ErrorProcessor: onFatalError, processing error from engine(4)
+10-17 16:15:10.283  4424  4424 I Choreographer: Skipped 59 frames!  The application may be doing too much work on its main thread.
+10-17 16:15:26.958  4424  4424 I Choreographer: Skipped 37 frames!  The application may be doing too much work on its main thread.
+10-17 16:16:53.044  1784  1784 I Choreographer: Skipped 33 frames!  The application may be doing too much work on its main thread.
+10-17 16:17:22.048  1634  1666 I Choreographer: Skipped 36 frames!  The application may be doing too much work on its main thread.
+10-17 16:21:18.350  2667  2788 W ErrorProcessor: onFatalError, processing error from engine(4)
+10-17 16:21:22.591  2667  2842 W ErrorProcessor: onFatalError, processing error from engine(4)
+10-17 16:21:27.622  2667  2842 W ErrorProcessor: onFatalError, processing error from engine(4)
+10-17 16:21:32.654  2667  2788 W ErrorProcessor: onFatalError, processing error from engine(4)
+10-17 16:21:37.686  2667  2753 W ErrorProcessor: onFatalError, processing error from engine(4)
+10-17 16:21:42.709  2667  2753 W ErrorProcessor: onFatalError, processing error from engine(4)
+10-17 16:21:47.760  2667  2788 W ErrorProcessor: onFatalError, processing error from engine(4)
+10-17 16:21:52.782  2667  2788 W ErrorProcessor: onFatalError, processing error from engine(4)
+10-17 16:21:57.836  2667  2788 W ErrorProcessor: onFatalError, processing error from engine(4)
+10-17 16:22:02.862  2667  2842 W ErrorProcessor: onFatalError, processing error from engine(4)
+10-17 16:22:07.884  2667  2788 W ErrorProcessor: onFatalError, processing error from engine(4)
+10-17 16:22:12.900  2667  2788 W ErrorProcessor: onFatalError, processing error from engine(4)
+10-17 16:22:17.945  2667  2842 W ErrorProcessor: onFatalError, processing error from engine(4)

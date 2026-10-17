@@ -1,0 +1,10 @@
+--------- beginning of main
+10-17 16:15:04.402  3679  3771 D LeakCanary: LeakCanary is running and ready to detect memory leaks.
+10-17 16:17:54.797  3679  3679 D LeakCanary: Watching instance of androidx.lifecycle.ReportFragment (androidx.lifecycle.ReportFragment received Fragment#onDestroy() callback) with key 6cb90029-5a8f-429e-bd41-327bd535060d
+10-17 16:17:54.920  3679  3679 D LeakCanary: Watching instance of app.show.tv.player.PlayerActivity (app.show.tv.player.PlayerActivity received Activity#onDestroy() callback) with key 8b93ba3e-d252-4116-ab23-940789ce2eb5
+10-17 16:18:31.872  3679  3679 D LeakCanary: Watching instance of androidx.lifecycle.ReportFragment (androidx.lifecycle.ReportFragment received Fragment#onDestroy() callback) with key 851ac6c6-b530-4358-b1c0-f37c9846bbac
+10-17 16:18:31.933  3679  3679 D LeakCanary: Watching instance of app.show.tv.player.PlayerActivity (app.show.tv.player.PlayerActivity received Activity#onDestroy() callback) with key d67fa095-6c0d-46e3-b690-1ac79f33b9f0
+10-17 16:19:14.078  3679  3679 D LeakCanary: Watching instance of androidx.lifecycle.ReportFragment (androidx.lifecycle.ReportFragment received Fragment#onDestroy() callback) with key da8ae5f7-7b82-4f81-948c-09bb95a5f4c5
+10-17 16:19:14.239  3679  3679 D LeakCanary: Watching instance of app.show.tv.player.PlayerActivity (app.show.tv.player.PlayerActivity received Activity#onDestroy() callback) with key 3e87951b-22a1-418d-8df8-603ed23ab15b
+10-17 16:21:15.868  3679  3679 D LeakCanary: Watching instance of androidx.lifecycle.ReportFragment (androidx.lifecycle.ReportFragment received Fragment#onDestroy() callback) with key 571977f6-0769-427b-9631-d549ad54f0e9
+10-17 16:21:15.903  3679  3679 D LeakCanary: Watching instance of app.show.tv.player.PlayerActivity (app.show.tv.player.PlayerActivity received Activity#onDestroy() callback) with key 48488b7d-d344-4ecf-a0c9-05e8114d8a3a

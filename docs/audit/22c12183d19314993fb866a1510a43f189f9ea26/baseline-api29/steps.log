@@ -1,0 +1,23 @@
+[16:15:26] cold start
+[16:16:27] idle Home 20 s
+[16:16:50] scroll Home
+[16:17:22] tap 'Live TV' at 416 2164
+[16:17:34] tap 'Search' at 662 2164
+[16:17:43] tap 'My List' at 909 2164
+[16:17:48] tap 'Home' at 170 2164
+[16:17:56] tap 'Settings' at 975 152
+[16:18:03] player cycles (leak / memory growth check)
+[16:18:14] tap 'Play' at 250 1003
+[16:18:41] tap 'Got it' at 1478 527
+[16:18:55] cycle 1: back on Home
+[16:19:03] tap 'Play' at 250 1003
+[16:19:31] tap 'Got it': not found
+[16:19:46] cycle 2: back on Home
+[16:19:57] tap 'Play' at 250 1003
+[16:20:24] tap 'Got it': not found
+[16:20:39] cycle 3: back on Home
+[16:20:39] background with the player open (screen off, no PiP)
+[16:20:45] tap 'Play' at 250 1003
+[16:21:07] tap 'Got it': not found
+[16:22:43] left the player
+[16:23:44] done

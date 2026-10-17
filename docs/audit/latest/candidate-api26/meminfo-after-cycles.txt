@@ -1,49 +1,52 @@
 Applications Memory Usage (in Kilobytes):
-Uptime: 303504 Realtime: 303504
+Uptime: 311116 Realtime: 311116
 
-** MEMINFO in pid 4508 [app.show.tv] **
+** MEMINFO in pid 4424 [app.show.tv] **
                    Pss  Private  Private  SwapPss     Heap     Heap     Heap
                  Total    Dirty    Clean    Dirty     Size    Alloc     Free
                 ------   ------   ------   ------   ------   ------   ------
-  Native Heap    24170    23912        0        0   249856    20386   229469
-  Dalvik Heap    26987    26956        0        0     3721     2791      930
- Dalvik Other     7521     7520        0        0                           
-        Stack      804      804        0        0                           
-       Ashmem      258      256        0        0                           
-    Other dev       12        0       12        0                           
-     .so mmap     5061      256     1756        0                           
-    .apk mmap      445        0       76        0                           
-    .ttf mmap      394        0      272        0                           
-    .dex mmap     7020        4     5612        0                           
-    .oat mmap     2735        0      464        0                           
-    .art mmap     1619      876      172        0                           
-   Other mmap      151        4        8        0                           
-      Unknown      591      556        0        0                           
-        TOTAL    77768    61144     8372        0   253577    23177   230399
+  Native Heap    25979    25720        0        0   262144    28066   234077
+  Dalvik Heap    30730    30700        0        0    34583    28455     6128
+ Dalvik Other     8509     8508        0        0                           
+        Stack      924      924        0        0                           
+       Ashmem     5080     2092        0        0                           
+    Other dev       50        0       48        0                           
+     .so mmap     7648      296     4252        0                           
+    .apk mmap      520        0       92        0                           
+    .ttf mmap      385        0      284        0                           
+    .dex mmap     8867        4     6584        0                           
+    .oat mmap     4393        0     1352        0                           
+    .art mmap     1861      948      180        0                           
+   Other mmap      260        4       28        0                           
+      Unknown      621      596        0        0                           
+        TOTAL    95827    69792    12820        0   296727    56521   240205
  
  App Summary
                        Pss(KB)
                         ------
-           Java Heap:    28004
-         Native Heap:    23912
-                Code:     8440
-               Stack:      804
+           Java Heap:    31828
+         Native Heap:    25720
+                Code:    12864
+               Stack:      924
             Graphics:        0
-       Private Other:     8356
-              System:     8252
+       Private Other:    11276
+              System:    13215
  
-               TOTAL:    77768       TOTAL SWAP PSS:        0
+               TOTAL:    95827       TOTAL SWAP PSS:        0
  
  Objects
-               Views:        0         ViewRootImpl:        0
-         AppContexts:        1           Activities:        0
-              Assets:        2        AssetManagers:        2
-       Local Binders:       14        Proxy Binders:       17
-       Parcel memory:        5         Parcel count:       20
-    Death Recipients:        0      OpenSSL Sockets:        6
+               Views:       57         ViewRootImpl:        2
+         AppContexts:        5           Activities:        2
+              Assets:        3        AssetManagers:        5
+       Local Binders:       34        Proxy Binders:       26
+       Parcel memory:        9         Parcel count:       38
+    Death Recipients:        0      OpenSSL Sockets:        1
             WebViews:        0
  
  SQL
          MEMORY_USED:        0
   PAGECACHE_OVERFLOW:        0          MALLOC_SIZE:        0
  
+ 
+ Asset Allocations
+    zip:/data/app/app.show.tv-iff9fAsHtBm02QZm-8iiSg==/base.apk:/res/RV.ttf: 3K

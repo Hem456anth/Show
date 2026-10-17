@@ -2,6 +2,6 @@ Starting: Intent { cmp=app.show.tv/.MainActivity }
 Status: ok
 LaunchState: COLD
 Activity: app.show.tv/.MainActivity
-TotalTime: 4368
-WaitTime: 4426
+TotalTime: 1985
+WaitTime: 2001
 Complete

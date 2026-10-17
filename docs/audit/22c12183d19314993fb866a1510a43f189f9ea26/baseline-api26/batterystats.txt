@@ -1,0 +1,172 @@
+Daily stats:
+  Current start time: 2026-10-17-16-14-31
+  Next min deadline: 2026-10-18-01-00-00
+  Next max deadline: 2026-10-18-03-00-00
+  Current daily steps:
+
+Statistics since last charge:
+  System starts: 0, currently on battery: true
+  Estimated battery capacity: 1000 mAh
+  Time on battery: 7m 54s 772ms (100.0%) realtime, 7m 54s 772ms (100.0%) uptime
+  Time on battery screen off: 1m 4s 228ms (13.5%) realtime, 1m 4s 228ms (13.5%) uptime
+  Total run time: 7m 54s 775ms realtime, 7m 54s 775ms uptime
+  Discharge: 0 mAh
+  Screen off discharge: 0 mAh
+  Screen on discharge: 0 mAh
+  Start clock time: 2026-10-17-16-14-37
+  Screen on: 6m 50s 544ms (86.5%) 1x, Interactive: 6m 49s 439ms (86.2%)
+  Screen brightnesses:
+    dark 14ms (0.0%)
+    medium 6m 50s 530ms (100.0%)
+  Connectivity changes: 2
+  Total full wakelock time: 5m 1s 728ms
+  Total partial wakelock time: 33s 563ms
+  Mobile total received: 0B, sent: 0B (packets received 0, sent 0)
+  Phone signal levels:
+    moderate 7m 40s 399ms (97.0%) 1x
+    great 14s 373ms (3.0%) 0x
+  Signal scanning time: 0ms
+  Radio types:
+    lte 7m 54s 772ms (100.0%) 0x
+  Mobile radio active time: 47s 214ms (9.9%) 4x
+  Mobile radio active adjusted time: 0ms (0.0%)
+  Radio Idle time:   0ms (--%)
+  Radio Rx time:     0ms (--%)
+  Radio Tx time:     0ms (--%)
+    [0] 0ms (--%)
+    [1] 0ms (--%)
+    [2] 0ms (--%)
+    [3] 0ms (--%)
+    [4] 0ms (--%)
+  Radio Power drain: 0mAh
+  Wi-Fi total received: 45.81MB, sent: 953.17KB (packets received 33987, sent 17759)
+  Wifi on: 7m 54s 772ms (100.0%), Wifi running: 7m 54s 772ms (100.0%)
+  Wifi states:
+    disconn 4s 645ms (1.0%) 0x
+    sta 7m 50s 127ms (99.0%) 1x
+  Wifi supplicant states:
+    associating 88ms (0.0%) 1x
+    associated 50ms (0.0%) 1x
+    completed 7m 50s 378ms (99.1%) 1x
+  Wifi signal levels:
+    level(4) 7m 50s 404ms (99.1%) 1x
+  WiFi Idle time:   0ms (--%)
+  WiFi Rx time:     0ms (--%)
+  WiFi Tx time:     0ms (--%)
+  WiFi Power drain: 0mAh
+  Bluetooth total received: 0B, sent: 0B
+  Bluetooth scan time: 0ms 
+  Bluetooth Idle time:   0ms (--%)
+  Bluetooth Rx time:     0ms (--%)
+  Bluetooth Tx time:     0ms (--%)
+  Bluetooth Power drain: 0mAh
+
+  Device battery use since last full charge
+    Amount discharged (lower bound): 0
+    Amount discharged (upper bound): 0
+    Amount discharged while screen on: 0
+    Amount discharged while screen off: 0
+
+  Estimated power use (mAh):
+    Capacity: 1000, Computed drain: 0.455, actual drain: 0
+    Uid 1000: 0.337 ( wifi=0.0000196 sensor=0.337 ) Excluded from smearing
+    Uid u0a14: 0.0348 ( wifi=0.000965 sensor=0.0338 ) Including smearing: 0.176 ( proportional=0.141 )
+    Uid u0a77: 0.0209 ( wifi=0.0209 ) Including smearing: 0.192 ( screen=0.0171 proportional=0.154 )
+    Screen: 0.0171 Excluded from smearing
+    Cell standby: 0.0145 ( radio=0.0145 ) Excluded from smearing
+    Wifi: 0.0139 ( wifi=0.0139 ) Including smearing: 0.0704 ( proportional=0.0565 )
+    Idle: 0.0132 Excluded from smearing
+    Uid u0a30: 0.00167 ( wifi=0.0000132 gps=0.00165 ) Including smearing: 0.00843 ( proportional=0.00676 )
+    Uid u0a17: 0.00117 ( wifi=0.00117 ) Including smearing: 0.00594 ( proportional=0.00476 )
+    Uid u0a7: 0.000314 ( wifi=0.000314 ) Including smearing: 0.00158 ( proportional=0.00127 )
+    Uid 0: 0.000123 ( wifi=0.000123 ) Excluded from smearing
+    Uid u0a76: 0.0000978 ( wifi=0.0000978 ) Including smearing: 0.000494 ( proportional=0.000397 )
+    Uid u0a57: 0.0000223 ( wifi=0.0000223 ) Including smearing: 0.000113 ( proportional=0.0000904 )
+    Uid u0a70: 0.0000105 ( wifi=0.0000105 ) Including smearing: 0.0000529 ( proportional=0.0000424 )
+    Uid u0a8: 0.00000956 ( wifi=0.00000956 ) Excluded from smearing
+
+Memory Stats
+  1000:
+    Mobile radio AP wakeups: 2
+    Wi-Fi network: 4.96KB received, 2.09KB sent (packets 22 received, 21 sent)
+    User activity: 5 other, 15 button, 57 touch
+    Wake lock ActivityManager-Sleep realtime
+    Wake lock WifiSuspend: 1ms partial (1 times) max=2 actual=2, 2ms background partial (1 times) max=2 realtime
+    Wake lock *dexopt* realtime
+    Wake lock LocationManagerService realtime
+    Wake lock *alarm* realtime
+    Wake lock NetworkStats realtime
+    Wake lock Icing realtime
+    Wake lock GnssLocationProvider realtime
+    Wake lock NetworkTimeUpdateService realtime
+    Wake lock *job*/android/com.android.server.pm.BackgroundDexOptService realtime
+    Wake lock SyncLoopWakeLock realtime
+    Wake lock SCREEN_FROZEN realtime
+    TOTAL wake: 1ms blamed partial, 2ms actual partial, 2ms actual background partial realtime
+    Job android/com.android.server.pm.BackgroundDexOptService: 556ms realtime (1 times), 556ms background (1 times)
+    Sensor 0: 6m 44s 158ms blamed realtime, 6m 50s 171ms realtime (1 times), 6m 50s 123ms background (1 times)
+    Cached for: 7m 54s 772ms 
+    Total running: 7m 54s 772ms 
+    Total cpu time: u=33s 625ms s=1m 17s 825ms 
+    Proc android.hardware.power@1.0-service:
+      CPU: 1s 50ms usr + 850ms krn ; 0ms fg
+    Proc servicemanager:
+      CPU: 100ms usr + 170ms krn ; 0ms fg
+    Proc android.hardware.keymaster@3.0-service:
+      CPU: 20ms usr + 0ms krn ; 0ms fg
+    Proc android.hardware.biometrics.fingerprint@2.1-service:
+      CPU: 0ms usr + 10ms krn ; 0ms fg
+    Proc android.hardware.graphics.composer@2.1-service:
+      CPU: 820ms usr + 4s 560ms krn ; 0ms fg
+    Proc com.android.keychain:
+      CPU: 0ms usr + 0ms krn ; 0ms fg
+      1 starts
+    Proc android.hardware.graphics.allocator@2.0-service:
+      CPU: 40ms usr + 100ms krn ; 0ms fg
+    Proc android.hardware.gnss@1.0-service:
+      CPU: 20ms usr + 90ms krn ; 0ms fg
+    Proc system:
+      CPU: 19s 280ms usr + 8s 530ms krn ; 0ms fg
+    Proc hwservicemanager:
+      CPU: 0ms usr + 10ms krn ; 0ms fg
+    Proc android.hardware.sensors@1.0-service:
+      CPU: 630ms usr + 1s 740ms krn ; 0ms fg
+    Apk com.android.keychain:
+      Service com.android.keychain.KeyChainService:
+        Created for: 0ms uptime
+        Starts: 0, launches: 1
+    Apk android:
+      Wakeup alarm *walarm*:*job.delay*: 1 times
+      Wakeup alarm *walarm*:WriteBufferAlarm: 1 times
+      Wakeup alarm *walarm*:WifiConnectivityManager Schedule Periodic Scan Timer: 6 times
+      Wakeup alarm *walarm*:*job.deadline*: 1 times
+      Wakeup alarm *walarm*:NETWORK_LINGER_COMPLETE.100: 1 times
+      Service com.android.server.pm.BackgroundDexOptService:
+        Created for: 0ms uptime
+        Starts: 0, launches: 1
+  u0a77:
+    Wi-Fi network: 41.92MB received, 638.10KB sent (packets 30409 received, 15478 sent)
+    Wifi Running: 0ms (0.0%)
+    Full Wifi Lock: 3m 57s 706ms (50.1%)
+    Wifi Scan (blamed): 0ms (0.0%) 0x
+    Wifi Scan (actual): 0ms (0.0%) 0x
+    Background Wifi Scan: 0ms (0.0%) 0x
+    WiFi AP wakeups: 1
+    Wake lock *dexopt* realtime
+    Wake lock AudioMix realtime
+    Wake lock ExoPlayer:WakeLockManager realtime
+    Wake lock *launch* realtime
+    Wake lock Icing realtime
+    Wake lock WindowManager: 5m 1s 728ms full (4 times) (running) realtime
+    TOTAL wake: 5m 1s 728ms full realtime
+    Audio: 3m 54s 309ms realtime (3 times) (running)
+    Foreground activities: 5m 19s 446ms realtime (3 times)
+    Top for: 6m 19s 992ms 
+    Top Sleeping for: 1m 5s 336ms 
+    Cached for: 94ms 
+    Total running: 7m 25s 422ms 
+    Total cpu time: u=1m 46s 845ms s=36s 655ms 
+    Proc app.show.tv:
+      CPU: 250ms usr + 170ms krn ; 30s 860ms fg
+      1 starts
+
