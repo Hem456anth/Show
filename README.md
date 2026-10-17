@@ -3,7 +3,7 @@
 [![Android CI](https://github.com/Hem456anth/Show/actions/workflows/android.yml/badge.svg)](https://github.com/Hem456anth/Show/actions/workflows/android.yml)
 [![Latest release](https://img.shields.io/github/v/release/Hem456anth/Show)](https://github.com/Hem456anth/Show/releases/latest)
 
-> Version 1.5.1 (fixes a grey overlay on Home in 1.5.0). 1.5.0: Zee channels fixed at the root (saved channels follow rotated links), an audio-track picker, smoother 1080p, verified Free-TV channels and a liquid-glass tab bar. See `CHANGELOG.md` and `docs/STREAMING_1.5.md`.
+> Version 1.5.2 (fixes the grey overlay on the Home hero). 1.5.0: Zee channels fixed at the root (saved channels follow rotated links), an audio-track picker, smoother 1080p, verified Free-TV channels and a liquid-glass tab bar. See `CHANGELOG.md` and `docs/STREAMING_1.5.md`.
 
 ## Download
 

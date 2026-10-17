@@ -1,8 +1,12 @@
 # Changelog
 
+## 1.5.2 (2026-10-17): Home overlay, real fix
+* **The grey panel over the Home hero is gone.** Real cause: the hero backdrop is zoomed ~1.65x and shifted for parallax,
+  and pager pages weren't clipped, so the next channel's artwork spilled across the current one. Each page now clips to its bounds.
+  Verified on a Pixel 6 API 34 emulator screenshot (docs/screenshots).
+
 ## 1.5.1 (2026-10-17): Home overlay fix
-* **Removed the grey overlay on Home.** 1.5.0's backdrop blur (Haze) drew a stray translucent panel across the hero and the brand
-  bar on devices. The blur library is gone; the liquid glass (tab bar, logomark, Play buttons) is now drawn directly: a dark
+* Removed the Haze backdrop-blur library (suspected cause of the overlay; 1.5.2 has the real fix); the liquid glass (tab bar, logomark, Play buttons) is now drawn directly: a dark
   translucent body, veil, specular highlight and lens rim, with no offscreen layers.
 * **Text and icons are white again** on Home (the hero title and the settings gear drew black once the old Scaffold was removed).
 

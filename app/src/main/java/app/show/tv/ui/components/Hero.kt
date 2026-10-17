@@ -45,6 +45,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.testTag
@@ -104,10 +105,10 @@ fun HeroCarousel(
         ) { page ->
             val ch = featured[page]
             val pageOffset = (pager.currentPage - page + pager.currentPageOffsetFraction)
-            Box(Modifier.fillMaxSize().semantics { contentDescription = "Featured: ${ch.name}" }) {
-                // No backdrop-blur source here: inside a translated pager page Haze drew the blurred layer
-                // offset across the hero (1.5.0 bug). The Play button's glass is drawn without a backdrop.
-                Box(Modifier.fillMaxSize()) {
+            // clipToBounds: the backdrop is scaled ~1.65x and shifted for parallax, so without a clip the
+            // NEXT page's artwork spilled across the current page as a grey panel (1.5.0/1.5.1 bug).
+            Box(Modifier.fillMaxSize().clipToBounds().semantics { contentDescription = "Featured: ${ch.name}" }) {
+                Box(Modifier.fillMaxSize().clipToBounds()) {
                     Box(Modifier.fillMaxSize().background(ShowColors.tileBrush(ch.name)))
                     ChannelArtwork(
                         ch,
