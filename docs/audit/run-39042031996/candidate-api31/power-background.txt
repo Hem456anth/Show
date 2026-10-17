@@ -1,0 +1,4 @@
+Wake Locks: size=2
+  PARTIAL_WAKE_LOCK              '*job*/com.android.dialer/com.android.voicemail.impl.scheduling.TaskSchedulerJobService' ACQ=-3m49s430ms LONG (uid=1000 pid=521 ws=WorkSource{10098})
+  PARTIAL_WAKE_LOCK              '*telephony-radio*' ACQ=-1m3s838ms LONG (uid=1001 pid=957 ws=WorkSource{1001 com.android.phone})
+Wake Lock Log

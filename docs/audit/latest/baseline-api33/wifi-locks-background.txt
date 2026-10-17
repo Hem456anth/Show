@@ -1,0 +1,5 @@
+mWifiLockStats:
+mWifiLockHighPerfAcqDurationSecHistogram:
+mWifiLockLowLatencyAcqDurationSecHistogram:
+mWifiLockHighPerfActiveSessionDurationSecHistogram:
+mWifiLockLowLatencyActiveSessionDurationSecHistogram:

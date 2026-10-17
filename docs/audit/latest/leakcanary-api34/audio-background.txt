@@ -1,0 +1,7 @@
+MediaFocusControl dump time: 2:57:28 PM
+Audio Focus stack entries (last is top of stack):
+No external focus policy
+Events log: focus commands as seen by MediaFocusControl
+10-17 14:54:15:278 requestAudioFocus() from uid/pid 10192/3074 AA=USAGE_MEDIA/CONTENT_TYPE_MOVIE clientId=android.media.AudioManager@9e1e770androidx.media3.exoplayer.AudioFocusManager$AudioFocusListener@a53dae9 callingPack=app.show.tv.leak req=1 flags=0x0 sdk=35
+10-17 14:56:24:959 abandonAudioFocus() from uid/pid 10192/3074 clientId=android.media.AudioManager@9e1e770androidx.media3.exoplayer.AudioFocusManager$AudioFocusListener@a53dae9
+Multi Audio Focus enabled :false

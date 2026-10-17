@@ -1,0 +1,293 @@
+Statistics since last charge:
+  System starts: 0, currently on battery: true
+  Estimated battery capacity: 10.0 mAh
+  Last learned battery capacity: 300 mAh
+  Min learned battery capacity: 300 mAh
+  Max learned battery capacity: 300 mAh
+  Time on battery: 6m 53s 147ms (100.0%) realtime, 6m 53s 147ms (100.0%) uptime
+  Time on battery screen off: 1m 4s 320ms (15.6%) realtime, 1m 4s 320ms (15.6%) uptime
+  Time on battery screen doze: 0ms (0.0%)
+  Total run time: 6m 53s 147ms realtime, 6m 53s 147ms uptime
+  Discharge: 0 mAh
+  Screen off discharge: 0 mAh
+  Screen doze discharge: 0 mAh
+  Screen on discharge: 0 mAh
+  Device light doze discharge: 0 mAh
+  Device deep doze discharge: 0 mAh
+  Start clock time: 2026-10-17-14-51-37
+  Screen on: 5m 48s 827ms (84.4%) 1x, Interactive: 5m 47s 748ms (84.2%)
+  Screen brightnesses:
+    dark 14ms (0.0%)
+    medium 5m 48s 813ms (100.0%)
+  Connectivity changes: 8
+  Total full wakelock time: 8s 68ms
+  Total partial wakelock time: 1m 4s 320ms
+
+  CONNECTIVITY POWER SUMMARY START
+  Logging duration for connectivity statistics: 6m 53s 147ms 
+  Cellular Statistics:
+     Cellular kernel active time: 3s 438ms (0.8%)
+     Cellular Sleep time:  0ms (0.0%)
+     Cellular Idle time:   6m 44s 844ms (98.0%)
+     Cellular Rx time:     0ms (0.0%)
+     Cellular Tx time:     
+       less than 0dBm:  0ms (0.0%)
+       0dBm to 8dBm:  0ms (0.0%)
+       8dBm to 15dBm:  0ms (0.0%)
+       15dBm to 20dBm:  0ms (0.0%)
+       above 20dBm:  0ms (0.0%)
+     Cellular data received: 144.83KB
+     Cellular data sent: 26.08KB
+     Cellular packets received: 235
+     Cellular packets sent: 143
+     Cellular Radio Access Technology:
+       oos 4s 168ms (1.0%) 
+       hspa 6m 42s 379ms (97.4%) 
+       lte 6s 600ms (1.6%) 
+     Cellular Rx signal strength (RSRP):
+       good (-108dBm to -98dBm):  1m 29s 988ms (21.8%) 
+       great (greater than -98dBm):  5m 23s 159ms (78.2%) 
+  Wifi Statistics:
+     Wifi kernel active time: 6m 34s 854ms (95.6%)
+     WiFi Scan time:  0ms (0.0%)
+     WiFi Sleep time:  6m 53s 147ms (100.0%)
+     WiFi Idle time:   0ms (0.0%)
+     WiFi Rx time:     0ms (0.0%)
+     WiFi Tx time:     0ms (0.0%)
+     Wifi data received: 0B
+     Wifi data sent: 0B
+     Wifi packets received: 0
+     Wifi packets sent: 0
+     Wifi states:
+       sta 6m 47s 161ms (98.6%) 
+     Wifi supplicant states:
+       authenticating 322ms (0.1%) 
+       associating 12ms (0.0%) 
+       associated 235ms (0.1%) 
+       completed 6m 48s 209ms (98.8%) 
+     Wifi Rx signal strength (RSSI):
+         great (greater than -55dBm): 6m 48s 100ms (98.8%) 
+  GPS Statistics:
+     GPS signal quality (Top 4 Average CN0):
+      poor (less than 20 dBHz): 0ms (0.0%) 
+      good (greater than 20 dBHz): 0ms (0.0%) 
+  CONNECTIVITY POWER SUMMARY END
+
+  Bluetooth total received: 0B, sent: 0B
+  Bluetooth scan time: 6m 30s 967ms 
+     Bluetooth Idle time:   0ms (0.0%)
+     Bluetooth Rx time:     0ms (0.0%)
+     Bluetooth Tx time:     0ms (0.0%)
+
+  Device battery use since last full charge
+    Amount discharged (lower bound): 0
+    Amount discharged (upper bound): 0
+    Amount discharged while screen on: 0
+    Amount discharged while screen off: 0
+    Amount discharged while screen doze: 0
+
+  Estimated power use (mAh):
+    Capacity: 300, Computed drain: 0, actual drain: 0
+    Global
+      screen: 0.0145 apps: 0.0145 duration: 5m 48s 827ms 
+      cpu: 0.00456 apps: 0.00456
+      mobile_radio: 0.0116 apps: 0.0000954 duration: 3s 438ms 
+      sensors: 0.415 apps: 0.415
+      wifi: 0.0000150 apps: 0.0000150
+      wakelock: 0.00179 apps: 0.00179 duration: 1m 4s 320ms 
+      idle: 0.0115 apps: 0 duration: 6m 53s 147ms 
+    UID 1000: 0.292 ( cpu=0.00113 mobile_radio=0.00000303 sensors=0.291 wakelock=0.00000022 ) 
+    UID u0a101: 0.125 ( cpu=0.000801 sensors=0.124 wakelock=0.0000953 ) 
+    UID u0a145: 0.00122 ( cpu=0.00122 ) 
+    UID 1001: 0.000864 ( cpu=0.0000211 wakelock=0.000843 ) 
+    UID u0a98: 0.000849 ( cpu=0.00000167 wakelock=0.000848 ) 
+    UID 0: 0.000408 ( cpu=0.000405 mobile_radio=0.00000303 wakelock=0.00000006 ) 
+    UID u0a100: 0.000147 ( cpu=0.000147 ) 
+    UID u0a113: 0.000128 ( cpu=0.0000983 mobile_radio=0.0000296 ) 
+    UID 2000: 0.000106 ( cpu=0.000106 ) 
+    UID u0a102: 0.000102 ( cpu=0.000102 ) 
+    UID 1036: 0.0000982 ( cpu=0.0000982 ) 
+    UID u0a133: 0.0000751 ( cpu=0.0000751 ) 
+    UID u0a63: 0.0000392 ( cpu=0.0000392 ) 
+    UID 1020: 0.0000391 ( cpu=0.00000044 mobile_radio=0.0000386 ) 
+    UID u0a134: 0.0000387 ( cpu=0.0000387 ) 
+    UID u0a109: 0.0000373 ( cpu=0.0000373 ) 
+    UID 1073: 0.0000271 ( cpu=0.00000786 mobile_radio=0.0000192 ) 
+    UID u0a123: 0.0000244 ( cpu=0.0000244 ) 
+    UID u0a97: 0.0000225 ( cpu=0.0000225 ) 
+    UID u0a124: 0.0000219 ( cpu=0.0000219 ) 
+    UID 1010: 0.0000166 ( cpu=0.00000161 wifi=0.0000150 ) 
+    UID u0a143: 0.0000162 ( cpu=0.0000162 ) 
+    UID u0a136: 0.0000149 ( cpu=0.0000149 ) 
+    UID u0a112: 0.0000141 ( cpu=0.0000141 ) 
+    UID u0a114: 0.0000133 ( cpu=0.0000133 ) 
+    UID u0a117: 0.0000118 ( cpu=0.0000118 ) 
+    UID u0a116: 0.00000986 ( cpu=0.00000986 ) 
+    UID 1069: 0.00000911 ( cpu=0.00000911 ) 
+    UID u0a40145: 0.00000794 ( cpu=0.00000794 ) 
+    UID 1013: 0.00000694 ( cpu=0.00000694 ) 
+    UID 1066: 0.00000625 ( cpu=0.00000625 ) 
+    UID u0a56: 0.00000617 ( cpu=0.00000617 ) 
+    UID u0a90: 0.00000556 ( cpu=0.00000556 ) 
+    UID 1040: 0.00000544 ( cpu=0.00000544 ) 
+    UID 1070: 0.00000528 ( cpu=0.00000528 ) 
+    UID 1041: 0.00000261 ( cpu=0.00000261 ) 
+    UID u0a94: 0.00000228 ( cpu=0.00000228 ) 
+    UID 1002: 0.00000222 ( cpu=0.00000222 ) 
+    UID u0a122: 0.00000217 ( cpu=0.00000217 ) 
+    UID 1051: 0.00000200 ( mobile_radio=0.00000200 ) 
+    UID u0a96: 0.00000181 ( cpu=0.00000181 ) 
+    UID u0a93: 0.00000169 ( cpu=0.00000169 ) 
+    UID u0a126: 0.00000156 ( cpu=0.00000156 ) 
+    UID 1017: 0.00000125 ( cpu=0.00000125 ) 
+    UID u0a118: 0.00000125 ( cpu=0.00000125 ) 
+    UID u0a58: 0.00000119 ( cpu=0.00000119 ) 
+    UID u0a66: 0.00000111 ( cpu=0.00000111 ) 
+    UID u0a142: 0.00000106 ( cpu=0.00000106 ) 
+    UID u0a61: 0.00000094 ( cpu=0.00000094 ) 
+    UID u0a59: 0.00000081 ( cpu=0.00000081 ) 
+    UID u0a110: 0.00000078 ( cpu=0.00000078 ) 
+    UID u0a144: 0.00000069 ( cpu=0.00000069 ) 
+    UID u0a95: 0.00000061 ( cpu=0.00000061 ) 
+    UID u0a99: 0.00000058 ( cpu=0.00000058 ) 
+    UID u0a135: 0.00000056 ( cpu=0.00000056 ) 
+    UID u0a108: 0.00000050 ( cpu=0.00000050 ) 
+    UID u0a74: 0.00000044 ( cpu=0.00000044 ) 
+    UID u0a89: 0.00000042 ( cpu=0.00000042 ) 
+    UID 1019: 0.00000039 ( cpu=0.00000039 ) 
+    UID u0a70: 0.00000039 ( cpu=0.00000039 ) 
+    UID u0a91: 0.00000039 ( cpu=0.00000039 ) 
+    UID u0a120: 0.00000039 ( cpu=0.00000039 ) 
+    UID u0a130: 0.00000039 ( cpu=0.00000039 ) 
+    UID u0a65: 0.00000036 ( cpu=0.00000036 ) 
+    UID 1027: 0.00000033 ( cpu=0.00000033 ) 
+    UID 1047: 0.00000033 ( cpu=0.00000033 ) 
+    UID 9999: 0.00000031 ( cpu=0.00000031 ) 
+    UID 1021: 0.00000025 ( cpu=0.00000025 ) 
+    UID u0a77: 0.00000017 ( cpu=0.00000017 ) 
+    UID u0a67: 0.00000014 ( cpu=0.00000014 ) 
+    UID u0a132: 0.00000011 ( cpu=0.00000011 ) 
+  Per-app mobile ms per packet:
+    Uid u0a113: 9.09 (117 packets over 1s 64ms) 2x
+    Uid 1073: 9.09 (76 packets over 691ms) 3x
+    Uid 1020: 9.09 (153 packets over 1s 391ms) 1x
+    Uid 1000: 9.08 (12 packets over 109ms) 3x
+    Uid 0: 9.08 (12 packets over 109ms) 1x
+    Uid 1051: 9.00 (8 packets over 72ms) 2x
+    TOTAL TIME: 3s 436ms (0.0%)
+
+  Resource Power Manager Stats
+
+  CPU freqs: 1 2 1 2
+
+  1000:
+    Mobile network: 752B received, 400B sent (packets 6 received, 6 sent)
+    Mobile radio active: 109ms (3.2%) 3x @ 9.08 mspp
+    User activity: 3 other, 9 button, 62 touch
+    Wake lock ActivityManager-Sleep: 3ms partial (1 times) max=5 actual=5 realtime
+    Wake lock WifiSuspend: 5ms partial (1 times) max=15 actual=15 realtime
+    Wake lock *alarm*: 1ms partial (2 times) max=2 actual=3 realtime
+    Wake lock time_detector realtime
+    Wake lock *launch* realtime
+    Wake lock NetworkStats realtime
+    Wake lock Icing realtime
+    Wake lock *telephony-radio* realtime
+    Wake lock NtpTimeHelper realtime
+    Wake lock WindowManager: 8s 68ms full (0 times) realtime
+    Wake lock NetworkTimeUpdateService realtime
+    TOTAL wake: 8s 68ms full, 9ms blamed partial, 23ms actual partial realtime
+    Sensor 0: 5m 48s 839ms realtime (1 times)
+    Foreground activities: 101ms realtime (1 times)
+    Foreground for: 6m 53s 147ms 
+    Total running: 6m 53s 147ms 
+    Total cpu time: u=22s 845ms s=53s 416ms 
+    Total cpu time per freq: 49713 0 23503 0
+    Total screen-off cpu time per freq: 168 0 175 0
+    Proc android.hardware.keymaster@4.1-service:
+      CPU: 20ms usr + 10ms krn ; 0ms fg
+    Proc servicemanager:
+      CPU: 110ms usr + 140ms krn ; 0ms fg
+    Proc com.android.settings:
+      CPU: 90ms usr + 1s 690ms krn ; 3s 910ms fg
+      2 starts
+    Proc android.hardware.graphics.composer@2.3-service:
+      CPU: 430ms usr + 35s 640ms krn ; 0ms fg
+    Proc android.system.suspend@1.0-service:
+      CPU: 10ms usr + 30ms krn ; 0ms fg
+    Proc com.android.emulator.multidisplay:
+      CPU: 20ms usr + 10ms krn ; 0ms fg
+    Proc com.android.localtransport:
+      CPU: 0ms usr + 0ms krn ; 0ms fg
+      1 starts
+    Proc com.android.dynsystem:dynsystem:
+      CPU: 0ms usr + 0ms krn ; 0ms fg
+      1 starts
+    Proc com.android.keychain:
+      CPU: 0ms usr + 20ms krn ; 0ms fg
+    Proc surfaceflinger:
+      CPU: 430ms usr + 1s 700ms krn ; 0ms fg
+    Proc system:
+      CPU: 19s 300ms usr + 9s 660ms krn ; 0ms fg
+    Proc android.hardware.health@2.1-service:
+      CPU: 10ms usr + 30ms krn ; 0ms fg
+    Proc android.hardware.sensors@2.1-service.multihal:
+      CPU: 870ms usr + 2s 50ms krn ; 0ms fg
+    Proc hwservicemanager:
+      CPU: 10ms usr + 10ms krn ; 0ms fg
+    Proc android.hardware.graphics.allocator@3.0-service:
+      CPU: 20ms usr + 790ms krn ; 0ms fg
+    Proc com.android.dynsystem:
+      CPU: 0ms usr + 0ms krn ; 0ms fg
+      1 starts
+    Apk com.android.emulator.multidisplay:
+      Service com.android.emulator.multidisplay.MultiDisplayService:
+        Created for: 6m 53s 125ms uptime
+        Starts: 1, launches: 1
+    Apk com.android.localtransport:
+      Service com.android.localtransport.LocalTransportService:
+        Created for: 0ms uptime
+        Starts: 0, launches: 1
+    Apk com.android.keychain:
+      (nothing executed)
+    Apk android:
+      Wakeup alarm *walarm*:WifiConnectivityManager Schedule Periodic Scan Timer: 0 times
+      Wakeup alarm *walarm*:NETWORK_LINGER_COMPLETE.100: 0 times
+      Wakeup alarm *walarm*:WifiHealthMonitor Schedule Post-Boot Detection Timer: 0 times
+    Apk com.android.dynsystem:
+      Service com.android.dynsystem.DynamicSystemInstallationService:
+        Created for: 0ms uptime
+        Starts: 1, launches: 1
+  u0a145:
+    Wake lock *dexopt* realtime
+    Wake lock *launch* realtime
+    Wake lock Icing realtime
+    Foreground activities: 2m 37s 910ms realtime (2 times)
+    Top for: 2m 38s 720ms 
+    Cached for: 4m 0s 969ms 
+    Total running: 6m 39s 689ms 
+    Total cpu time: u=40s 759ms s=36s 329ms 
+    Total cpu time per freq: 29765 0 48047 0
+    Total screen-off cpu time per freq: 2 0 9 0
+    Proc app.show.tv:
+      CPU: 0ms usr + 0ms krn ; 1m 16s 460ms fg
+      1 starts
+
+Total cpu time reads: 0
+Batched cpu time reads: 0
+Batching Duration (min): 7
+All UID cpu time reads since the later of device start or stats reset: 16
+UIDs removed since the later of device start or stats reset: 1
+
+BatteryStats constants:
+    track_cpu_times_by_proc_state=false
+    track_cpu_active_cluster_time=true
+    proc_state_cpu_times_read_delay_ms=5000
+    kernel_uid_readers_throttle_time=1000
+    external_stats_collection_rate_limit_ms=600000
+    battery_level_collection_delay_ms=300000
+    max_history_files=32
+    max_history_buffer_kb=128
+    battery_charged_delay_ms=900000
+
+On battery measured charge stats (microcoulombs) 
+    Not supported on this device.

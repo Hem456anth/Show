@@ -1,0 +1,52 @@
+Applications Memory Usage (in Kilobytes):
+Uptime: 316747 Realtime: 316747
+
+** MEMINFO in pid 4524 [app.show.tv] **
+                   Pss  Private  Private  SwapPss     Heap     Heap     Heap
+                 Total    Dirty    Clean    Dirty     Size    Alloc     Free
+                ------   ------   ------   ------   ------   ------   ------
+  Native Heap    26883    26624        0        0   264192    27801   236390
+  Dalvik Heap    51138    51108        0        0    51382    45238     6144
+ Dalvik Other     8677     8676        0        0                           
+        Stack     1012     1012        0        0                           
+       Ashmem    10084     4100        0        0                           
+    Other dev       60        0       60        0                           
+     .so mmap     8064      296     4688        0                           
+    .apk mmap      467        0       16        0                           
+    .ttf mmap      313        0      184        0                           
+    .dex mmap     8173        4     6372        0                           
+    .oat mmap     3524        0      912        0                           
+    .art mmap     1781      964      184        0                           
+   Other mmap      205        4       12        0                           
+      Unknown      629      604        0        0                           
+        TOTAL   121010    93392    12428        0   315574    73039   242534
+ 
+ App Summary
+                       Pss(KB)
+                        ------
+           Java Heap:    52256
+         Native Heap:    26624
+                Code:    12472
+               Stack:     1012
+            Graphics:        0
+       Private Other:    13456
+              System:    15190
+ 
+               TOTAL:   121010       TOTAL SWAP PSS:        0
+ 
+ Objects
+               Views:       57         ViewRootImpl:        2
+         AppContexts:        5           Activities:        2
+              Assets:        3        AssetManagers:        5
+       Local Binders:       24        Proxy Binders:       26
+       Parcel memory:        8         Parcel count:       34
+    Death Recipients:        0      OpenSSL Sockets:        6
+            WebViews:        0
+ 
+ SQL
+         MEMORY_USED:        0
+  PAGECACHE_OVERFLOW:        0          MALLOC_SIZE:        0
+ 
+ 
+ Asset Allocations
+    zip:/data/app/app.show.tv-nE37e0Sa7irohMb-ZdIHHg==/base.apk:/res/RV.ttf: 3K

@@ -1,0 +1,2 @@
+--------- beginning of main
+10-17 14:52:10.370  3074  3310 D LeakCanary: LeakCanary is running and ready to detect memory leaks.

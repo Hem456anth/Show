@@ -1,0 +1,7 @@
+Wake Locks: size=6
+  PARTIAL_WAKE_LOCK              'NlpCollectorWakeLock' ACQ=-551ms (uid=10116 pid=2055)
+  PARTIAL_WAKE_LOCK              '*job*/com.google.android.googlequicksearchbox/com.google.android.apps.gsa.tasks.BackgroundTasksJobService' ACQ=-550ms (uid=1000 pid=1910 ws=WorkSource{10122})
+  PARTIAL_WAKE_LOCK              '*job*/com.google.android.googlequicksearchbox/com.google.android.apps.gsa.tasks.BackgroundTasksJobService' ACQ=-167ms (uid=1000 pid=1910 ws=WorkSource{10122})
+  PARTIAL_WAKE_LOCK              '*job*/com.google.android.googlequicksearchbox/com.google.android.apps.gsa.tasks.BackgroundTasksJobService' ACQ=-80ms (uid=1000 pid=1910 ws=WorkSource{10122})
+  PARTIAL_WAKE_LOCK              '*job*/com.google.android.googlequicksearchbox/com.google.android.apps.gsa.tasks.BackgroundTasksJobService' ACQ=-29ms (uid=1000 pid=1910 ws=WorkSource{10122})
+  PARTIAL_WAKE_LOCK              'Icing' ACQ=-9ms (uid=10116 pid=2306 ws=WorkSource{10116 com.google.android.gms, 10122 com.google.android.googlequicksearchbox})

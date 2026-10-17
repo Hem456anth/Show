@@ -1,0 +1,21 @@
+  mLastScreenBrightnessBoostTime=0 (226797 ms ago)
+  mScreenBrightnessBoostInProgress=false
+  mSuspendWhenScreenOffDueToProximityConfig=false
+  mDozeAfterScreenOff=false
+  mMinimumScreenOffTimeoutConfig=10000
+  mMaximumScreenDimDurationConfig=7000
+  mMaximumScreenDimRatioConfig=0.20000005
+  mScreenOffTimeoutSetting=2147483647
+  mMaximumScreenOffTimeoutFromDeviceAdmin=9223372036854775807 (enforced=false)
+  mScreenBrightnessSetting=0
+  mScreenBrightnessModeSetting=0
+  mScreenBrightnessOverrideFromWindowManager=-1
+  mDozeScreenStateOverrideFromDreamManager=0
+  mDozeScreenBrightnessOverrideFromDreamManager=-1
+  mScreenBrightnessSettingMinimum=10
+  mScreenBrightnessSettingMaximum=255
+  mScreenBrightnessSettingDefault=102
+Screen off timeout: 2147483647 ms
+Screen dim duration: 7000 ms
+Wake Locks: size=1
+  PARTIAL_WAKE_LOCK              '*job*/com.android.dialer/com.android.voicemail.impl.scheduling.TaskSchedulerJobService' ACQ=-3m11s866ms LONG (uid=1000 pid=1910 ws=WorkSource{10107})

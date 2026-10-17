@@ -1,0 +1,259 @@
+Statistics since last charge:
+  System starts: 0, currently on battery: true
+  Estimated battery capacity: 10.0 mAh
+  Min learned battery capacity: 300 mAh
+  Max learned battery capacity: 300 mAh
+  Time on battery: 7m 25s 519ms (100.0%) realtime, 7m 25s 519ms (100.0%) uptime
+  Time on battery screen off: 1m 4s 703ms (14.5%) realtime, 1m 4s 700ms (14.5%) uptime
+  Time on battery screen doze: 0ms (0.0%)
+  Total run time: 7m 25s 513ms realtime, 7m 25s 513ms uptime
+  Discharge: 0 mAh
+  Screen off discharge: 0 mAh
+  Screen doze discharge: 0 mAh
+  Screen on discharge: 0 mAh
+  Device light doze discharge: 0 mAh
+  Device deep doze discharge: 0 mAh
+  Start clock time: 2026-10-17-14-51-37
+  Screen on: 6m 20s 816ms (85.5%) 1x, Interactive: 6m 20s 127ms (85.3%)
+  Screen brightnesses:
+    dark 7ms (0.0%)
+    medium 6m 20s 809ms (100.0%)
+  Connectivity changes: 1
+  Total partial wakelock time: 45s 715ms
+
+  CONNECTIVITY POWER SUMMARY START
+  Logging duration for connectivity statistics: 7m 25s 519ms 
+  Cellular Statistics:
+     Cellular kernel active time: 0ms (0.0%)
+     Cellular Sleep time:  3s 0ms (0.7%)
+     Cellular Idle time:   300ms (0.1%)
+     Cellular Rx time:     57ms (0.0%)
+     Cellular Tx time:     
+       less than 0dBm:  15ms (0.0%)
+       0dBm to 8dBm:  24ms (0.0%)
+       8dBm to 15dBm:  6ms (0.0%)
+       15dBm to 20dBm:  9ms (0.0%)
+       above 20dBm:  9ms (0.0%)
+     Cellular data received: 57.03KB
+     Cellular data sent: 28.03KB
+     Cellular packets received: 143
+     Cellular packets sent: 123
+     Cellular Radio Access Technology:
+       none 2s 70ms (0.5%) 
+       lte 7m 23s 449ms (99.5%) 
+     Cellular Rx signal strength (RSRP):
+       very poor (less than -128dBm):  13s 979ms (3.1%) 
+       moderate (-118dBm to -108dBm):  7m 11s 540ms (96.9%) 
+  Wifi Statistics:
+     Wifi kernel active time: 6m 21s 70ms (85.5%)
+     WiFi Scan time:  0ms (0.0%)
+     WiFi Sleep time:  7m 25s 520ms (100.0%)
+     WiFi Idle time:   0ms (0.0%)
+     WiFi Rx time:     0ms (0.0%)
+     WiFi Tx time:     0ms (0.0%)
+     Wifi data received: 0B
+     Wifi data sent: 0B
+     Wifi packets received: 0
+     Wifi packets sent: 0
+     Wifi states:
+       scanning 451ms (0.1%) 
+       sta 7m 25s 68ms (99.9%) 
+     Wifi supplicant states:
+       authenticating 14ms (0.0%) 
+       associated 39ms (0.0%) 
+       completed 7m 25s 466ms (100.0%) 
+     Wifi Rx signal strength (RSSI):
+         great (greater than -55dBm): 7m 25s 502ms (100.0%) 
+  GPS Statistics:
+     GPS signal quality (Top 4 Average CN0):
+      poor (less than 20 dBHz): 0ms (0.0%) 
+      good (greater than 20 dBHz): 0ms (0.0%) 
+  CONNECTIVITY POWER SUMMARY END
+
+  Bluetooth total received: 0B, sent: 0B
+  Bluetooth scan time: 0ms 
+     Bluetooth Idle time:   0ms (0.0%)
+     Bluetooth Rx time:     0ms (0.0%)
+     Bluetooth Tx time:     0ms (0.0%)
+
+  Device battery use since last full charge
+    Amount discharged (lower bound): 0
+    Amount discharged (upper bound): 0
+    Amount discharged while screen on: 0
+    Amount discharged while screen off: 0
+    Amount discharged while screen doze: 0
+
+  Estimated power use (mAh):
+    Capacity: 1000, Computed drain: 2.54, actual drain: 0
+    Uid u0a112: 2.12 ( cpu=0.0000261 sensor=2.12 ) Excluded from smearing
+    Uid 1000: 0.309 ( cpu=0.000511 wake=0.00000125 sensor=0.308 ) Excluded from smearing
+    Uid u0a116: 0.0575 ( cpu=0.000107 wake=0.000429 radio=0.00000002 wifi=0.000134 sensor=0.0568 ) Excluded from smearing
+    Screen: 0.0159 Excluded from smearing
+    Wifi: 0.0133 ( cpu=0.00000028 wifi=0.0133 ) Including smearing: 0.698 ( proportional=0.685 )
+    Cell standby: 0.0128 ( radio=0.0128 ) Excluded from smearing
+    Idle: 0.0124 Excluded from smearing
+    Uid u0a122: 0.00559 ( cpu=0.0000290 wake=0.00000947 wifi=0.0000241 ) Including smearing: 0.294 ( proportional=0.288 )
+    Uid u0a107: 0.000833 ( cpu=0.00000236 wake=0.000830 ) Including smearing: 0.0438 ( proportional=0.0430 )
+    Uid 0: 0.000556 ( cpu=0.0000288 wake=0.000528 radio=0.00000002 ) Excluded from smearing
+    Uid u0a146: 0.000337 ( cpu=0.000337 ) Including smearing: 0.0177 ( proportional=0.0174 )
+    Uid u0a108: 0.0000298 ( cpu=0.0000298 ) Including smearing: 0.00157 ( proportional=0.00154 )
+    Uid 2000: 0.0000211 ( cpu=0.0000211 ) Excluded from smearing
+    Uid u0a131: 0.0000146 ( cpu=0.0000146 ) Including smearing: 0.000769 ( proportional=0.000754 )
+    Uid u0a55: 0.0000131 ( cpu=0.0000131 ) Excluded from smearing
+    Uid 1041: 0.00000793 ( cpu=0.00000793 ) Excluded from smearing
+    Uid u0a135: 0.00000792 ( cpu=0.00000792 ) Including smearing: 0.000417 ( proportional=0.000409 )
+    Uid u0a40146: 0.00000647 ( cpu=0.00000647 ) Including smearing: 0.000340 ( proportional=0.000334 )
+    Uid u0a145: 0.00000554 ( cpu=0.00000554 ) Including smearing: 0.000291 ( proportional=0.000286 )
+    Uid u0a74: 0.00000382 ( cpu=0.00000382 ) Including smearing: 0.000201 ( proportional=0.000197 )
+    Uid 1001: 0.00000337 ( cpu=0.00000309 wake=0.00000028 ) Excluded from smearing
+    Uid 1069: 0.00000279 ( cpu=0.00000279 ) Excluded from smearing
+    Uid 1036: 0.00000254 ( cpu=0.00000254 ) Excluded from smearing
+    Uid u0a54: 0.00000248 ( cpu=0.00000248 ) Including smearing: 0.000130 ( proportional=0.000128 )
+    Uid u0a120: 0.00000237 ( cpu=0.00000237 ) Including smearing: 0.000125 ( proportional=0.000122 )
+    Uid u0a141: 0.00000184 ( cpu=0.00000184 ) Including smearing: 0.0000966 ( proportional=0.0000947 )
+    Uid u0a136: 0.00000167 ( cpu=0.00000167 ) Including smearing: 0.0000877 ( proportional=0.0000860 )
+    Uid 1040: 0.00000157 ( cpu=0.00000157 ) Excluded from smearing
+    Uid u0a137: 0.00000154 ( cpu=0.00000154 ) Including smearing: 0.0000811 ( proportional=0.0000796 )
+    Uid 9999: 0.00000133 ( cpu=0.00000133 ) Excluded from smearing
+    Uid 1066: 0.00000124 ( cpu=0.00000124 ) Excluded from smearing
+    Uid u0a104: 0.00000122 ( cpu=0.00000122 ) Including smearing: 0.0000640 ( proportional=0.0000628 )
+    Uid u0a140: 0.00000115 ( cpu=0.00000115 ) Including smearing: 0.0000603 ( proportional=0.0000592 )
+    Uid u0a142: 0.00000110 ( cpu=0.00000110 ) Including smearing: 0.0000580 ( proportional=0.0000569 )
+    Uid 1073: 0.00000080 ( cpu=0.00000077 radio=0.00000004 ) Excluded from smearing
+    Uid u0a110: 0.00000079 ( cpu=0.00000079 ) Including smearing: 0.0000416 ( proportional=0.0000409 )
+    Uid 1013: 0.00000078 ( cpu=0.00000078 ) Excluded from smearing
+    Uid u0a127: 0.00000072 ( cpu=0.00000072 ) Including smearing: 0.0000378 ( proportional=0.0000371 )
+    Uid u0a129: 0.00000047 ( cpu=0.00000047 ) Including smearing: 0.0000248 ( proportional=0.0000244 )
+    Uid u0a117: 0.00000034 ( cpu=0.00000034 ) Including smearing: 0.0000180 ( proportional=0.0000176 )
+    Uid u0a106: 0.00000032 ( cpu=0.00000032 ) Including smearing: 0.0000169 ( proportional=0.0000166 )
+    Uid 1070: 0.00000030 ( cpu=0.00000030 ) Excluded from smearing
+    Uid u0a61: 0.00000028 ( cpu=0.00000028 ) Excluded from smearing
+    Uid 1021: 0.00000027 ( cpu=0.00000027 ) Excluded from smearing
+    Uid u0a119: 0.00000026 ( cpu=0.00000026 ) Including smearing: 0.0000136 ( proportional=0.0000133 )
+    Uid u0a62: 0.00000024 ( cpu=0.00000024 ) Including smearing: 0.0000124 ( proportional=0.0000122 )
+    Uid u0a133: 0.00000019 ( cpu=0.00000019 ) Including smearing: 0.0000101 ( proportional=0.00000989 )
+    Uid 1020: 0.00000019 ( cpu=0.00000009 radio=0.00000009 ) Excluded from smearing
+    Uid u0a73: 0.00000017 ( cpu=0.00000017 ) Including smearing: 0.00000877 ( proportional=0.00000860 )
+    Uid u0a67: 0.00000016 ( cpu=0.00000016 ) Including smearing: 0.00000833 ( proportional=0.00000817 )
+    Uid u0a109: 0.00000016 ( cpu=0.00000016 ) Including smearing: 0.00000818 ( proportional=0.00000803 )
+    Uid u0a60: 0.00000013 ( cpu=0.00000013 ) Including smearing: 0.00000701 ( proportional=0.00000688 )
+    Uid u0a143: 0.00000013 ( cpu=0.00000013 ) Including smearing: 0.00000687 ( proportional=0.00000674 )
+    Uid 1017: 0.00000011 ( cpu=0.00000011 ) Excluded from smearing
+    Uid u0a80: 0.00000010 ( cpu=0.00000010 ) Including smearing: 0.00000526 ( proportional=0.00000516 )
+    Uid 1019: 0.00000010 ( cpu=0.00000010 ) Excluded from smearing
+    Uid u0a57: 0.00000009 ( cpu=0.00000009 ) Including smearing: 0.00000468 ( proportional=0.00000459 )
+    Uid u0a113: 0.00000009 ( cpu=0.00000009 ) Including smearing: 0.00000468 ( proportional=0.00000459 )
+    Uid u0a125: 0.00000009 ( cpu=0.00000009 ) Including smearing: 0.00000468 ( proportional=0.00000459 )
+    Uid u0a130: 0.00000008 ( cpu=0.00000008 ) Including smearing: 0.00000395 ( proportional=0.00000387 )
+    Uid u0a132: 0.00000006 ( cpu=0.00000006 ) Including smearing: 0.00000336 ( proportional=0.00000330 )
+    Uid u0a71: 0.00000006 ( cpu=0.00000006 ) Including smearing: 0.00000321 ( proportional=0.00000315 )
+    Uid u0a81: 0.00000006 ( cpu=0.00000006 ) Including smearing: 0.00000321 ( proportional=0.00000315 )
+    Uid u0a114: 0.00000006 ( cpu=0.00000006 ) Including smearing: 0.00000321 ( proportional=0.00000315 )
+    Uid u0a105: 0.00000006 ( cpu=0.00000006 ) Including smearing: 0.00000292 ( proportional=0.00000287 )
+    Uid u0a115: 0.00000005 ( cpu=0.00000005 ) Including smearing: 0.00000278 ( proportional=0.00000272 )
+    Uid 1027: 0.00000005 ( cpu=0.00000005 ) Excluded from smearing
+    Uid 1047: 0.00000005 ( cpu=0.00000005 ) Excluded from smearing
+    Uid u0a70: 0.00000005 ( cpu=0.00000005 ) Including smearing: 0.00000263 ( proportional=0.00000258 )
+    Uid u0a111: 0.00000005 ( cpu=0.00000005 ) Including smearing: 0.00000263 ( proportional=0.00000258 )
+    Uid u0a87: 0.00000005 ( cpu=0.00000005 ) Including smearing: 0.00000248 ( proportional=0.00000244 )
+    Uid u0a72: 0.00000004 ( cpu=0.00000004 ) Including smearing: 0.00000219 ( proportional=0.00000215 )
+    Uid 1068: 0.00000001 ( cpu=0.00000001 ) Excluded from smearing
+    Uid 1051: 0.00000001 ( radio=0.00000001 ) Excluded from smearing
+    Uid 1072: 0.00000000 ( cpu=0.00000000 ) Excluded from smearing
+
+  Resource Power Manager Stats
+
+  1000:
+    User activity: 2 other, 9 button, 53 touch
+    Wake lock ActivityManager-Sleep: 10ms partial (1 times) max=44 actual=44 realtime
+    Wake lock WifiSuspend: 1ms partial (1 times) max=4 actual=4 realtime
+    Wake lock *dexopt* realtime
+    Wake lock *alarm*: 18ms partial (2 times) max=30 actual=36 realtime
+    Wake lock NetworkStats realtime
+    Wake lock Icing realtime
+    Wake lock *telephony-radio* realtime
+    Wake lock NtpTimeHelper realtime
+    Wake lock GnssLocationProvider: 15ms partial (24 times) max=1 actual=24 realtime
+    Wake lock NetworkTimeUpdateService realtime
+    Wake lock *job*/android/com.android.server.pm.BackgroundDexOptService realtime
+    Wake lock SyncLoopWakeLock realtime
+    TOTAL wake: 44ms blamed partial, 108ms actual partial realtime
+    Job android/com.android.server.pm.BackgroundDexOptService: 6s 223ms realtime (1 times)
+    Job Completions android/com.android.server.pm.BackgroundDexOptService: canceled(1x)
+    Sensor 0: 6m 10s 195ms blamed realtime, 6m 20s 674ms realtime (1 times)
+    Foreground for: 7m 25s 519ms 
+    Total running: 7m 25s 519ms 
+    Total cpu time: u=12ms s=171ms 
+    Proc idmap2d:
+      CPU: 10ms usr + 10ms krn ; 0ms fg
+    Proc servicemanager:
+      CPU: 40ms usr + 110ms krn ; 0ms fg
+    Proc com.android.settings:
+      CPU: 30ms usr + 680ms krn ; 0ms fg
+      1 starts
+    Proc android.hardware.biometrics.fingerprint@2.1-service:
+      CPU: 0ms usr + 10ms krn ; 0ms fg
+    Proc android.system.suspend@1.0-service:
+      CPU: 290ms usr + 970ms krn ; 0ms fg
+    Proc android.hardware.graphics.composer@2.1-service:
+      CPU: 600ms usr + 1m 35s 570ms krn ; 0ms fg
+    Proc com.android.localtransport:
+      CPU: 0ms usr + 0ms krn ; 0ms fg
+      1 starts
+    Proc com.android.keychain:
+      CPU: 0ms usr + 0ms krn ; 0ms fg
+      2 starts
+    Proc android.hardware.graphics.allocator@2.0-service:
+      CPU: 0ms usr + 410ms krn ; 0ms fg
+    Proc surfaceflinger:
+      CPU: 1s 840ms usr + 23s 380ms krn ; 0ms fg
+    Proc system:
+      CPU: 10s 30ms usr + 40s 980ms krn ; 0ms fg
+    Proc hwservicemanager:
+      CPU: 0ms usr + 10ms krn ; 0ms fg
+    Proc android.hardware.sensors@1.0-service:
+      CPU: 160ms usr + 3s 840ms krn ; 0ms fg
+    Proc com.android.dynsystem:
+      CPU: 0ms usr + 0ms krn ; 0ms fg
+      1 starts
+    Apk com.android.emulator.multidisplay:
+      Service com.android.emulator.multidisplay.MultiDisplayService:
+        Created for: 7m 16s 711ms uptime
+        Starts: 1, launches: 1
+    Apk com.android.localtransport:
+      Service com.android.localtransport.LocalTransportService:
+        Created for: 0ms uptime
+        Starts: 0, launches: 1
+    Apk com.android.keychain:
+      Service com.android.keychain.KeyChainService:
+        Created for: 0ms uptime
+        Starts: 0, launches: 2
+    Apk android:
+      Wakeup alarm *walarm*:*job.delay*: 0 times
+      Wakeup alarm *walarm*:WriteBufferAlarm: 0 times
+      Wakeup alarm *walarm*:WifiConnectivityManager Schedule Periodic Scan Timer: 0 times
+      Wakeup alarm *walarm*:*job.deadline*: 0 times
+      Service com.android.server.pm.BackgroundDexOptService:
+        Created for: 0ms uptime
+        Starts: 0, launches: 1
+      Service com.android.server.content.SyncJobService:
+        Created for: 0ms uptime
+        Starts: 0, launches: 1
+  u0a146:
+    Wake lock *dexopt* realtime
+    Wake lock *launch* realtime
+    Wake lock Icing realtime
+    Foreground activities: 2m 54s 784ms realtime (1 times)
+    Top for: 2m 56s 60ms 
+    Cached for: 3m 57s 565ms 
+    Total running: 6m 53s 625ms 
+    Total cpu time: u=20ms s=100ms 
+    Proc app.show.tv:
+      CPU: 0ms usr + 0ms krn ; 0ms fg
+      1 starts
+
+Total cpu time reads: 0
+Batched cpu time reads: 0
+Batching Duration (min): 7
+All UID cpu time reads since the later of device start or stats reset: 60
+UIDs removed since the later of device start or stats reset: 2

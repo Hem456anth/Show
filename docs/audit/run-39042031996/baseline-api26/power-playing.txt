@@ -1,0 +1,31 @@
+  mLastScreenBrightnessBoostTime=0 (244482 ms ago)
+  mScreenBrightnessBoostInProgress=false
+  mSuspendWhenScreenOffDueToProximityConfig=false
+  mDozeAfterScreenOffConfig=false
+  mMinimumScreenOffTimeoutConfig=10000
+  mMaximumScreenDimDurationConfig=7000
+  mMaximumScreenDimRatioConfig=0.20000005
+  mScreenOffTimeoutSetting=2147483647
+  mMaximumScreenOffTimeoutFromDeviceAdmin=2147483647 (enforced=false)
+  mScreenBrightnessSetting=102
+  mScreenAutoBrightnessAdjustmentSetting=0.0
+  mScreenBrightnessModeSetting=0
+  mScreenBrightnessOverrideFromWindowManager=-1
+  mTemporaryScreenBrightnessSettingOverride=-1
+  mTemporaryScreenAutoBrightnessAdjustmentSettingOverride=NaN
+  mDozeScreenStateOverrideFromDreamManager=0
+  mDozeScreenBrightnessOverrideFromDreamManager=-1
+  mScreenBrightnessSettingMinimum=10
+  mScreenBrightnessSettingMaximum=255
+  mScreenBrightnessSettingDefault=102
+  mScreenBrightnessForVrSettingDefault=86
+  mScreenBrightnessForVrSetting=86
+Screen off timeout: 2147483647 ms
+Screen dim duration: 7000 ms
+Wake Locks: size=6
+  PARTIAL_WAKE_LOCK              '*job*/com.google.android.dialer/com.android.voicemail.impl.scheduling.TaskSchedulerJobService' ACQ=-3m12s955ms LONG (uid=1000 pid=1638 ws=WorkSource{10020})
+  PARTIAL_WAKE_LOCK              '*job*/com.google.android.googlequicksearchbox/com.google.android.apps.gsa.tasks.BackgroundTasksJobService' ACQ=-43s913ms (uid=1000 pid=1638 ws=WorkSource{10030})
+  PARTIAL_WAKE_LOCK              'AudioMix' ACQ=-24s528ms (uid=1041 ws=WorkSource{10077})
+  PARTIAL_WAKE_LOCK              'ExoPlayer:WakeLockManager' ACQ=-25s750ms (uid=10077 pid=4524)
+  SCREEN_BRIGHT_WAKE_LOCK        'WindowManager' ON_AFTER_RELEASE ACQ=-25s329ms (uid=1000 pid=1638 ws=WorkSource{10077})
+  PARTIAL_WAKE_LOCK              'IntentOp:.chimera.container.InitConfigOperation' ACQ=-22s499ms (uid=10012 pid=2163 ws=WorkSource{10012 com.google.android.gms})

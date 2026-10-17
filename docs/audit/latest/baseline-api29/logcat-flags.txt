@@ -1,0 +1,5 @@
+10-17 14:52:10.192  5823  5823 I Choreographer: Skipped 32 frames!  The application may be doing too much work on its main thread.
+10-17 14:52:11.184  5823  5823 I Choreographer: Skipped 58 frames!  The application may be doing too much work on its main thread.
+10-17 14:53:24.066  1910  1929 I DropBoxManagerService: add tag=system_server_strictmode isTagEnabled=true flags=0x2
+10-17 14:53:24.138  1910  1929 I DropBoxManagerService: add tag=system_server_strictmode isTagEnabled=true flags=0x2
+10-17 14:54:07.701  2514  2514 I Choreographer: Skipped 46 frames!  The application may be doing too much work on its main thread.
