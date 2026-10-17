@@ -1,0 +1,42 @@
+name: Device audit report
+
+# Re-summarises the artifacts of an earlier Device audit run (e.g. when one matrix leg timed out).
+on:
+  workflow_dispatch:
+    inputs:
+      run_id:
+        description: Device audit run id
+        required: true
+
+permissions:
+  contents: write
+  actions: read
+
+jobs:
+  report:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: 'audit-*'
+          path: raw
+          merge-multiple: true
+          run-id: ${{ inputs.run_id }}
+          github-token: ${{ github.token }}
+      - name: Summarise and commit
+        run: |
+          pip install pillow >/dev/null
+          DEST=docs/audit/run-${{ inputs.run_id }}
+          mkdir -p "$DEST"
+          cp -r raw/* "$DEST"/
+          python3 tools/audit_summary.py "$DEST" > "$DEST/SUMMARY.md"
+          cat "$DEST/SUMMARY.md"
+          find "$DEST" -path '*baseline-*' -name '*.png' ! -name '01-home.png' -delete
+          rm -rf docs/audit/latest && cp -r "$DEST" docs/audit/latest
+          git config user.name "github-actions[bot]"
+          git config user.email "41898283+github-actions[bot]@users.noreply.github.com"
+          git add docs/audit
+          git commit -m "Device audit results for run ${{ inputs.run_id }}" || exit 0
+          git pull --rebase
+          git push

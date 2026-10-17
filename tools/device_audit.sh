@@ -14,7 +14,7 @@ ticks() { local p; p=$(pid); [ -n "$p" ] && adb shell cat /proc/$p/stat 2>/dev/n
 
 # Tap the first node whose text or content-desc equals $1 (Compose exposes both to uiautomator).
 tap() {
-  adb shell uiautomator dump /sdcard/ui.xml >/dev/null 2>&1
+  timeout 25 adb shell uiautomator dump /sdcard/ui.xml >/dev/null 2>&1
   adb shell cat /sdcard/ui.xml > "$OUT/.ui.xml" 2>/dev/null
   local xy
   xy=$(python3 - "$1" "$OUT/.ui.xml" <<'PY'

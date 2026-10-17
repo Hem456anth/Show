@@ -60,7 +60,7 @@ jobs:
           profile: pixel_6
           disable-animations: false
           emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim
-          script: bash tools/device_audit.sh apks/${{ matrix.build }}.apk out/${{ matrix.build }}-api${{ matrix.api }} || true
+          script: timeout 1500 bash tools/device_audit.sh apks/${{ matrix.build }}.apk out/${{ matrix.build }}-api${{ matrix.api }} || true
       - uses: actions/upload-artifact@v4
         if: always()
         with: { name: 'audit-${{ matrix.build }}-api${{ matrix.api }}', path: out }
