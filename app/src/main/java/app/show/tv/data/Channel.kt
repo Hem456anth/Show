@@ -48,8 +48,33 @@ data class Channel(
     val isNot247: Boolean get() = flags.any { it.equals("Not 24/7", ignoreCase = true) }
     val protocol: StreamProtocol get() = StreamProtocol.of(streamUrl)
 
+    /**
+     * Who the channel is, independent of its address. iptv-org rotates stream URLs often (Zee's
+     * links changed several times in October 2026), and [id] is a hash of the URL, so a saved
+     * channel is matched back to the live catalog by this key: the `tvg-id` feed when present,
+     * otherwise the normalised display name.
+     */
+    val identity: String get() = identityOf(tvgId, name)
+
+    /** Same channel but from a different source of links ([Channel.flags] carries it). */
+    val isExtra: Boolean get() = EXTRA_FLAG in flags
+
     companion object {
         const val UNCATEGORISED = "Undefined"
+        const val EXTRA_FLAG = "Free-TV"
+
+        fun identityOf(tvgId: String?, name: String): String =
+            tvgId?.trim()?.lowercase()?.takeIf { tvgIdShape.matches(it) }?.let { "id:$it" }
+                ?: "name:${normalizeName(name)}"
+
+        private val decorations = Regex("""[\u24B6-\u24E9\u2460-\u24FF]|\((?:\d{3,4}p|[^)]*)\)|\[[^\]]*\]""")
+        private val spaces = Regex("""\s+""")
+        /** iptv-org ids look like "ZeeTV.in@SD"; Free-TV sometimes leaves markdown such as "[NDTV](https://…)". */
+        private val tvgIdShape = Regex("""[a-z0-9][a-z0-9._+-]*\.[a-z]{2,3}(@[a-z0-9._+-]+)?""")
+
+        /** "Zee TV HD (720p) [Geo-blocked]" -> "zee tv hd": drops quality, flags and Free-TV's Ⓢ/Ⓨ marks. */
+        fun normalizeName(name: String): String =
+            name.replace(decorations, " ").lowercase().replace(spaces, " ").trim()
     }
 }
 

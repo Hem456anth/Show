@@ -97,11 +97,11 @@ fun ChannelDetailSheet(
                 )
                 Spacer(Modifier.height(18.dp))
                 Row(horizontalArrangement = Arrangement.spacedBy(12.dp), verticalAlignment = Alignment.CenterVertically) {
-                    ShowPrimaryButton(
-                        onClick = { onPlay(channel) }, shape = RoundedCornerShape(50),
-                        modifier = Modifier.weight(1f).height(52.dp).testTag("detail_play"),
-                    ) { Icon(Icons.Rounded.PlayArrow, null); Spacer(Modifier.width(6.dp)); Text("Play Live", style = MaterialTheme.typography.labelLarge) }
-                    GlassCircleButton(if (inList) "Remove from My List" else "Add to My List", onClick = { onToggleList(channel) }, tag = "detail_list") {
+                    GlassPlayButton(
+                        onClick = { onPlay(channel) }, label = "Play Live", height = 52.dp,
+                        modifier = Modifier.weight(1f).testTag("detail_play"),
+                    )
+                    OutlineCircleButton(if (inList) "Remove from My List" else "Add to My List", onClick = { onToggleList(channel) }, tag = "detail_list") {
                         Icon(if (inList) Icons.Rounded.Check else Icons.Rounded.Add, null)
                     }
                 }

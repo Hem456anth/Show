@@ -10,6 +10,10 @@ Not affiliated with VideoLAN, Netflix, or iptv-org.
   their broadcasters and are shown only to identify each channel (logos are loaded from the URLs
   in the index, never bundled). Broadcasters can ask iptv-org to remove a link: https://github.com/iptv-org/iptv#legal
 
+* **Free-TV/IPTV**: https://github.com/Free-TV/IPTV (no licence declared). Show fetches its public playlist at run
+  time and uses only entries whose stream URL passed Show's own verification (`assets/verified_extra.json`, a list of
+  public stream addresses). Channel names and logos belong to their broadcasters.
+
 ## Third-party libraries (all Apache License 2.0)
 * AndroidX Media3 (ExoPlayer, HLS, DASH, SmoothStreaming, RTSP, OkHttp and RTMP data sources, UI): The Android Open Source Project
 * `media3-datasource-rtmp` bundles LibRtmp-Client-for-Android (Apache 2.0 wrapper of librtmp; librtmp is LGPL-2.1, dynamically loaded `.so`)
@@ -17,6 +21,7 @@ Not affiliated with VideoLAN, Netflix, or iptv-org.
 * Kotlin and kotlinx.coroutines: JetBrains
 * OkHttp: Square
 * Coil: Coil Contributors
+* Haze (backdrop blur): Chris Banes
 * Test-only: JUnit 4 (EPL-1.0), Robolectric (MIT), MockWebServer and okhttp-tls (Apache 2.0)
 
 ## VLC

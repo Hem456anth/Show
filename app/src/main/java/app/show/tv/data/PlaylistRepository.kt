@@ -46,6 +46,10 @@ class PlaylistRepository(
         grouping: PlaylistSource.Grouping = PlaylistSource.Grouping.CATEGORY,
     ) : this(client, cacheDir, { url }, maxBytes, io, System::currentTimeMillis, { grouping })
 
+    /** Any fixed playlist (e.g. Free-TV), sharing this repository's client and cache folder. */
+    fun forUrl(url: String, grouping: PlaylistSource.Grouping): PlaylistRepository =
+        PlaylistRepository(client, cacheDir, url, maxBytes, io, grouping)
+
     /** A fixed iptv-org index, sharing this repository's client and cache folder. */
     fun forSource(source: PlaylistSource): PlaylistRepository =
         PlaylistRepository(client, cacheDir, source.url, maxBytes, io, source.grouping)

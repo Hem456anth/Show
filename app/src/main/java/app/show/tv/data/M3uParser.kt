@@ -195,14 +195,19 @@ object M3uParser {
 
     private fun PendingEntry.toChannel(url: String, extGroup: String?, opts: Map<String, String>, grouping: PlaylistSource.Grouping): Channel {
         val rawName = attrs["tvg-name"]?.takeIf { it.isNotBlank() } ?: title.ifBlank { url }
-        val (name, resolution, flags) = splitTags(rawName)
+        val (name, resolution, tagFlags) = splitTags(rawName)
+        // Free-TV marks geo-blocked channels with Ⓖ in the display title (tvg-name has it stripped).
+        val flags = if ('\u24BC' in title && tagFlags.none { it.equals("Geo-blocked", true) }) tagFlags + "Geo-blocked" else tagFlags
         val group = attrs["group-title"]?.takeIf { it.isNotBlank() } ?: extGroup
         val groups = group?.split(';')?.map { it.trim() }?.filter { it.isNotEmpty() }?.distinct().orEmpty()
         val tvgId = attrs["tvg-id"]?.takeIf { it.isNotBlank() }
         val categories = (if (grouping == PlaylistSource.Grouping.CATEGORY) groups else emptyList()).ifEmpty { listOf(Channel.UNCATEGORISED) }
         val countries = when (grouping) {
             PlaylistSource.Grouping.COUNTRY -> groups.filterNot { it.equals(Channel.UNCATEGORISED, ignoreCase = true) }
-            else -> listOfNotNull(tvgId?.let(::countryFromTvgId)?.let(Countries::name))
+            else -> listOfNotNull(
+                (attrs["tvg-country"]?.split(';', ',')?.firstOrNull()?.trim()?.takeIf { it.length == 2 && it.all(Char::isLetter) }
+                    ?: tvgId?.let(::countryFromTvgId))?.let(Countries::name),
+            )
         }
         val languages = when (grouping) {
             PlaylistSource.Grouping.LANGUAGE -> groups.filterNot { it.equals(Channel.UNCATEGORISED, ignoreCase = true) }.map(::languageName)

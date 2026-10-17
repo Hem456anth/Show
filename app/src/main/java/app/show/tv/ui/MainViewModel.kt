@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import app.show.tv.data.CatalogEnricher
+import app.show.tv.data.ExtraSources
 import app.show.tv.data.Channel
 import app.show.tv.data.PlaylistSource
 import app.show.tv.data.ChannelCatalog
@@ -57,13 +58,19 @@ class MainViewModel(
     private val settingsStore: SettingsStore? = null,
     /** Supplies the other iptv-org indexes used to add countries/languages/categories (null = off). */
     private val indexRepository: ((PlaylistSource) -> PlaylistRepository)? = null,
+    /** The verified extra source (Free-TV) and its allowlist; null = off (tests, custom builds). */
+    private val extraRepository: (() -> PlaylistRepository)? = null,
+    private val allowlist: () -> ExtraSources.Allowlist = { ExtraSources.Allowlist.EMPTY },
 ) : ViewModel() {
+
+    private val extraRepo by lazy { extraRepository?.invoke() }
 
     private val indexRepos = HashMap<PlaylistSource, PlaylistRepository>()
 
     /** Unfiltered playlist; favourites and history resolve against it so hiding never loses them. */
     private var raw: List<Channel> = emptyList()
     private var rawById: Map<String, Channel> = emptyMap()
+    private var rawByIdentity: Map<String, Channel> = emptyMap()
     private var rawAt: Long = 0
     private var rawNotice: String? = null
     private var loadJob: Job? = null
@@ -81,11 +88,11 @@ class MainViewModel(
     private val _searchCategory = MutableStateFlow<String?>(null)
 
     val favorites: StateFlow<List<Channel>> = combine(_state, library.favorites) { _, ids ->
-        ids.mapNotNull { rawById[it] ?: library.snapshot(it) }
+        ids.mapNotNull(::resolveSaved).distinctBy { it.id }
     }.stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
 
     val history: StateFlow<List<Channel>> = combine(_state, library.history) { _, entries ->
-        entries.mapNotNull { rawById[it.channelId] ?: library.snapshot(it.channelId) }
+        entries.mapNotNull { resolveSaved(it.channelId) }.distinctBy { it.id }
     }.stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
 
     val favoriteIds: StateFlow<Set<String>> = library.favorites.map { it.toSet() }
@@ -108,6 +115,7 @@ class MainViewModel(
                     when {
                         now.playlistUrl != last.playlistUrl -> { raw = emptyList(); rawById = emptyMap(); _state.value = CatalogState(); load() }
                         now.hideGeoBlocked != last.hideGeoBlocked && raw.isNotEmpty() -> publish(raw, rawAt, rawNotice, _state.value.loading)
+                        now.extraSources != last.extraSources -> load()
                     }
                     last = now
                 }
@@ -147,32 +155,64 @@ class MainViewModel(
      * A failed index just leaves that dimension as the source had it.
      */
     private suspend fun enrich(base: List<Channel>, at: Long, notice: String?) {
-        val provider = indexRepository ?: return
-        val sources = settings.value.source?.enrichFrom ?: PlaylistSource.CUSTOM_ENRICH
-        val indexes = coroutineScope {
-            sources.map { src ->
-                async {
-                    val repo = synchronized(indexRepos) { indexRepos.getOrPut(src) { provider(src) } }
-                    runCatching { src.grouping to repo.refresh().playlist }
-                        .onFailure { if (it is kotlinx.coroutines.CancellationException) throw it }
-                        .getOrNull()
-                }
-            }.awaitAll().filterNotNull()
+        var channels = base
+        val provider = indexRepository
+        if (provider != null) {
+            val sources = settings.value.source?.enrichFrom ?: PlaylistSource.CUSTOM_ENRICH
+            val indexes = coroutineScope {
+                sources.map { src ->
+                    async {
+                        val repo = synchronized(indexRepos) { indexRepos.getOrPut(src) { provider(src) } }
+                        runCatching { src.grouping to repo.refresh().playlist }
+                            .onFailure { if (it is kotlinx.coroutines.CancellationException) throw it }
+                            .getOrNull()
+                    }
+                }.awaitAll().filterNotNull()
+            }
+            if (indexes.isNotEmpty()) {
+                channels = withContext(compute) { CatalogEnricher.enrich(channels, indexes) }
+                publish(channels, at, notice, stillLoading = false)
+            }
         }
-        if (indexes.isEmpty()) return
-        val enriched = withContext(compute) { CatalogEnricher.enrich(base, indexes) }
-        publish(enriched, at, notice, stillLoading = false)
+        mergeExtra(channels, at, notice)
     }
+
+    /**
+     * Third pass: verified Free-TV links. Matches become backup links (no duplicate tiles), the rest
+     * are added as new channels. Skipped for the viewer's own playlist and when turned off.
+     */
+    private suspend fun mergeExtra(base: List<Channel>, at: Long, notice: String?) {
+        val repo = extraRepo ?: return
+        val s = settings.value
+        val source = s.source ?: return
+        if (!s.extraSources) return
+        val allow = withContext(compute) { allowlist() }
+        if (allow.isEmpty) return
+        val extra = runCatching { repo.refresh().playlist.channels }
+            .onFailure { if (it is kotlinx.coroutines.CancellationException) throw it }
+            .getOrNull() ?: return
+        val merged = withContext(compute) {
+            ExtraSources.merge(base, extra, allow, countryFilter = if (source == PlaylistSource.INDIA) "India" else null)
+        }
+        if (merged !== base) publish(merged, at, notice, stillLoading = false)
+    }
+
+    /** A saved id: the live entry, else the live entry for the same channel at a new address, else the snapshot. */
+    private fun resolveSaved(id: String): Channel? =
+        rawById[id] ?: library.snapshot(id)?.let { snap -> rawByIdentity[snap.identity] ?: snap }
 
     private suspend fun publish(channels: List<Channel>, at: Long, notice: String?, stillLoading: Boolean) {
         raw = channels; rawAt = at; rawNotice = notice
         val hideGeo = settings.value.hideGeoBlocked
         val built = withContext(compute) {
             rawById = channels.associateBy { it.id }
+            rawByIdentity = HashMap<String, Channel>(channels.size * 2).also { m -> channels.forEach { m.putIfAbsent(it.identity, it) } }
             val catalog = ChannelCatalog(if (hideGeo) channels.filterNot { it.isGeoBlocked } else channels)
             val rows = catalog.rows(settings.value.grouping).map { HomeRow(it.first, it.second) }
             Triple(catalog, catalog.featured(daySeed()), rows)
         }
+        // Saved channels whose link was replaced upstream follow the channel to its new address.
+        if (!stillLoading) library.reconcile(isCurrent = { it in rawById }, current = { rawByIdentity[it.identity] })
         // A search category from a previous source that this catalog doesn't have would match nothing.
         _searchCategory.value?.let { if (it !in built.first.categories) _searchCategory.value = null }
         _state.value = CatalogState(
@@ -191,6 +231,14 @@ class MainViewModel(
         settingsStore?.setPlaylistUrl(url) ?: SettingsStore.UrlResult.Invalid("Settings unavailable")
     fun setHideGeoBlocked(v: Boolean) { settingsStore?.setHideGeoBlocked(v) }
     fun setHideUnavailable(v: Boolean) { settingsStore?.setHideUnavailable(v) }
+    fun setExtraSources(v: Boolean) { settingsStore?.setExtraSources(v) }
+
+    /** Called when the app returns to the foreground: links rotate daily, so re-check a stale list. */
+    fun refreshIfStale(maxAgeMs: Long = STALE_AFTER_MS, now: Long = System.currentTimeMillis()) {
+        val s = _state.value
+        if (s.loading || s.catalog.channels.isEmpty()) return
+        if (now - s.updatedAt >= maxAgeMs) load()
+    }
 
     private fun friendly(t: Throwable): String = when (t) {
         is java.net.UnknownHostException -> "You're offline. Connect to the internet to load channels."
@@ -211,8 +259,15 @@ class MainViewModel(
     class Factory(
         private val repo: PlaylistRepository, private val lib: LibraryStore, private val settings: SettingsStore,
         private val indexes: ((PlaylistSource) -> PlaylistRepository)? = repo::forSource,
+        private val extra: (() -> PlaylistRepository)? = null,
+        private val allowlist: () -> ExtraSources.Allowlist = { ExtraSources.Allowlist.EMPTY },
     ) : ViewModelProvider.Factory {
         @Suppress("UNCHECKED_CAST")
-        override fun <T : ViewModel> create(modelClass: Class<T>): T = MainViewModel(repo, lib, settingsStore = settings, indexRepository = indexes) as T
+        override fun <T : ViewModel> create(modelClass: Class<T>): T =
+            MainViewModel(repo, lib, settingsStore = settings, indexRepository = indexes, extraRepository = extra, allowlist = allowlist) as T
+    }
+
+    companion object {
+        const val STALE_AFTER_MS = 6L * 60 * 60 * 1000
     }
 }

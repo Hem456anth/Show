@@ -63,6 +63,19 @@ import app.show.tv.ui.screens.MyListScreen
 import app.show.tv.ui.screens.SearchScreen
 import app.show.tv.ui.theme.ShowColors
 import app.show.tv.ui.theme.ShowTheme
+import app.show.tv.ui.components.FloatingGlassTabBar
+import app.show.tv.ui.components.GlassTab
+import app.show.tv.ui.components.LocalBottomBarInset
+import app.show.tv.ui.components.TabBarHeight
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.ui.Alignment
+import dev.chrisbanes.haze.HazeState
+import dev.chrisbanes.haze.haze
 
 enum class Tab(val route: String, val label: String, val icon: ImageVector) {
     Home("home", "Home", Icons.Rounded.Home),
@@ -71,9 +84,11 @@ enum class Tab(val route: String, val label: String, val icon: ImageVector) {
     MyList("mylist", "My List", Icons.Rounded.Bookmarks),
 }
 
+private val glassTabs = Tab.entries.map { GlassTab(it.route, it.label, it.icon) }
+
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
-        enableEdgeToEdge(statusBarStyle = SystemBarStyle.dark(android.graphics.Color.TRANSPARENT), navigationBarStyle = SystemBarStyle.dark(android.graphics.Color.BLACK))
+        enableEdgeToEdge(statusBarStyle = SystemBarStyle.dark(android.graphics.Color.TRANSPARENT), navigationBarStyle = SystemBarStyle.dark(android.graphics.Color.TRANSPARENT))
         super.onCreate(savedInstanceState)
         setContent { ShowTheme { ShowRoot() } }
     }
@@ -83,7 +98,7 @@ class MainActivity : ComponentActivity() {
 fun ShowRoot() {
     val context = LocalContext.current
     val graph = context.appGraph
-    val vm: MainViewModel = viewModel(factory = MainViewModel.Factory(graph.playlistRepository, graph.libraryStore, graph.settings, graph.indexRepository))
+    val vm: MainViewModel = viewModel(factory = MainViewModel.Factory(graph.playlistRepository, graph.libraryStore, graph.settings, graph.indexRepository, graph.extraRepository, { graph.extraAllowlist }))
     val state by vm.state.collectAsStateWithLifecycle()
     val favorites by vm.favorites.collectAsStateWithLifecycle()
     val history by vm.history.collectAsStateWithLifecycle()
@@ -94,6 +109,8 @@ fun ShowRoot() {
     val settings by vm.settings.collectAsStateWithLifecycle()
     val unavailable by vm.unavailableIds.collectAsStateWithLifecycle()
     var showSettings by remember { mutableStateOf(false) }
+    // Back in the foreground after hours (TV boxes stay "open" for days): links may have rotated.
+    androidx.lifecycle.compose.LifecycleResumeEffect(vm) { vm.refreshIfStale(); onPauseOrDispose { } }
 
     var detail by remember { mutableStateOf<Channel?>(null) }
     var liveFilter by remember { mutableStateOf<LiveFilter?>(null) }
@@ -172,30 +189,18 @@ fun ShowRoot() {
                 host(Modifier.weight(1f))
             }
         } else {
-            Scaffold(
-                containerColor = ShowColors.Ink,
-                bottomBar = {
-                    // iOS-style tab bar: frosted black, hairline on top, white selected item, no pill.
-                    NavigationBar(
-                        containerColor = ShowColors.GlassStrong, tonalElevation = 0.dp,
-                        modifier = Modifier.drawBehind { drawLine(ShowColors.Hairline, androidx.compose.ui.geometry.Offset(0f, 0f), androidx.compose.ui.geometry.Offset(size.width, 0f), 1f) }
-                            .testTag("nav_bar"),
-                    ) {
-                        Tab.entries.forEach { tab ->
-                            NavigationBarItem(
-                                selected = current == tab.route, onClick = { go(tab) },
-                                icon = { Icon(tab.icon, null) }, label = { Text(tab.label, style = MaterialTheme.typography.labelSmall) },
-                                colors = NavigationBarItemDefaults.colors(
-                                    selectedIconColor = Color.White, indicatorColor = Color.Transparent,
-                                    selectedTextColor = Color.White, unselectedIconColor = ShowColors.Mist.copy(alpha = 0.8f), unselectedTextColor = ShowColors.Mist.copy(alpha = 0.8f),
-                                ),
-                                modifier = Modifier.testTag("tab_${tab.route}"),
-                            )
-                        }
-                    }
-                },
-                contentWindowInsets = androidx.compose.foundation.layout.WindowInsets(0),
-            ) { pad -> host(Modifier.padding(pad)) }
+            // Floating liquid-glass tab bar; the content runs underneath it and is blurred through it.
+            val navHaze = remember { HazeState() }
+            val navBottom = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
+            Box(Modifier.fillMaxSize().background(ShowColors.Ink)) {
+                CompositionLocalProvider(LocalBottomBarInset provides TabBarHeight + 16.dp + navBottom) {
+                    host(Modifier.fillMaxSize().haze(navHaze))
+                }
+                FloatingGlassTabBar(
+                    tabs = glassTabs, selectedKey = current, onSelect = { t -> go(Tab.entries.first { it.route == t.key }) }, haze = navHaze,
+                    modifier = Modifier.align(Alignment.BottomCenter).navigationBarsPadding().padding(horizontal = 18.dp, vertical = 10.dp),
+                )
+            }
         }
     }
 
@@ -205,6 +210,7 @@ fun ShowRoot() {
         settings = settings, onDismiss = { showSettings = false },
         onPlaylistUrl = vm::setPlaylistUrl, onHideGeo = vm::setHideGeoBlocked,
         onHideUnavailable = vm::setHideUnavailable, onClearHistory = vm::clearHistory,
+        onExtraSources = vm::setExtraSources,
         onSource = { vm.setSource(it); showSettings = false },
     )
 

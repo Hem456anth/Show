@@ -11,6 +11,10 @@ data class Settings(
     val playlistUrl: String = PlaylistRepository.DEFAULT_PLAYLIST_URL,
     val hideGeoBlocked: Boolean = false,
     val hideUnavailable: Boolean = false,
+    /** Audio language the viewer last picked in the player (BCP-47), preferred on every channel. */
+    val audioLanguage: String? = null,
+    /** Merge independently verified Free-TV links into the catalog (new channels + backup links). */
+    val extraSources: Boolean = true,
 ) {
     /** The iptv-org index in use, or null for the viewer's own playlist. */
     val source: PlaylistSource? get() = PlaylistSource.byUrl(playlistUrl)
@@ -42,6 +46,11 @@ class SettingsStore(private val prefs: SharedPreferences) {
 
     fun setHideGeoBlocked(v: Boolean) = update(_settings.value.copy(hideGeoBlocked = v))
     fun setHideUnavailable(v: Boolean) = update(_settings.value.copy(hideUnavailable = v))
+    fun setAudioLanguage(tag: String?) {
+        val clean = tag?.trim()?.takeIf { it.length in 2..35 && it.all { c -> c.isLetterOrDigit() || c == '-' } }
+        if (clean != _settings.value.audioLanguage) update(_settings.value.copy(audioLanguage = clean))
+    }
+    fun setExtraSources(v: Boolean) = update(_settings.value.copy(extraSources = v))
 
     private fun update(s: Settings) {
         _settings.value = s
@@ -49,18 +58,25 @@ class SettingsStore(private val prefs: SharedPreferences) {
             .putString(KEY_URL, s.playlistUrl)
             .putBoolean(KEY_GEO, s.hideGeoBlocked)
             .putBoolean(KEY_DEAD, s.hideUnavailable)
+            .putString(KEY_AUDIO, s.audioLanguage)
+            .putBoolean(KEY_EXTRA, s.extraSources)
             .apply()
     }
 
     private fun read(): Settings {
         val url = prefs.getString(KEY_URL, null)?.takeIf { validate(it) == null } ?: PlaylistRepository.DEFAULT_PLAYLIST_URL
-        return Settings(url, prefs.getBoolean(KEY_GEO, false), prefs.getBoolean(KEY_DEAD, false))
+        return Settings(
+            url, prefs.getBoolean(KEY_GEO, false), prefs.getBoolean(KEY_DEAD, false),
+            audioLanguage = prefs.getString(KEY_AUDIO, null), extraSources = prefs.getBoolean(KEY_EXTRA, true),
+        )
     }
 
     companion object {
         private const val KEY_URL = "playlist_url"
         private const val KEY_GEO = "hide_geo"
         private const val KEY_DEAD = "hide_dead"
+        private const val KEY_AUDIO = "audio_language"
+        private const val KEY_EXTRA = "extra_sources"
 
         /** Returns a reason the URL is unusable, or null when it's fine. */
         fun validate(url: String): String? {

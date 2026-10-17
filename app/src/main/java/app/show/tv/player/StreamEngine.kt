@@ -46,7 +46,7 @@ class StreamEngine(
     private val loadErrorPolicy = loadErrorPolicy(segmentRetries, retryBaseDelayMs)
 
 
-    fun buildPlayer(): ExoPlayer {
+    fun buildPlayer(preferredAudioLanguage: String? = null): ExoPlayer {
         val loadControl = DefaultLoadControl.Builder()
             .setBufferDurationsMs(
                 /* minBufferMs = */ LIVE_MIN_BUFFER_MS,
@@ -58,9 +58,10 @@ class StreamEngine(
             .setTargetBufferBytes(TARGET_BUFFER_BYTES)
             .build()
 
-        val trackSelector = DefaultTrackSelector(context).apply {
+        val trackSelector = DefaultTrackSelector(context, adaptiveFactory()).apply {
             setParameters(
                 buildUponParameters()
+                    .setPreferredAudioLanguage(preferredAudioLanguage)
                     .setPreferredTextLanguage(null)
                     .setSelectUndeterminedTextLanguage(false)
                     .setExceedRendererCapabilitiesIfNecessary(true)
@@ -95,11 +96,30 @@ class StreamEngine(
             .createMediaSource(mediaItem(channel, forceMimeType))
 
     companion object {
-        const val LIVE_MIN_BUFFER_MS = 15_000
+        /*
+         * Buffer targets (see docs/STREAMING_1.5.md). Live 1080p IPTV is often one 5+ Mbps rendition
+         * from an origin that serves it at only ~1.3x real time, with a 4-segment (~12 s) window. With
+         * 1.4's 3 s after-rebuffer threshold the player resumed on one segment and stalled again
+         * ("stutter loop"); 5 s rides out a slow segment. Zapping still starts after 1.5 s.
+         */
+        const val LIVE_MIN_BUFFER_MS = 20_000
         const val MAX_BUFFER_MS = 50_000
         const val START_BUFFER_MS = 1_500
-        const val REBUFFER_MS = 3_000
+        const val REBUFFER_MS = 5_000
         const val TARGET_BUFFER_BYTES = 48 * 1024 * 1024
+        const val MAX_LIVE_SPEED = 1.0f
+        const val MIN_LIVE_SPEED = 0.97f
+        /**
+         * Adaptive switching tuned for live TV: step up only after 10 s of headroom, drop quickly,
+         * and budget 65% of measured bandwidth (Media3 default 70%) because IPTV origins are bursty.
+         */
+        fun adaptiveFactory() = androidx.media3.exoplayer.trackselection.AdaptiveTrackSelection.Factory(
+            /* minDurationForQualityIncreaseMs = */ 10_000,
+            /* maxDurationForQualityDecreaseMs = */ 15_000,
+            /* minDurationToRetainAfterDiscardMs = */ 15_000,
+            /* bandwidthFraction = */ 0.65f,
+        )
+
         val DEFAULT_USER_AGENT = "Show/${BuildConfig.VERSION_NAME} (Linux; Android) Media3"
 
         /**
@@ -127,9 +147,12 @@ class StreamEngine(
                 .setUri(channel.streamUrl)
                 .setMimeType(forceMimeType ?: mimeTypeFor(channel.protocol))
                 .setLiveConfiguration(
+                    // Never speed up to chase the live edge: doing so drains the buffer faster than a
+                    // slow origin refills it (the main cause of 1080p rebuffering in 1.4). Slowing
+                    // down slightly is allowed, which rebuilds the buffer when it runs low.
                     MediaItem.LiveConfiguration.Builder()
-                        .setMaxPlaybackSpeed(1.04f)
-                        .setMinPlaybackSpeed(0.97f)
+                        .setMaxPlaybackSpeed(MAX_LIVE_SPEED)
+                        .setMinPlaybackSpeed(MIN_LIVE_SPEED)
                         .build(),
                 )
                 .setMediaMetadata(

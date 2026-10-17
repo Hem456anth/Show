@@ -12,6 +12,8 @@ import coil.disk.DiskCache
 import coil.memory.MemoryCache
 import okhttp3.ConnectionPool
 import okhttp3.OkHttpClient
+import app.show.tv.data.ExtraSources
+import app.show.tv.data.PlaylistSource
 import okhttp3.Protocol
 import java.io.File
 import java.util.concurrent.TimeUnit
@@ -54,6 +56,16 @@ class AppGraph(
     )
     val indexRepository: ((app.show.tv.data.PlaylistSource) -> PlaylistRepository)? =
         if (enrichFromIndexes) playlistRepository::forSource else null
+
+    /** Free-TV, enabled alongside the indexes (off when tests pin a playlist URL). */
+    val extraRepository: (() -> PlaylistRepository)? =
+        if (enrichFromIndexes) ({ playlistRepository.forUrl(ExtraSources.FREETV_URL, PlaylistSource.Grouping.CATEGORY) }) else null
+
+    /** Verified Free-TV URLs, shipped in assets and read once off the main thread. */
+    val extraAllowlist: ExtraSources.Allowlist by lazy {
+        runCatching { app.assets.open("verified_extra.json").bufferedReader().use { it.readText() } }
+            .map(ExtraSources::parseAllowlist).getOrDefault(ExtraSources.Allowlist.EMPTY)
+    }
 
     val libraryStore = LibraryStore(app.getSharedPreferences("library", Context.MODE_PRIVATE))
     val streamEngine = StreamEngine(app, mediaClient)

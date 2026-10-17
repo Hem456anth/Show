@@ -66,6 +66,36 @@ class LibraryStore(
     private fun readSnapshots(): Map<String, Channel> =
         prefs.getString(KEY_SNAPSHOTS, null).orEmpty().split(REC).mapNotNull(::decode).associateBy { it.id }
 
+    /**
+     * Re-attaches saved channels whose stream address changed upstream. Ids are URL hashes, so
+     * when iptv-org replaces a channel's link (common for Zee, Colors, Star feeds) My List and
+     * Up Next would keep playing the old, dead snapshot. [current] maps a saved channel to the
+     * catalog's entry for the same [Channel.identity], or null when it isn't there.
+     * Returns how many entries were moved to a new id.
+     */
+    @Synchronized
+    fun reconcile(isCurrent: (String) -> Boolean, current: (Channel) -> Channel?): Int {
+        val moves = HashMap<String, Channel>()
+        for (id in _favorites.value + _history.value.map { it.channelId }) {
+            if (id in moves || isCurrent(id)) continue
+            val snap = snapshots[id] ?: continue
+            val now = current(snap) ?: continue
+            if (now.id != id) moves[id] = now
+        }
+        if (moves.isEmpty()) return 0
+        val favs = _favorites.value.map { moves[it]?.id ?: it }.distinct()
+        val hist = _history.value.map { e -> moves[e.channelId]?.let { HistoryEntry(it.id, e.watchedAt) } ?: e }.distinctBy { it.channelId }
+        _favorites.value = favs
+        _history.value = hist
+        snapshots = snapshots + moves.values.associateBy { it.id }
+        prefs.edit()
+            .putString(KEY_FAVORITES, favs.joinToString(SEP))
+            .putString(KEY_HISTORY, hist.joinToString(SEP) { "${it.channelId}:${it.watchedAt}" })
+            .apply()
+        prune()
+        return moves.size
+    }
+
     /** Remember a dead link so browsing can flag or hide it; cleared on the next success. */
     @Synchronized
     fun markUnavailable(id: String) {

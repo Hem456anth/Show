@@ -53,6 +53,7 @@ fun SettingsSheet(
     onPlaylistUrl: (String) -> SettingsStore.UrlResult,
     onHideGeo: (Boolean) -> Unit,
     onHideUnavailable: (Boolean) -> Unit,
+    onExtraSources: (Boolean) -> Unit = {},
     onClearHistory: () -> Unit,
     onSource: (PlaylistSource) -> Unit = {},
 ) {
@@ -101,6 +102,11 @@ fun SettingsSheet(
             Text("Browsing", style = MaterialTheme.typography.titleMedium)
             ToggleRow("Hide geo-blocked channels", "Skip channels the broadcaster limits to certain regions.", settings.hideGeoBlocked, onHideGeo, "toggle_geo")
             ToggleRow("Working channels only", "Hide channels that failed to play in the last 24 hours.", settings.hideUnavailable, onHideUnavailable, "toggle_dead")
+            if (!settings.isCustomPlaylist) ToggleRow(
+                "Add verified Free-TV channels",
+                "Free-to-air channels from the Free-TV project, each link tested before release. Duplicates become backup links.",
+                settings.extraSources, onExtraSources, "toggle_extra",
+            )
 
             HorizontalDivider(Modifier.padding(vertical = 18.dp), color = Color.White.copy(alpha = 0.08f))
             Text("Privacy", style = MaterialTheme.typography.titleMedium)

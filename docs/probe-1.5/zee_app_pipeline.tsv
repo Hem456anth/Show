@@ -1,0 +1,41 @@
+Zee 24 Ghanta	HLS	ISSUE TIMEOUT The stream stalled | null null	https://tvsen6.aynaott.com/DpPnXP9r/index.m3u8
+Zee 24 Kalak	HLS	READY audio=1 video=[720] links=1	https://vg-zeefta.akamaized.net/ptnr-yupptv/title-zee24kalak/v1/manifest/611d79b
+Zee 24 Taas	HLS	READY audio=1 video=[720] links=1	https://dgrvlduwztkd4.cloudfront.net/index_5.m3u8
+Zee Action	HLS	READY audio=1 video=[576] links=1	http://107.167.16.138/zeeaction/index.m3u8?token=test
+Zee Bangla	HLS	READY audio=1 video=[576] links=1	http://103.151.60.162:2122/play/a011/index.m3u8?hls
+Zee Bangla HD	HLS	READY audio=1 video=[1080] links=1	http://103.151.60.162:2122/play/a02p/index.m3u8?hls
+Zee Bangla Sonar	HLS	READY audio=1 video=[144/240/360/480/144/240/360/480] links=1	https://d1g8wgjurz8via.cloudfront.net/bpk-tv/ColorsHD/default/ColorsHD.m3u8
+Zee Bharat	HLS	READY audio=1 video=[216/360/576/720] links=1	https://vg-zeefta.akamaized.net/ptnr-yupptv/title-zeehindustan/v1/master/611d79b
+Zee Bihar Jharkhand	HLS	READY audio=1 video=[216/360/576/720] links=1	https://raw.githubusercontent.com/amazeyourself/adaptive-streams/refs/heads/main
+Zee Business	HLS	READY audio=1 video=[720] links=1	https://dwby15d04agvq.cloudfront.net/index_5.m3u8
+Zee Cine Classic	HLS	ISSUE FORBIDDEN Not available in your region | ERROR_CODE_IO_BAD_HTTP_STATUS androidx.media3.datasource.HttpDataSource$InvalidResponseCodeException: Response code: 403	https://amg00862-amg00862c8-amgplt0173.playout.now3.amagi.tv/playlist/amg00862-a
+Zee Cinema	HLS	READY audio=1 video=[144/240/360/480/144/240/360/480] links=1	https://d1g8wgjurz8via.cloudfront.net/bpk-tv/NGCHD/default/NGCHD.m3u8
+Zee Cinema APAC	HLS	READY audio=1 video=[360/720] links=1	https://raw.githubusercontent.com/amazeyourself/adaptive-streams/refs/heads/main
+Zee Cinema HD	HLS	READY audio=1 video=[1080] links=1	http://103.151.60.162:2122/play/a024/index.m3u8?hls
+Zee Cinemalu HD	HLS	ISSUE NOT_FOUND Channel is offline | ERROR_CODE_IO_BAD_HTTP_STATUS androidx.media3.datasource.HttpDataSource$InvalidResponseCodeException: Response code: 404	https://mumbai-edge.smartplaytv.in/ZeeCinemaluHD/index.m3u8
+Zee Classic	HLS	READY audio=1 video=[576] links=1	http://107.167.16.138/zeeclassic/index.m3u8?token=test
+Zee Comedy Nation	HLS	ISSUE FORBIDDEN Not available in your region | ERROR_CODE_IO_BAD_HTTP_STATUS androidx.media3.datasource.HttpDataSource$InvalidResponseCodeException: Response code: 403	https://amg00862-amg00862c5-amgplt0173.playout.now3.amagi.tv/playlist/amg00862-a
+Zee Delhi NCR Haryana	HLS	READY audio=1 video=[216/360/576/720] links=1	https://vg-zeefta.akamaized.net/ptnr-yupptv/title-zeedelhincr/v1/master/611d79b1
+Zee Dil Se	HLS	ISSUE FORBIDDEN Not available in your region | ERROR_CODE_IO_BAD_HTTP_STATUS androidx.media3.datasource.HttpDataSource$InvalidResponseCodeException: Response code: 403	https://amg00862-amg00862c6-amgplt0173.playout.now3.amagi.tv/playlist/amg00862-a
+Zee Horror Nights	HLS	ISSUE FORBIDDEN Not available in your region | ERROR_CODE_IO_BAD_HTTP_STATUS androidx.media3.datasource.HttpDataSource$InvalidResponseCodeException: Response code: 403	https://amg00862-amg00862c7-amgplt0173.playout.now3.amagi.tv/playlist/amg00862-a
+Zee Kannada HD	HLS	READY audio=1 video=[360/720] links=1	https://yuppnimresmum.akamaized.net/28072023/smil:zeekannadahd.smil/playlist.m3u
+Zee Kannada News	HLS	READY audio=1 video=[720] links=1	https://d3vzwoqcbpfm8p.cloudfront.net/index_4.m3u8
+Zee Madhya Pradesh Chhattisgarh	HLS	READY audio=1 video=[216/360/576/720] links=1	https://vg-zeefta.akamaized.net/ptnr-yupptv/title-zeemadhyachhattisgarh/v1/maste
+Zee Marathi HD	HLS	READY audio=1 video=[360/720] links=1	https://raw.githubusercontent.com/amazeyourself/adaptive-streams/refs/heads/main
+Zee News	HLS	READY audio=1 video=[1080] links=1	https://dknttpxmr0dwf.cloudfront.net/index_57.m3u8
+Zee Nung	HLS	ISSUE OFFLINE Connection lost | ERROR_CODE_IO_NETWORK_CONNECTION_FAILED androidx.media3.datasource.HttpDataSource$HttpDataSourceException: java.io.IOException: java.util.concurrent.ExecutionException: java.net.UnknownHostException: amg17931-zee-amg17931c4-samsung-th-5592.playouts.now.amagi.tv	https://amg17931-zee-amg17931c4-samsung-th-5592.playouts.now.amagi.tv/playlist/a
+Zee One	HLS	READY audio=1 video=[216/360/540/720/1080] links=1	https://amg17931-zee-amg17931c6-samsung-au-8872.playouts.now.amagi.tv/playlist/a
+Zee One French	HLS	READY audio=1 video=[360/540/720] links=1	https://7689426c.wurl.com/master/f36d25e7e52f1ba8d7e56eb859c636563214f541/U2Ftc3
+Zee One German	HLS	READY audio=1 video=[360/540/720] links=1	https://e4955b54.wurl.com/master/f36d25e7e52f1ba8d7e56eb859c636563214f541/U2Ftc3
+Zee Punjab Haryana Himachal	HLS	READY audio=1 video=[216/360/576/720] links=1	https://vg-zeefta.akamaized.net/ptnr-yupptv/title-zeepunjabharyanahima/v1/master
+Zee Rajasthan	HLS	READY audio=1 video=[216/360/576/720] links=1	https://vg-zeefta.akamaized.net/ptnr-yupptv/title-zeerajashthannews/v1/master/61
+Zee South Flix	HLS	ISSUE FORBIDDEN Not available in your region | ERROR_CODE_IO_BAD_HTTP_STATUS androidx.media3.datasource.HttpDataSource$InvalidResponseCodeException: Response code: 403	https://amg00862-amg00862c9-amgplt0173.playout.now3.amagi.tv/playlist/amg00862-a
+Zee Talkies	HLS	READY audio=1 video=[1080] links=1	http://107.167.16.138/zeetalkies/index.m3u8?token=test
+Zee Tamil HD	HLS	READY audio=3 video=[240/480/720/1080] links=1	https://d2o8pibksxtln6.cloudfront.net/live/media/Zee_Tamil_HD/hls/Zee_Tamil_HD.m
+Zee Tamil News	HLS	ISSUE OFFLINE Connection lost | ERROR_CODE_IO_NETWORK_CONNECTION_FAILED androidx.media3.datasource.HttpDataSource$HttpDataSourceException: java.io.IOException: java.util.concurrent.ExecutionException: java.net.UnknownHostException: dpkvdnzbeen1l.cloudfront.net	https://raw.githubusercontent.com/amazeyourself/adaptive-streams/refs/heads/main
+Zee Telugu HD	HLS	ISSUE NOT_FOUND Channel is offline | ERROR_CODE_IO_BAD_HTTP_STATUS androidx.media3.datasource.HttpDataSource$InvalidResponseCodeException: Response code: 404	https://mumbai-edge.smartplaytv.in/ZeeTeluguHD/index.m3u8
+Zee Telugu News	HLS	READY audio=1 video=[240/360/480/720/1080] links=1	https://d116gfrn8orazi.cloudfront.net/index.m3u8?akes=eyJ0eXAiOiJKV1QiLCJhbGciOi
+Zee TV	HLS	READY audio=1 video=[576] links=1	http://103.151.60.162:2122/play/a01u/index.m3u8?hls
+Zee TV HD	HLS	READY audio=2 video=[720] links=1	http://41.205.93.154/ZEE-TV/index.m3u8
+Zee TV Asia Pacific	HLS	ISSUE FORMAT Unsupported stream format | ERROR_CODE_PARSING_MANIFEST_MALFORMED androidx.media3.common.ParserException: Loaded playlist has unexpected type. {contentIsMalformed=true, dataType=4}	https://raw.githubusercontent.com/amazeyourself/adaptive-streams/refs/heads/main
+Zee Uttar Pradesh/Uttarakhand	HLS	READY audio=1 video=[720] links=1	https://duw35ict5q7th.cloudfront.net/index_3.m3u8

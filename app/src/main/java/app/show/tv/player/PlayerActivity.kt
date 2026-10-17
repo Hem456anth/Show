@@ -41,6 +41,7 @@ import androidx.compose.material.icons.rounded.AspectRatio
 import androidx.compose.material.icons.rounded.Bedtime
 import androidx.compose.material.icons.rounded.HighQuality
 import androidx.compose.material.icons.rounded.PictureInPictureAlt
+import androidx.compose.material.icons.rounded.RecordVoiceOver
 import androidx.compose.material.icons.rounded.SkipNext
 import androidx.compose.material.icons.rounded.SkipPrevious
 import androidx.compose.material3.CircularProgressIndicator
@@ -79,7 +80,7 @@ import app.show.tv.ui.theme.ShowTheme
 
 /**
  * Dedicated fullscreen player (VLC's VideoPlayerActivity equivalent): immersive landscape,
- * Media3 controls (play/pause, live seek, subtitle + audio-track + speed pickers), channel
+ * Media3 controls (play/pause, live seek, subtitles, speed), our own audio-track picker, channel
  * zapping, resize modes (fit/fill/zoom), picture-in-picture and connectivity-aware recovery.
  */
 @OptIn(UnstableApi::class)
@@ -105,11 +106,12 @@ class PlayerActivity : ComponentActivity() {
         if (queue == null) { finish(); return }
         val lib = graph.libraryStore
         val c = PlaybackController(
-            graph.streamEngine, graph.streamEngine.buildPlayer(), queue.first, queue.second,
+            graph.streamEngine, graph.streamEngine.buildPlayer(graph.settings.settings.value.audioLanguage), queue.first, queue.second,
             onChannelStarted = { lib.recordWatched(it) },
             onChannelPlaying = { lib.markAvailable(it.id) },
             onChannelFailed = { ch, _ -> lib.markUnavailable(ch.id) },
             isUnavailable = { it.id in lib.recentlyUnavailable() },
+            onAudioLanguage = { graph.settings.setAudioLanguage(it) },
         )
         controller = c
         savedInstanceState?.getInt(KEY_RESIZE)?.let { resizeMode = it }
@@ -130,6 +132,9 @@ class PlayerActivity : ComponentActivity() {
     @Composable
     private fun PlayerScreen(c: PlaybackController) {
         val ui by c.state.collectAsStateWithLifecycle()
+        androidx.compose.runtime.LaunchedEffect(ui.autoQuality) {
+            ui.autoQuality?.let { toast("Connection is slow. Switched to ${it}p for smoother playback") }
+        }
         Box(Modifier.fillMaxSize().background(Color.Black).testTag("player_root")) {
             AndroidView(
                 modifier = Modifier.fillMaxSize(),
@@ -184,18 +189,46 @@ class PlayerActivity : ComponentActivity() {
             IconButton(onClick = { finish() }) { Icon(Icons.AutoMirrored.Rounded.ArrowBack, "Back", tint = Color.White) }
             Column(Modifier.weight(1f)) {
                 Text(ch.name, style = MaterialTheme.typography.titleMedium, color = Color.White, maxLines = 1)
-                Text(listOfNotNull("LIVE", ch.primaryCategory, ch.resolution, ch.protocol.label).joinToString(" · "),
+                val ui by c.state.collectAsStateWithLifecycle()
+                val audio = ui.audioTracks.size.takeIf { it > 1 }?.let { "$it audio tracks" }
+                val auto = ui.autoQuality?.let { "Auto ${it}p" }
+                Text(listOfNotNull("LIVE", ch.primaryCategory, ch.resolution, ch.protocol.label, audio, auto).joinToString(" · "),
                     style = MaterialTheme.typography.bodySmall, color = ShowColors.Mist)
             }
             if (c.hasQueue()) {
                 IconButton(onClick = c::previous) { Icon(Icons.Rounded.SkipPrevious, "Previous channel", tint = Color.White) }
                 IconButton(onClick = c::next, modifier = Modifier.testTag("next_channel")) { Icon(Icons.Rounded.SkipNext, "Next channel", tint = Color.White) }
             }
+            AudioMenu(c)
             QualityMenu(c)
             SleepMenu(c)
             IconButton(onClick = { cycleResize() }) { Icon(Icons.Rounded.AspectRatio, "Resize: ${resizeLabel()}", tint = Color.White) }
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && packageManager.hasSystemFeature("android.software.picture_in_picture")) {
                 IconButton(onClick = { enterPip() }) { Icon(Icons.Rounded.PictureInPictureAlt, "Picture in picture", tint = Color.White) }
+            }
+        }
+    }
+
+    /** Shown when the stream has 2+ audio tracks: every track by language, layout and codec. */
+    @Composable
+    private fun AudioMenu(c: PlaybackController) {
+        val ui by c.state.collectAsStateWithLifecycle()
+        if (ui.audioTracks.size < 2) return
+        var open by remember { mutableStateOf(false) }
+        val current = ui.audioTracks.firstOrNull { it.selected }
+        Box {
+            IconButton(onClick = { open = true }, modifier = Modifier.testTag("audio")) {
+                Icon(Icons.Rounded.RecordVoiceOver, "Audio: ${current?.label ?: "Auto"}", tint = Color.White)
+            }
+            DropdownMenu(open, onDismissRequest = { open = false }, modifier = Modifier.testTag("audio_menu")) {
+                Text("Audio", style = MaterialTheme.typography.labelMedium, color = ShowColors.Mist, modifier = Modifier.padding(horizontal = 16.dp, vertical = 6.dp))
+                ui.audioTracks.forEach { t ->
+                    DropdownMenuItem(
+                        text = { Text(t.label + if (t.selected) "  ✓" else "") },
+                        onClick = { c.selectAudio(t); open = false; toast("Audio: ${t.label}") },
+                        modifier = Modifier.testTag("audio_${t.key}"),
+                    )
+                }
             }
         }
     }

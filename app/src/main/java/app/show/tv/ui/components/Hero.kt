@@ -44,6 +44,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
+import dev.chrisbanes.haze.HazeState
+import dev.chrisbanes.haze.haze
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
@@ -61,7 +63,7 @@ import kotlin.math.absoluteValue
 /**
  * Apple TV-style "top shelf": full-bleed immersive artwork that slowly drifts (Ken Burns),
  * parallaxes against the swipe and against the page scroll ([scrollOffset]), with a title stack
- * anchored bottom-left, a white capsule Play button and frosted circular actions.
+ * anchored bottom-left, a liquid-glass capsule Play button and flat outlined circular actions.
  * Auto-advances every 8 s unless the user turned animations off.
  */
 @Composable
@@ -104,19 +106,23 @@ fun HeroCarousel(
         ) { page ->
             val ch = featured[page]
             val pageOffset = (pager.currentPage - page + pager.currentPageOffsetFraction)
+            // The backdrop is the glass Play button's blur source.
+            val haze = remember { HazeState() }
             Box(Modifier.fillMaxSize().semantics { contentDescription = "Featured: ${ch.name}" }) {
-                Box(Modifier.fillMaxSize().background(ShowColors.tileBrush(ch.name)))
-                ChannelArtwork(
-                    ch,
-                    Modifier.fillMaxSize().graphicsLayer {
-                        scaleX = zoom; scaleY = zoom; alpha = 0.6f
-                        translationX = pageOffset * size.width * 0.45f // backdrop lags the swipe
-                    }.then(if (Build.VERSION.SDK_INT >= 31) Modifier.blur(40.dp) else Modifier),
-                    logoPadding = 36.dp,
-                )
-                Box(Modifier.fillMaxSize().background(ShowColors.TopScrim))
-                Box(Modifier.fillMaxSize().background(ShowColors.BottomScrim))
-                if (wide) Box(Modifier.fillMaxSize().background(ShowColors.SideScrim))
+                Box(Modifier.fillMaxSize().haze(haze)) {
+                    Box(Modifier.fillMaxSize().background(ShowColors.tileBrush(ch.name)))
+                    ChannelArtwork(
+                        ch,
+                        Modifier.fillMaxSize().graphicsLayer {
+                            scaleX = zoom; scaleY = zoom; alpha = 0.6f
+                            translationX = pageOffset * size.width * 0.45f // backdrop lags the swipe
+                        }.then(if (Build.VERSION.SDK_INT >= 31) Modifier.blur(40.dp) else Modifier),
+                        logoPadding = 36.dp,
+                    )
+                    Box(Modifier.fillMaxSize().background(ShowColors.TopScrim))
+                    Box(Modifier.fillMaxSize().background(ShowColors.BottomScrim))
+                    if (wide) Box(Modifier.fillMaxSize().background(ShowColors.SideScrim))
+                }
 
                 val textAlpha = 1f - (pageOffset.absoluteValue * 1.6f).coerceIn(0f, 1f)
                 Column(
@@ -126,7 +132,7 @@ fun HeroCarousel(
                 ) {
                     TitleTreatment(ch, Modifier.width(if (wide) 260.dp else 188.dp).height(if (wide) 146.dp else 106.dp))
                     Spacer(Modifier.height(16.dp))
-                    HeroText(ch, ch.id in favoriteIds, onPlay, onToggleList, onInfo, Modifier.widthIn(max = 560.dp))
+                    HeroText(ch, ch.id in favoriteIds, onPlay, onToggleList, onInfo, Modifier.widthIn(max = 560.dp), haze)
                 }
             }
         }
@@ -162,6 +168,7 @@ private fun HeroText(
     onToggleList: (Channel) -> Unit,
     onInfo: (Channel) -> Unit,
     modifier: Modifier,
+    haze: HazeState? = null,
 ) {
     Column(modifier) {
         Row(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalAlignment = Alignment.CenterVertically) {
@@ -178,33 +185,11 @@ private fun HeroText(
         )
         Spacer(Modifier.height(18.dp))
         Row(horizontalArrangement = Arrangement.spacedBy(12.dp), verticalAlignment = Alignment.CenterVertically) {
-            ShowPrimaryButton(
-                onClick = { onPlay(ch) },
-                shape = RoundedCornerShape(50),
-                modifier = Modifier.height(50.dp).widthIn(min = 150.dp).testTag("hero_play"),
-            ) {
-                Icon(Icons.Rounded.PlayArrow, null)
-                Spacer(Modifier.width(6.dp))
-                Text("Play", style = MaterialTheme.typography.labelLarge)
-            }
-            GlassCircleButton(
+            GlassPlayButton(onClick = { onPlay(ch) }, label = "Play", haze = haze, modifier = Modifier.testTag("hero_play"))
+            OutlineCircleButton(
                 if (inList) "Remove from My List" else "Add to My List", onClick = { onToggleList(ch) }, tag = "hero_list",
             ) { Icon(if (inList) Icons.Rounded.Check else Icons.Rounded.Add, null) }
-            GlassCircleButton("Details", onClick = { onInfo(ch) }, tag = "hero_info") { Icon(Icons.Rounded.Info, null) }
+            OutlineCircleButton("Details", onClick = { onInfo(ch) }, tag = "hero_info") { Icon(Icons.Rounded.Info, null) }
         }
     }
-}
-
-/** 50 dp frosted circle with a focus lift, for secondary actions over artwork. */
-@Composable
-fun GlassCircleButton(label: String, onClick: () -> Unit, tag: String, content: @Composable () -> Unit) {
-    val interaction = remember { MutableInteractionSource() }
-    Box(
-        Modifier.size(50.dp).lift(interaction, CircleShape).clip(CircleShape).background(ShowColors.Glass)
-            .border(1.dp, ShowColors.Hairline, CircleShape)
-            .clickable(interactionSource = interaction, indication = null, role = Role.Button, onClickLabel = label, onClick = onClick)
-            .semantics { contentDescription = label }
-            .testTag(tag),
-        contentAlignment = Alignment.Center,
-    ) { content() }
 }

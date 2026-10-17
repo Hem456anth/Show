@@ -87,6 +87,9 @@ import app.show.tv.ui.components.ChannelArtwork
 import app.show.tv.ui.components.ChannelCard
 import app.show.tv.ui.components.ChannelRow
 import app.show.tv.ui.components.HeroCarousel
+import app.show.tv.ui.components.GlassPlayButton
+import app.show.tv.ui.components.LocalBottomBarInset
+import app.show.tv.ui.components.liquidGlass
 import app.show.tv.ui.components.LocalUnavailableIds
 import app.show.tv.ui.theme.ShowColors
 
@@ -138,7 +141,7 @@ fun HomeScreen(
             val listState = rememberLazyListState()
             val scrolled by remember { derivedStateOf { listState.firstVisibleItemIndex > 0 || listState.firstVisibleItemScrollOffset > 200 } }
             PullToRefreshBox(isRefreshing = state.loading, onRefresh = onRetry, modifier = Modifier.fillMaxSize()) {
-                LazyColumn(state = listState, contentPadding = PaddingValues(bottom = 24.dp), modifier = Modifier.fillMaxSize().testTag("home_list")) {
+                LazyColumn(state = listState, contentPadding = PaddingValues(bottom = 24.dp + LocalBottomBarInset.current), modifier = Modifier.fillMaxSize().testTag("home_list")) {
                     item(key = "hero") {
                         HeroCarousel(
                             state.featured, favoriteIds,
@@ -163,9 +166,10 @@ fun HomeScreen(
                     }
                     item(key = "credit") { Attribution() }
                 }
-                // Brand bar that turns to frosted glass as content scrolls under it.
-                val barColor by androidx.compose.animation.animateColorAsState(if (scrolled) ShowColors.GlassStrong else Color.Transparent, label = "bar")
-                Column(Modifier.fillMaxWidth().background(barColor)) {
+                // Brand bar: transparent over the hero, then a clean solid black once content scrolls under it
+                // (glass is reserved for the logomark, the tab bar and Play buttons).
+                val barColor by androidx.compose.animation.animateColorAsState(if (scrolled) ShowColors.Ink.copy(alpha = 0.96f) else Color.Transparent, label = "bar")
+                Column(Modifier.fillMaxWidth().background(barColor).testTag("brand_bar")) {
                     Spacer(Modifier.windowInsetsTopHeight(WindowInsets.statusBars))
                     Row(Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 10.dp), verticalAlignment = Alignment.CenterVertically) {
                         BrandMark()
@@ -179,11 +183,15 @@ fun HomeScreen(
     }
 }
 
+/** The retro-TV logomark on a liquid-glass tile, white on glass, with the wordmark. */
 @Composable
 fun BrandMark() {
     Row(verticalAlignment = Alignment.CenterVertically) {
-        Box(Modifier.size(30.dp).clip(RoundedCornerShape(8.dp)).background(Color.White).testTag("brand_mark"), contentAlignment = Alignment.Center) {
-            Icon(painterResource(R.drawable.ic_show_mark), contentDescription = "Show", tint = Color.Black, modifier = Modifier.size(24.dp))
+        Box(
+            Modifier.size(34.dp).liquidGlass(RoundedCornerShape(10.dp), elevation = 6.dp).testTag("brand_mark"),
+            contentAlignment = Alignment.Center,
+        ) {
+            Icon(painterResource(R.drawable.ic_show_mark), contentDescription = "Show", tint = Color.White, modifier = Modifier.size(24.dp))
         }
         Spacer(Modifier.size(8.dp))
         Text("Show", style = MaterialTheme.typography.titleLarge, color = Color.White)
@@ -206,7 +214,8 @@ private fun OfflineBanner(text: String, onRetry: () -> Unit) {
 @Composable
 private fun Attribution() {
     Text(
-        "Channel index by the iptv-org community (github.com/iptv-org/iptv). Show hosts no streams; " +
+        "Channel index by the iptv-org community (github.com/iptv-org/iptv), plus verified links from Free-TV " +
+            "(github.com/Free-TV/IPTV). Show hosts no streams; " +
             "every channel is a public link owned by its broadcaster.",
         style = MaterialTheme.typography.bodySmall, color = ShowColors.Mist.copy(alpha = 0.7f),
         modifier = Modifier.padding(horizontal = 16.dp, vertical = 28.dp),
@@ -371,7 +380,7 @@ private fun Chip(label: String, selected: Boolean, tag: String = "chip_$label", 
 fun ChannelGrid(channels: List<Channel>, favoriteIds: Set<String>, metrics: Metrics, actions: ChannelActions, modifier: Modifier = Modifier, header: (@Composable () -> Unit)? = null) {
     LazyVerticalGrid(
         columns = GridCells.Adaptive(metrics.gridMin),
-        contentPadding = PaddingValues(metrics.gutter),
+        contentPadding = PaddingValues(start = metrics.gutter, top = metrics.gutter, end = metrics.gutter, bottom = metrics.gutter + LocalBottomBarInset.current),
         horizontalArrangement = Arrangement.spacedBy(14.dp),
         verticalArrangement = Arrangement.spacedBy(18.dp),
         modifier = modifier.fillMaxSize(),
@@ -475,7 +484,7 @@ fun MyListScreen(
             }
             return
         }
-        LazyColumn(Modifier.fillMaxSize().testTag("mylist"), contentPadding = PaddingValues(bottom = 24.dp)) {
+        LazyColumn(Modifier.fillMaxSize().testTag("mylist"), contentPadding = PaddingValues(bottom = 24.dp + LocalBottomBarInset.current)) {
             if (favorites.isNotEmpty()) item {
                 ChannelRow("Saved channels", favorites, actions.play, favoriteIds, metrics.cardWidth, onLongPress = actions.toggleList)
             }
@@ -497,7 +506,7 @@ fun MyListScreen(
                         Text(ch.name, style = MaterialTheme.typography.titleSmall, maxLines = 1)
                         Text(ch.categories.joinToString(" · "), style = MaterialTheme.typography.bodySmall, color = ShowColors.Mist, maxLines = 1)
                     }
-                    IconButton(onClick = { actions.play(ch, favorites) }) { Icon(Icons.Rounded.PlayCircle, "Play ${ch.name}", tint = ShowColors.Accent) }
+                    GlassPlayButton(onClick = { actions.play(ch, favorites) }, label = "Play ${ch.name}", compact = true, height = 40.dp)
                     IconButton(onClick = { actions.toggleList(ch) }) { Icon(Icons.Rounded.Close, "Remove ${ch.name}") }
                 }
             }

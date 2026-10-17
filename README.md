@@ -3,7 +3,7 @@
 [![Android CI](https://github.com/Hem456anth/Show/actions/workflows/android.yml/badge.svg)](https://github.com/Hem456anth/Show/actions/workflows/android.yml)
 [![Latest release](https://img.shields.io/github/v/release/Hem456anth/Show)](https://github.com/Hem456anth/Show/releases/latest)
 
-> Version 1.4.0: an Apple TV-inspired redesign (top-shelf hero, focus-lift cards, Up Next, frosted bars), the new TV logomark and Android TV support. See `CHANGELOG.md` and `docs/AUDIT_1.4.md`.
+> Version 1.5.0: Zee channels fixed at the root (saved channels follow rotated links), an audio-track picker, smoother 1080p, verified Free-TV channels and a liquid-glass tab bar. See `CHANGELOG.md` and `docs/STREAMING_1.5.md`.
 
 ## Download
 
@@ -18,16 +18,17 @@ An original Android live-TV app for the free channels indexed by the
 and a streaming core modelled on what VLC does (see `docs/VLC_ANALYSIS.md`), built on AndroidX Media3.
 
 * **Sources:** India, Global, By country, By language or By category (iptv-org), switchable from Home chips or Settings, each enriched with the other indexes so every channel has categories, countries and languages
-* **Home:** rotating hero banner with Play, My List and Details, plus *Continue watching*, *My List* and 14 carousels grouped the way the source is (genre, country or language)
+* **Verified Free-TV channels:** free-to-air links from [Free-TV/IPTV](https://github.com/Free-TV/IPTV), used only when they passed `tools/verify_extra_sources.py`; duplicates become backup links
+* **Home:** rotating hero banner with a liquid-glass Play button, My List and Details, plus *Up Next*, *My List* and 14 carousels grouped the way the source is (genre, country or language)
 * **Live TV:** category chips, country and language dropdowns and a "Working only" chip over an adaptive poster grid
 * **Search:** ranked, accent-insensitive search by name, country, language or genre, with a category filter
 * **My List:** saved channels and watch history (clearable)
 * **Settings** (gear on Home): your own https M3U playlist, hide geo-blocked channels, working channels only, privacy and about
 * **Dead-link memory:** channels that failed in the last 24 h are dimmed, badged OFFLINE and skipped when zapping. Backup links are tried before a channel counts as dead
-* **Player:** fullscreen immersive playback with live seek, subtitle, audio-track and speed pickers, fit/zoom/stretch,
-  channel zapping, picture-in-picture, a quality picker, a sleep timer, automatic recovery and clear error messages
+* **Player:** fullscreen immersive playback with live seek, an **Audio** picker for multilingual streams, subtitle and speed pickers, fit/zoom/stretch,
+  channel zapping, picture-in-picture, a quality picker with automatic step-down after repeated stalls, a sleep timer, automatic recovery and clear error messages
 * **Android TV:** leanback launcher, D-pad focus lift, and Channel +/- and Last-channel keys in the player
-* **Phones and tablets:** bottom bar under 600 dp, navigation rail above, with scaled cards and hero
+* **Phones and tablets:** floating liquid-glass tab bar under 600 dp, navigation rail above, with scaled cards and hero
 
 ## Setup and build
 
@@ -84,9 +85,13 @@ delivered APK was built.
 | `PlaylistRepositoryTest` | HTTPS MockWebServer: download+cache, ETag 304, offline fallback, cleartext refusal, size cap, captive-portal rejection |
 | `PlaybackControllerTest` | real Media3 pipeline vs a local server: UA/Referer/Origin headers, 404/403 mapping, 5xx backoff then manual retry, unsupported protocols, zapping, live-window resync, history |
 | `LibraryAndViewModelTest` | favourites/history persistence, dedupe/cap, corrupt data, ViewModel offline load and search |
+| `Release15Test` (`RotatedLinkTest`, `ExtraSourcesTest`, `AudioTracksTest`) | saved channels following rotated links, Free-TV allowlist and merge, audio labels and listing, adaptive step-down, live speed |
 | `NavigationUiTest` | Compose UI: bottom nav across all tabs, category chips, search results, detail sheet → My List → Player launch, tablet navigation rail |
 
 Live stream reachability probe (no decoding): `python3 tools/probe_streams.py --sample 80`.
+In-app live diagnostic (real parser, engine and Media3, needs network):
+`SHOW_LIVE_PLAYLIST=/path/index.m3u SHOW_LIVE_FILTER='^zee' ./gradlew :app:testDebugUnitTest --tests '*LiveStreamDiagnostic'`.
+Re-verify Free-TV before a release: `python3 tools/verify_extra_sources.py`.
 
 ## Project layout and design
 

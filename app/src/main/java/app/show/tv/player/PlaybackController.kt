@@ -49,6 +49,7 @@ class PlaybackController(
     private val onChannelFailed: (Channel, PlaybackIssue) -> Unit = { _, _ -> },
     private val clock: () -> Long = SystemClock::elapsedRealtime,
     private val isUnavailable: (Channel) -> Boolean = { false },
+    private val onAudioLanguage: (String?) -> Unit = {},
 ) {
     data class UiState(
         val channel: Channel,
@@ -67,7 +68,14 @@ class PlaybackController(
         val quality: Int? = null,
         /** 0 = the channel's main stream, n = its n-th backup stream. */
         val backup: Int = 0,
+        /** Audio renditions the stream offers (languages, commentary, surround…), in stream order. */
+        val audioTracks: List<AudioTrack> = emptyList(),
+        /** Set when the player lowered the quality cap itself after repeated stalls. */
+        val autoQuality: Int? = null,
     )
+
+    /** One selectable audio track: [group]/[track] index into [Tracks.groups]. */
+    data class AudioTrack(val key: String, val label: String, val language: String?, val selected: Boolean, val group: Int, val track: Int)
 
     private var queue: List<Channel> = queue.ifEmpty { error("queue must not be empty") }
     private var index = startIndex.coerceIn(0, this.queue.lastIndex)
@@ -75,6 +83,8 @@ class PlaybackController(
     private var released = false
     private var linkIndex = 0
     private var lastIndex = -1
+    private var hasPlayed = false
+    private val rebuffers = ArrayDeque<Long>()
 
     private val _state = MutableStateFlow(UiState(this.queue[index], index, this.queue.size))
     val state: StateFlow<UiState> = _state.asStateFlow()
@@ -97,8 +107,10 @@ class PlaybackController(
                 Player.STATE_BUFFERING -> {
                     _state.value = _state.value.copy(buffering = true)
                     handler.postDelayed(stallRunnable, stallTimeoutMs)
+                    if (hasPlayed) onRebuffer()
                 }
                 Player.STATE_READY -> {
+                    hasPlayed = true
                     retry.reset()
                     _state.value = _state.value.copy(buffering = false, issue = null, retrying = false, attempt = 0)
                     onChannelPlaying(current)
@@ -108,7 +120,7 @@ class PlaybackController(
         }
 
         override fun onTracksChanged(tracks: Tracks) {
-            _state.value = _state.value.copy(qualities = videoHeights(tracks))
+            _state.value = _state.value.copy(qualities = videoHeights(tracks), audioTracks = audioTracks(tracks))
         }
 
         override fun onPlayerError(error: PlaybackException) = onError(error)
@@ -197,6 +209,35 @@ class PlaybackController(
         _state.value = _state.value.copy(quality = maxHeight)
     }
 
+    /** Plays [track]; its language becomes the preference for the next channels too. */
+    fun selectAudio(track: AudioTrack) {
+        val group = player.currentTracks.groups.getOrNull(track.group)?.takeIf { it.type == C.TRACK_TYPE_AUDIO } ?: return
+        if (track.track !in 0 until group.length) return
+        player.trackSelectionParameters = player.trackSelectionParameters.buildUpon()
+            .clearOverridesOfType(C.TRACK_TYPE_AUDIO)
+            .setOverrideForType(TrackSelectionOverride(group.mediaTrackGroup, track.track))
+            .setPreferredAudioLanguage(track.language)
+            .build()
+        onAudioLanguage(track.language)
+    }
+
+    /**
+     * Adaptive streams that keep stalling (two rebuffers within a minute while on Auto) are capped
+     * one rendition lower, like YouTube's "playback is choppy" fallback. Manual picks are respected.
+     */
+    private fun onRebuffer() {
+        val now = clock()
+        rebuffers.addLast(now)
+        while (rebuffers.isNotEmpty() && now - rebuffers.first() > REBUFFER_WINDOW_MS) rebuffers.removeFirst()
+        val s = _state.value
+        if (rebuffers.size < 2 || s.quality != null) return
+        val playing = player.videoFormat?.height?.takeIf { it > 0 } ?: return
+        val lower = stepDown(s.qualities, playing) ?: return
+        rebuffers.clear()
+        player.trackSelectionParameters = player.trackSelectionParameters.buildUpon().setMaxVideoSize(Int.MAX_VALUE, lower).build()
+        _state.value = s.copy(autoQuality = lower)
+    }
+
     fun release() {
         if (released) return
         released = true
@@ -218,9 +259,13 @@ class PlaybackController(
         val ch = queue[index]
         val keep = _state.value
         _state.value = UiState(ch, index, queue.size, sleepAt = keep.sleepAt)
-        // Each channel starts adaptive; a quality cap from the previous channel rarely fits.
+        hasPlayed = false
+        rebuffers.clear()
+        // Each channel starts adaptive; a quality cap or audio pick from the previous channel rarely fits
+        // (the preferred audio language is kept, so a Telugu pick prefers Telugu on the next channel).
         player.trackSelectionParameters = player.trackSelectionParameters.buildUpon()
-            .clearOverridesOfType(C.TRACK_TYPE_VIDEO).setMaxVideoSize(Int.MAX_VALUE, Int.MAX_VALUE).build()
+            .clearOverridesOfType(C.TRACK_TYPE_VIDEO).clearOverridesOfType(C.TRACK_TYPE_AUDIO)
+            .setMaxVideoSize(Int.MAX_VALUE, Int.MAX_VALUE).build()
         if (!ch.protocol.playableInApp) {
             player.stop()
             player.clearMediaItems()
@@ -286,6 +331,35 @@ class PlaybackController(
         val DEAD_LINK_KINDS = setOf(
             PlaybackIssue.Kind.NOT_FOUND, PlaybackIssue.Kind.FORBIDDEN, PlaybackIssue.Kind.FORMAT, PlaybackIssue.Kind.SERVER,
         )
+
+        const val REBUFFER_WINDOW_MS = 60_000L
+
+        /** The next rendition below [playing], or null at the bottom. */
+        fun stepDown(qualities: List<Int>, playing: Int): Int? = qualities.filter { it < playing }.maxOrNull()
+
+        /**
+         * Lists every supported audio track. HLS often repeats one language at several bitrates
+         * (Zee Tamil HD has three "und" AAC renditions); those get a bitrate suffix so each row is distinct.
+         */
+        fun audioTracks(tracks: Tracks): List<AudioTrack> {
+            val raw = ArrayList<AudioTrack>()
+            tracks.groups.forEachIndexed { gi, g ->
+                if (g.type != C.TRACK_TYPE_AUDIO) return@forEachIndexed
+                for (ti in 0 until g.length) {
+                    if (!g.isTrackSupported(ti, /* allowExceedsCapabilities = */ true)) continue
+                    val f = g.getTrackFormat(ti)
+                    raw += AudioTrack("$gi:$ti", AudioLabels.label(f), AudioLabels.language(f.language), g.isTrackSelected(ti), gi, ti)
+                }
+            }
+            val counts = raw.groupingBy { it.label }.eachCount()
+            return raw.mapIndexed { i, t ->
+                if ((counts[t.label] ?: 0) < 2) t else {
+                    val f = tracks.groups[t.group].getTrackFormat(t.track)
+                    val br = f.bitrate.takeIf { it > 0 } ?: f.averageBitrate.takeIf { it > 0 } ?: f.peakBitrate.takeIf { it > 0 }
+                    t.copy(label = t.label + if (br != null) " · ${br / 1000} kbps" else " · ${i + 1}")
+                }
+            }
+        }
 
         fun videoHeights(tracks: Tracks): List<Int> = tracks.groups.asSequence()
             .filter { it.type == C.TRACK_TYPE_VIDEO }
