@@ -1,0 +1,52 @@
+name: Screenshot
+
+# Captures Show's Home on an emulator from the latest release APK and commits it to docs/screenshots.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  home:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download latest release APK
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p dist
+          gh release download --repo "${{ github.repository }}" --pattern 'Show-*.apk' --dir dist
+          ls -la dist
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules && sudo udevadm trigger --name-match=kvm
+      - name: Capture Home (Pixel 6, API 34)
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 34
+          arch: x86_64
+          target: google_apis
+          profile: pixel_6
+          disable-animations: true
+          emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim
+          script: |
+            adb install -r dist/*.apk
+            adb shell am start -W -n app.show.tv/.MainActivity
+            sleep 75
+            mkdir -p docs/screenshots
+            adb exec-out screencap -p > docs/screenshots/home.png
+            adb shell input swipe 540 1800 540 700 400
+            sleep 8
+            adb exec-out screencap -p > docs/screenshots/home-rows.png
+      - name: Commit screenshots
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898283+github-actions[bot]@users.noreply.github.com"
+          git add docs/screenshots
+          git commit -m "Home screenshots from emulator" || exit 0
+          git pull --rebase
+          git push
