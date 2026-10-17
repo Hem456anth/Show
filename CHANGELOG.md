@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.5.1 (2026-10-17): Home overlay fix
+* **Removed the grey overlay on Home.** 1.5.0's backdrop blur (Haze) drew a stray translucent panel across the hero and the brand
+  bar on devices. The blur library is gone; the liquid glass (tab bar, logomark, Play buttons) is now drawn directly: a dark
+  translucent body, veil, specular highlight and lens rim, with no offscreen layers.
+* **Text and icons are white again** on Home (the hero title and the settings gear drew black once the old Scaffold was removed).
+
 ## 1.5.0 (2026-10-17): Zee fix, audio tracks, smoother 1080p, verified Free-TV, liquid glass
 * **Zee channels (root cause):** iptv-org rotates Zee links almost daily, and Show's channel id is a hash of the URL, so My List and
   Up Next kept playing the old, dead snapshot (Zee News worked only because its link never changed). Saved channels now follow the
@@ -17,7 +23,7 @@
   bytes) and only those ship in `assets/verified_extra.json`. Matches become backup links (no duplicate tiles), new free-to-air
   channels are added and tagged Free-TV, the India source gains only Indian channels, YouTube (Ⓨ) and VOD entries are never
   used, Ⓖ becomes Geo-blocked. Settings has a toggle.
-* **Liquid glass:** a floating capsule tab bar with real backdrop blur (Haze; translucent fallback before Android 12), a specular
+* **Liquid glass:** a floating capsule tab bar with a specular
   highlight, a lens-like rim and a glass "lens" that springs to the selected tab. The logomark sits on a glass tile.
 * **Home:** glass now lives only on Play buttons (hero Play, Play Live, My List play). My List and Details are flat outlined circles,
   and the brand bar turns solid black on scroll instead of frosted.

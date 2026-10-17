@@ -44,8 +44,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
-import dev.chrisbanes.haze.HazeState
-import dev.chrisbanes.haze.haze
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
@@ -106,10 +104,10 @@ fun HeroCarousel(
         ) { page ->
             val ch = featured[page]
             val pageOffset = (pager.currentPage - page + pager.currentPageOffsetFraction)
-            // The backdrop is the glass Play button's blur source.
-            val haze = remember { HazeState() }
             Box(Modifier.fillMaxSize().semantics { contentDescription = "Featured: ${ch.name}" }) {
-                Box(Modifier.fillMaxSize().haze(haze)) {
+                // No backdrop-blur source here: inside a translated pager page Haze drew the blurred layer
+                // offset across the hero (1.5.0 bug). The Play button's glass is drawn without a backdrop.
+                Box(Modifier.fillMaxSize()) {
                     Box(Modifier.fillMaxSize().background(ShowColors.tileBrush(ch.name)))
                     ChannelArtwork(
                         ch,
@@ -132,7 +130,7 @@ fun HeroCarousel(
                 ) {
                     TitleTreatment(ch, Modifier.width(if (wide) 260.dp else 188.dp).height(if (wide) 146.dp else 106.dp))
                     Spacer(Modifier.height(16.dp))
-                    HeroText(ch, ch.id in favoriteIds, onPlay, onToggleList, onInfo, Modifier.widthIn(max = 560.dp), haze)
+                    HeroText(ch, ch.id in favoriteIds, onPlay, onToggleList, onInfo, Modifier.widthIn(max = 560.dp))
                 }
             }
         }
@@ -168,7 +166,6 @@ private fun HeroText(
     onToggleList: (Channel) -> Unit,
     onInfo: (Channel) -> Unit,
     modifier: Modifier,
-    haze: HazeState? = null,
 ) {
     Column(modifier) {
         Row(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalAlignment = Alignment.CenterVertically) {
@@ -185,7 +182,7 @@ private fun HeroText(
         )
         Spacer(Modifier.height(18.dp))
         Row(horizontalArrangement = Arrangement.spacedBy(12.dp), verticalAlignment = Alignment.CenterVertically) {
-            GlassPlayButton(onClick = { onPlay(ch) }, label = "Play", haze = haze, modifier = Modifier.testTag("hero_play"))
+            GlassPlayButton(onClick = { onPlay(ch) }, label = "Play", modifier = Modifier.testTag("hero_play"))
             OutlineCircleButton(
                 if (inList) "Remove from My List" else "Add to My List", onClick = { onToggleList(ch) }, tag = "hero_list",
             ) { Icon(if (inList) Icons.Rounded.Check else Icons.Rounded.Add, null) }

@@ -74,8 +74,6 @@ import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.ui.Alignment
-import dev.chrisbanes.haze.HazeState
-import dev.chrisbanes.haze.haze
 
 enum class Tab(val route: String, val label: String, val icon: ImageVector) {
     Home("home", "Home", Icons.Rounded.Home),
@@ -143,7 +141,8 @@ fun ShowRoot() {
         }
     }
 
-    CompositionLocalProvider(LocalUnavailableIds provides unavailable) {
+    // White content by default: 1.4's Scaffold supplied it, and without it titles and icons drew black.
+    CompositionLocalProvider(LocalUnavailableIds provides unavailable, androidx.compose.material3.LocalContentColor provides Color.White) {
     BoxWithConstraints(Modifier.fillMaxSize()) {
         val metrics = Metrics.forWidth(maxWidth)
         val useRail = maxWidth >= 600.dp
@@ -189,15 +188,14 @@ fun ShowRoot() {
                 host(Modifier.weight(1f))
             }
         } else {
-            // Floating liquid-glass tab bar; the content runs underneath it and is blurred through it.
-            val navHaze = remember { HazeState() }
+            // Floating liquid-glass tab bar; the content runs underneath it and shows through, dimmed.
             val navBottom = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
             Box(Modifier.fillMaxSize().background(ShowColors.Ink)) {
                 CompositionLocalProvider(LocalBottomBarInset provides TabBarHeight + 16.dp + navBottom) {
-                    host(Modifier.fillMaxSize().haze(navHaze))
+                    host(Modifier.fillMaxSize())
                 }
                 FloatingGlassTabBar(
-                    tabs = glassTabs, selectedKey = current, onSelect = { t -> go(Tab.entries.first { it.route == t.key }) }, haze = navHaze,
+                    tabs = glassTabs, selectedKey = current, onSelect = { t -> go(Tab.entries.first { it.route == t.key }) },
                     modifier = Modifier.align(Alignment.BottomCenter).navigationBarsPadding().padding(horizontal = 18.dp, vertical = 10.dp),
                 )
             }

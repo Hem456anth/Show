@@ -21,7 +21,6 @@ Not affiliated with VideoLAN, Netflix, or iptv-org.
 * Kotlin and kotlinx.coroutines: JetBrains
 * OkHttp: Square
 * Coil: Coil Contributors
-* Haze (backdrop blur): Chris Banes
 * Test-only: JUnit 4 (EPL-1.0), Robolectric (MIT), MockWebServer and okhttp-tls (Apache 2.0)
 
 ## VLC

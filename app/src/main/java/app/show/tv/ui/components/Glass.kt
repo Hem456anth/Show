@@ -48,17 +48,14 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import dev.chrisbanes.haze.HazeState
-import dev.chrisbanes.haze.HazeStyle
-import dev.chrisbanes.haze.HazeTint
-import dev.chrisbanes.haze.hazeChild
 
 /**
  * Show's "liquid glass" material (after Apple's 2025 design language), kept monochrome:
  *
- *  1. **Backdrop:** with a [HazeState] the content behind is blurred (RenderEffect on Android 12+;
- *     older devices get Haze's translucent fallback tint, so it still reads as glass).
- *  2. **Body:** a faint white veil so the glass is visible over pure black.
+ *  1. **Body:** a dark translucent fill (stronger for bars) plus a faint white veil, so content
+ *     scrolling underneath shows through dimmed. (1.5.0 used Haze backdrop blur; on devices it drew
+ *     a stray grey panel across Home, so 1.5.1 draws the glass itself, with no offscreen layers.)
+ *  2. **Veil:** keeps the glass visible over pure black.
  *  3. **Specular:** a soft top highlight, like light caught on a curved surface.
  *  4. **Rim:** a 1 dp edge that is bright top-left and bottom-right and fades in between,
  *     which gives the lens-like thickness of liquid glass without coloured refraction.
@@ -66,14 +63,6 @@ import dev.chrisbanes.haze.hazeChild
  * Used only where the design calls for it: the floating tab bar, the logomark and Play buttons.
  */
 object LiquidGlass {
-    fun hazeStyle(strong: Boolean = false) = HazeStyle(
-        backgroundColor = Color.Black,
-        tint = HazeTint(Color.Black.copy(alpha = if (strong) 0.42f else 0.22f)),
-        blurRadius = if (strong) 28.dp else 20.dp,
-        noiseFactor = 0.04f,
-        fallbackTint = HazeTint(Color(0xE0141416)),
-    )
-
     val Veil = Color.White.copy(alpha = 0.10f)
     val Rim = Brush.linearGradient(
         0f to Color.White.copy(alpha = 0.55f),
@@ -87,13 +76,12 @@ object LiquidGlass {
 /** Height a floating bar occupies over the content; scrolling screens pad their end by it. */
 val LocalBottomBarInset = staticCompositionLocalOf { 0.dp }
 
-/** Applies the liquid-glass layers to [shape]. Pass [haze] for a true backdrop blur. */
-fun Modifier.liquidGlass(shape: Shape, haze: HazeState? = null, strong: Boolean = false, elevation: Dp = 0.dp): Modifier {
+/** Applies the liquid-glass layers to [shape]; [strong] is for bars that sit over busy content. */
+fun Modifier.liquidGlass(shape: Shape, strong: Boolean = false, elevation: Dp = 0.dp): Modifier {
     var m = this
     if (elevation > 0.dp) m = m.shadow(elevation, shape, clip = false, ambientColor = Color.Black, spotColor = Color.Black)
-    m = m.clip(shape)
-    if (haze != null) m = m.hazeChild(state = haze, style = LiquidGlass.hazeStyle(strong))
-    return m
+    return m.clip(shape)
+        .then(if (strong) Modifier.background(Color(0xD9101012), shape) else Modifier)
         .background(LiquidGlass.Veil, shape)
         .drawWithContent {
             drawContent()
@@ -112,7 +100,6 @@ fun GlassPlayButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     label: String = "Play",
-    haze: HazeState? = null,
     compact: Boolean = false,
     height: Dp = 50.dp,
     content: (@Composable RowScope.() -> Unit)? = null,
@@ -123,7 +110,7 @@ fun GlassPlayButton(
         modifier
             .then(if (compact) Modifier.size(height) else Modifier.defaultMinSize(minWidth = 150.dp, minHeight = height))
             .lift(interaction, shape)
-            .liquidGlass(shape, haze, elevation = 10.dp)
+            .liquidGlass(shape, elevation = 10.dp)
             .clickable(interactionSource = interaction, indication = null, role = Role.Button, onClickLabel = label, onClick = onClick)
             .semantics { contentDescription = label },
         contentAlignment = Alignment.Center,
@@ -168,14 +155,13 @@ fun FloatingGlassTabBar(
     tabs: List<GlassTab>,
     selectedKey: String,
     onSelect: (GlassTab) -> Unit,
-    haze: HazeState?,
     modifier: Modifier = Modifier,
 ) {
     val selected = tabs.indexOfFirst { it.key == selectedKey }.coerceAtLeast(0)
     val reduceMotion = rememberReduceMotion()
     androidx.compose.foundation.layout.BoxWithConstraints(
         modifier.widthIn(max = 520.dp).fillMaxWidth().height(TabBarHeight)
-            .liquidGlass(RoundedCornerShape(50), haze, strong = true, elevation = 18.dp)
+            .liquidGlass(RoundedCornerShape(50), strong = true, elevation = 18.dp)
             .testTag("nav_bar"),
     ) {
         val itemWidth = maxWidth / tabs.size
