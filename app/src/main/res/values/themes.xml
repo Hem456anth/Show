@@ -4,6 +4,19 @@
         <item name="android:windowBackground">@color/show_ink</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:navigationBarColor">@color/show_ink</item>
+        <!-- 1.5.3: pin every platform accent to the monochrome palette. android:Theme.Material's
+             default accent (teal, or the OEM's system blue on Samsung/MIUI/ColorOS builds) otherwise
+             tinted framework-drawn bits: PlayerView controls and their focus/press states, edge glows,
+             scrollbars and popup check marks. -->
+        <item name="android:colorAccent">@color/show_white</item>
+        <item name="android:colorPrimary">@color/show_ink</item>
+        <item name="android:colorPrimaryDark">@color/show_ink</item>
+        <item name="android:colorControlActivated">@color/show_white</item>
+        <item name="android:colorControlNormal">#B3FFFFFF</item>
+        <item name="android:colorControlHighlight">#33FFFFFF</item>
+        <item name="android:colorEdgeEffect">#66FFFFFF</item>
+        <item name="android:textColorHighlight">#66FFFFFF</item>
+        <item name="android:windowContentOverlay">@null</item>
     </style>
     <style name="Theme.Show.Player" parent="Theme.Show">
         <item name="android:windowBackground">@android:color/black</item>

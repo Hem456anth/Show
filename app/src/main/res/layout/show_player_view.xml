@@ -4,8 +4,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/black"
-    android:keepScreenOn="true"
     app:surface_type="surface_view"
     app:show_buffering="never"
     app:shutter_background_color="@android:color/black"
-    app:keep_content_on_player_reset="true" />
+    app:keep_content_on_player_reset="true"
+    app:played_color="@android:color/white"
+    app:scrubber_color="@android:color/white"
+    app:buffered_color="#66FFFFFF"
+    app:unplayed_color="#33FFFFFF" />

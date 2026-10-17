@@ -81,6 +81,8 @@ class PlaybackController(
     private var index = startIndex.coerceIn(0, this.queue.lastIndex)
     private var forcedHls = false
     private var released = false
+    /** False while the player screen is stopped (not visible, not in PiP): nothing may load or retry. */
+    private var foreground = true
     private var linkIndex = 0
     private var lastIndex = -1
     private var hasPlayed = false
@@ -89,14 +91,19 @@ class PlaybackController(
     private val _state = MutableStateFlow(UiState(this.queue[index], index, this.queue.size))
     val state: StateFlow<UiState> = _state.asStateFlow()
 
-    private val retryRunnable = Runnable { reload(keepCounter = true) }
+    private val retryRunnable = Runnable { if (foreground) reload(keepCounter = true) }
     private val stallRunnable = Runnable {
-        if (player.playbackState == Player.STATE_BUFFERING) {
+        // Only a stall the viewer is waiting through counts: not one while paused or in the background.
+        if (foreground && player.playWhenReady && player.playbackState == Player.STATE_BUFFERING) {
             handleIssue(PlaybackIssue(PlaybackIssue.Kind.TIMEOUT, "The stream stalled", "Reconnecting…", true))
         }
     }
     private val sleepRunnable = Runnable {
+        // stop(), not just pause(): a paused live player keeps polling the playlist all night.
         player.pause()
+        player.stop()
+        handler.removeCallbacks(retryRunnable)
+        handler.removeCallbacks(stallRunnable)
         _state.value = _state.value.copy(sleepAt = null, sleptByTimer = true)
     }
 
@@ -167,6 +174,7 @@ class PlaybackController(
 
     /** Connectivity came back: retry immediately if we were failing for network reasons. */
     fun onNetworkAvailable() {
+        if (!foreground || released) return
         val kind = _state.value.issue?.kind ?: return
         if (kind == PlaybackIssue.Kind.OFFLINE || kind == PlaybackIssue.Kind.TIMEOUT || kind == PlaybackIssue.Kind.SERVER) {
             handler.removeCallbacks(retryRunnable)
@@ -189,10 +197,36 @@ class PlaybackController(
 
     fun resumeAfterSleep() {
         _state.value = _state.value.copy(sleptByTimer = false)
-        // Live: jump back to the live edge rather than resuming minutes behind.
-        if (player.isCurrentMediaItemLive) player.seekToDefaultPosition()
-        player.play()
+        // The timer stopped the player; reload at the live edge.
+        reload(keepCounter = false)
     }
+
+    /**
+     * The player screen left the foreground (Home, another app, screen off) without PiP. Stops loading
+     * entirely and cancels retries, so a stalled or failing stream can't reconnect and start playing
+     * audio in the background (1.5.2 and earlier did: a retry or backup failover called play()).
+     */
+    fun onBackground() {
+        if (released || !foreground) return
+        foreground = false
+        handler.removeCallbacks(retryRunnable)
+        handler.removeCallbacks(stallRunnable)
+        player.pause()
+        player.stop()
+    }
+
+    /** Back on screen: reconnect at the live edge unless a final error or the sleep timer is showing. */
+    fun onForeground() {
+        if (released || foreground) return
+        foreground = true
+        val s = _state.value
+        if (s.sleptByTimer) return
+        if (s.issue != null && !s.retrying) return
+        if (!active.protocol.playableInApp) return
+        reload(keepCounter = false)
+    }
+
+    internal val isForeground: Boolean get() = foreground
 
     /** Cap video at [maxHeight] (one of [UiState.qualities]); null restores adaptive. */
     fun setQuality(maxHeight: Int?) {
@@ -277,7 +311,9 @@ class PlaybackController(
     }
 
     private fun prepare(ch: Channel, mime: String?) {
+        if (released) return
         player.setMediaSource(engine.mediaSource(ch, mime))
+        if (!foreground) return // loaded on return to the foreground
         player.prepare()
         player.play()
     }
@@ -290,6 +326,7 @@ class PlaybackController(
 
     internal fun onError(error: PlaybackException) {
         handler.removeCallbacks(stallRunnable)
+        if (!foreground || released) return
         if (error.errorCode == PlaybackException.ERROR_CODE_BEHIND_LIVE_WINDOW) {
             player.seekToDefaultPosition()
             player.prepare()

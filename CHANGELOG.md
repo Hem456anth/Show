@@ -1,5 +1,30 @@
 # Changelog
 
+## 1.5.3 (2026-10-17): Battery, lag and background audit
+* **Lag and battery drain on Home (root cause):** the hero's Ken Burns zoom was an infinite 16 s animation over three pager pages,
+  each a ~1.6x-zoomed layer with a 40 dp RenderEffect blur, so the GPU re-blurred full-screen artwork every frame for as long as
+  Home was open. The zoom is now a 1.2 s settle when a page lands, the backdrop is a tiny 48x27 decode drawn large (soft with no
+  blur pass, also on Android 8–11), auto-advance stops when Home isn't resumed, and all hero motion stops in Battery Saver.
+* **Scroll jank:** channel artwork used `SubcomposeAsyncImage` (a subcomposition per tile, hundreds per screen); it is now plain
+  `AsyncImage` decoded at the tile's real size instead of a fixed 480x270.
+* **Background drain (root cause):** leaving the player paused it, but a pending retry, a stall timeout, a backup-link failover or
+  a network change still re-prepared the stream and called `play()`, so audio could restart in the background with the network
+  wake lock and Wi-Fi lock held. Leaving now stops the player and cancels every retry; returning reconnects at the live edge.
+* **Screen kept awake:** the player held `FLAG_KEEP_SCREEN_ON` (and PlayerView `keepScreenOn`) for its whole life, so the error
+  screen or the sleep timer's "Paused" card kept the display on all night. It is now on only while video plays or loads. The sleep
+  timer stops the stream instead of pausing it (a paused live player keeps polling the playlist).
+* **Audio focus:** Show now requests audio focus, so it pauses for calls and other apps instead of playing over them.
+* **PiP closed with its X** now finishes the player, releasing the decoder, wake lock and connection.
+* **Blue dots / tints:** every platform accent is pinned to the monochrome palette (`colorAccent`, control, highlight, edge-effect,
+  text-highlight). Theme.Material's teal, or an OEM's system blue on Samsung/MIUI/ColorOS, was tinting PlayerView controls and
+  focus/press states, edge glows and popup checks. PlayerView's time bar colours are set explicitly.
+* **Hero jumping after launch:** the featured channels are kept across the four load passes (cache, network, indexes, Free-TV)
+  instead of being re-picked each time.
+* **Less network:** the countries/languages indexes and Free-TV are re-checked at most every 6 h instead of on every launch.
+* Tests: 102 (Release153Test: background, stall, network callback, final-error, release safety; fresh-index cache). New
+  `.github/workflows/audit.yml` + `tools/device_audit.sh` measure frames, jank, CPU, memory, wake locks, audio focus and
+  screenshots on API 26/29/31/33/35 against the previous release, plus a LeakCanary pass. Results: `docs/AUDIT_1.5.3.md`.
+
 ## 1.5.2 (2026-10-17): Home overlay, real fix
 * **The grey panel over the Home hero is gone.** Real cause: the hero backdrop is zoomed ~1.65x and shifted for parallax,
   and pager pages weren't clipped, so the next channel's artwork spilled across the current one. Each page now clips to its bounds.

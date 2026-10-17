@@ -76,6 +76,13 @@ class StreamEngine(
             .setLoadControl(loadControl)
             .setTrackSelector(trackSelector)
             .setHandleAudioBecomingNoisy(true)
+            // 1.5.3: request audio focus, so Show pauses for calls and for other apps' audio instead of
+            // playing over them (it never asked for focus before).
+            .setAudioAttributes(
+                androidx.media3.common.AudioAttributes.Builder()
+                    .setUsage(C.USAGE_MEDIA).setContentType(C.AUDIO_CONTENT_TYPE_MOVIE).build(),
+                /* handleAudioFocus = */ true,
+            )
             .setWakeMode(C.WAKE_MODE_NETWORK)
             .build()
     }

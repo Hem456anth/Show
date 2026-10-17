@@ -163,7 +163,7 @@ class MainViewModel(
                 sources.map { src ->
                     async {
                         val repo = synchronized(indexRepos) { indexRepos.getOrPut(src) { provider(src) } }
-                        runCatching { src.grouping to repo.refresh().playlist }
+                        runCatching { src.grouping to repo.refreshIfOlderThan(SECONDARY_MAX_AGE_MS).playlist }
                             .onFailure { if (it is kotlinx.coroutines.CancellationException) throw it }
                             .getOrNull()
                     }
@@ -188,7 +188,7 @@ class MainViewModel(
         if (!s.extraSources) return
         val allow = withContext(compute) { allowlist() }
         if (allow.isEmpty) return
-        val extra = runCatching { repo.refresh().playlist.channels }
+        val extra = runCatching { repo.refreshIfOlderThan(SECONDARY_MAX_AGE_MS).playlist.channels }
             .onFailure { if (it is kotlinx.coroutines.CancellationException) throw it }
             .getOrNull() ?: return
         val merged = withContext(compute) {
@@ -209,7 +209,13 @@ class MainViewModel(
             rawByIdentity = HashMap<String, Channel>(channels.size * 2).also { m -> channels.forEach { m.putIfAbsent(it.identity, it) } }
             val catalog = ChannelCatalog(if (hideGeo) channels.filterNot { it.isGeoBlocked } else channels)
             val rows = catalog.rows(settings.value.grouping).map { HomeRow(it.first, it.second) }
-            Triple(catalog, catalog.featured(daySeed()), rows)
+            // Keep the hero on the same channels across the enrichment passes (cache, network, indexes,
+            // Free-TV). 1.5.2 re-picked them on every pass, so the top shelf jumped 2-3 times after launch.
+            val previous = _state.value.featured
+            val byId = catalog.channels.associateBy { it.id }
+            val kept = previous.mapNotNull { byId[it.id] }
+            val featured = if (previous.isNotEmpty() && kept.size == previous.size) kept else catalog.featured(daySeed())
+            Triple(catalog, featured, rows)
         }
         // Saved channels whose link was replaced upstream follow the channel to its new address.
         if (!stillLoading) library.reconcile(isCurrent = { it in rawById }, current = { rawByIdentity[it.identity] })
@@ -269,5 +275,7 @@ class MainViewModel(
 
     companion object {
         const val STALE_AFTER_MS = 6L * 60 * 60 * 1000
+        /** Countries/languages indexes and Free-TV only add metadata; re-check them at most this often. */
+        const val SECONDARY_MAX_AGE_MS = 6L * 60 * 60 * 1000
     }
 }

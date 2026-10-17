@@ -67,6 +67,19 @@ class PlaylistRepository(
         runCatching { Result(parseFile(cacheFile), Source.Cache(null), cacheFile.lastModified()) }.getOrNull()
     }
 
+    /**
+     * 1.5.3: for the secondary indexes (countries/languages, Free-TV), which only add metadata. A copy
+     * younger than [maxAgeMs] is used as is: no request at all, instead of three conditional GETs on
+     * every launch and resume.
+     */
+    suspend fun refreshIfOlderThan(maxAgeMs: Long): Result = withContext(io) {
+        val age = clock() - cacheFile.lastModified()
+        if (hasCache() && age in 0 until maxAgeMs) {
+            runCatching { Result(parseFile(cacheFile), Source.NotModified, cacheFile.lastModified()) }.getOrNull()
+                ?: refresh()
+        } else refresh()
+    }
+
     suspend fun refresh(): Result = withContext(io) {
         try {
             fetch()

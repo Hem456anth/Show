@@ -1,0 +1,120 @@
+name: Device audit
+
+# Performance, battery, background and rendering audit across Android versions (docs/AUDIT_1.5.3.md).
+# Runs tools/device_audit.sh on emulators for the previous release (baseline) and this commit
+# (candidate), plus a LeakCanary pass, then commits the summary and screenshots to docs/audit/.
+on:
+  workflow_dispatch:
+    inputs:
+      baseline:
+        description: Release tag to compare against
+        default: v1.5.2
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with: { distribution: temurin, java-version: '17' }
+      - uses: gradle/actions/setup-gradle@v4
+      - run: ./gradlew --no-daemon :app:assembleRelease :app:assembleLeak
+      - name: Collect APKs
+        env: { GH_TOKEN: '${{ github.token }}' }
+        run: |
+          mkdir -p apks
+          cp app/build/outputs/apk/release/app-release.apk apks/candidate.apk
+          cp app/build/outputs/apk/leak/app-leak.apk apks/leak.apk
+          gh release download "${{ inputs.baseline }}" --repo "${{ github.repository }}" --pattern 'Show-*.apk' --output apks/baseline.apk
+          ls -la apks
+      - uses: actions/upload-artifact@v4
+        with: { name: apks, path: apks }
+
+  device:
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        api: [26, 29, 31, 33, 35]
+        build: [baseline, candidate]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with: { name: apks, path: apks }
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules && sudo udevadm trigger --name-match=kvm
+      - name: Audit on API ${{ matrix.api }}
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: ${{ matrix.api }}
+          arch: x86_64
+          target: google_apis
+          profile: pixel_6
+          disable-animations: false
+          emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim
+          script: bash tools/device_audit.sh apks/${{ matrix.build }}.apk out/${{ matrix.build }}-api${{ matrix.api }} || true
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: { name: 'audit-${{ matrix.build }}-api${{ matrix.api }}', path: out }
+
+  leaks:
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with: { name: apks, path: apks }
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules && sudo udevadm trigger --name-match=kvm
+      - name: LeakCanary pass (API 34)
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 34
+          arch: x86_64
+          target: google_apis
+          profile: pixel_6
+          emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim
+          script: |
+            bash tools/device_audit.sh apks/leak.apk out/leakcanary-api34 app.show.tv.leak || true
+            sleep 120
+            adb logcat -d -s LeakCanary > out/leakcanary-api34/leakcanary.txt || true
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: { name: audit-leakcanary, path: out }
+
+  report:
+    needs: [device, leaks]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with: { pattern: 'audit-*', path: raw, merge-multiple: true }
+      - name: Summarise and commit
+        run: |
+          pip install pillow >/dev/null
+          DEST=docs/audit/${{ github.sha }}
+          mkdir -p "$DEST"
+          cp -r raw/* "$DEST"/
+          python3 tools/audit_summary.py "$DEST" > "$DEST/SUMMARY.md"
+          cat "$DEST/SUMMARY.md"
+          # Keep the repo light: baseline keeps only its Home screenshot.
+          find "$DEST" -path '*baseline-*' -name '*.png' ! -name '01-home.png' -delete
+          rm -rf docs/audit/latest && cp -r "$DEST" docs/audit/latest
+          git config user.name "github-actions[bot]"
+          git config user.email "41898283+github-actions[bot]@users.noreply.github.com"
+          git add docs/audit
+          git commit -m "Device audit results for ${{ github.sha }}" || exit 0
+          git pull --rebase
+          git push

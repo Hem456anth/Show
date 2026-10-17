@@ -113,4 +113,20 @@ class PlaylistRepositoryTest {
             assertTrue(e.message!!.contains("no playable"))
         }
     }
+
+    // 1.5.3
+    @Test fun `secondary indexes are not re-requested while their copy is fresh`() = runBlocking {
+        val m3u = "#EXTM3U\n#EXTINF:-1 group-title=\"News\",One\nhttps://a.example/1.m3u8\n"
+        server.enqueue(MockResponse().setBody(m3u))
+        val url = server.url("/index.country.m3u").toString()
+        val repo = PlaylistRepository(client, tmp.root, url, 1024 * 1024, Dispatchers.Unconfined)
+        assertEquals(1, repo.refreshIfOlderThan(60_000).playlist.channels.size)
+        assertEquals(1, server.requestCount)
+        val again = repo.refreshIfOlderThan(60_000)
+        assertEquals(1, again.playlist.channels.size)
+        assertEquals("fresh copy used without a request", 1, server.requestCount)
+        server.enqueue(MockResponse().setResponseCode(304))
+        repo.refreshIfOlderThan(0)
+        assertEquals("stale copy is re-checked", 2, server.requestCount)
+    }
 }

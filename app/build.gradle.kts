@@ -13,8 +13,8 @@ android {
         applicationId = "app.show.tv"
         minSdk = 26
         targetSdk = 35
-        versionCode = 8
-        versionName = "1.5.2"
+        versionCode = 9
+        versionName = "1.5.3"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables { useSupportLibrary = true }
     }
@@ -40,6 +40,12 @@ android {
             isShrinkResources = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
             signingConfig = signingConfigs.findByName("release") ?: signingConfigs.getByName("debug")
+        }
+        // CI-only leak audit build: debuggable, LeakCanary on (see .github/workflows/audit.yml).
+        create("leak") {
+            initWith(getByName("debug"))
+            applicationIdSuffix = ".leak"
+            matchingFallbacks += listOf("debug")
         }
     }
 
@@ -83,6 +89,7 @@ dependencies {
     implementation("androidx.compose.material:material-icons-extended")
     implementation("androidx.compose.animation:animation")
 
+    "leakImplementation"("com.squareup.leakcanary:leakcanary-android:2.14")
     implementation("androidx.media3:media3-exoplayer:$media3")
     implementation("androidx.media3:media3-exoplayer-hls:$media3")
     implementation("androidx.media3:media3-exoplayer-dash:$media3")

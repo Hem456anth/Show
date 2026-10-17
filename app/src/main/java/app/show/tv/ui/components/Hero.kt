@@ -1,12 +1,8 @@
 package app.show.tv.ui.components
 
-import android.os.Build
-import androidx.compose.animation.core.LinearEasing
-import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateDpAsState
-import androidx.compose.animation.core.animateFloat
-import androidx.compose.animation.core.infiniteRepeatable
-import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -39,11 +35,12 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.graphics.Color
@@ -77,18 +74,25 @@ fun HeroCarousel(
 ) {
     if (featured.isEmpty()) return
     val reduceMotion = rememberReduceMotion()
+    // 1.5.3: no motion at all in battery saver, and nothing runs unless Home is actually resumed.
+    val calm = reduceMotion || rememberPowerSave()
+    val resumed = rememberIsResumed()
     val pager = rememberPagerState { featured.size }
-    LaunchedEffect(pager, featured.size, reduceMotion) {
-        while (featured.size > 1 && !reduceMotion) {
+    LaunchedEffect(pager, featured.size, calm, resumed) {
+        while (featured.size > 1 && !calm && resumed) {
             delay(8_000)
             if (!pager.isScrollInProgress) pager.animateScrollToPage((pager.currentPage + 1) % featured.size, animationSpec = tween(900))
         }
     }
-    val drift = rememberInfiniteTransition(label = "kenBurns")
-    val zoom by drift.animateFloat(
-        initialValue = 1.55f, targetValue = if (reduceMotion) 1.55f else 1.75f,
-        animationSpec = infiniteRepeatable(tween(16_000, easing = LinearEasing), RepeatMode.Reverse), label = "zoom",
-    )
+    // 1.5.3: Ken Burns is a short settle (1.2 s) when a page lands instead of an infinite 16 s loop. The
+    // loop redrew three zoomed, RenderEffect-blurred layers every frame (60 fps forever while Home was
+    // open): the main cause of the lag, heat and battery drain reports.
+    val zoomAnim = remember { Animatable(BACKDROP_ZOOM) }
+    LaunchedEffect(pager.settledPage, calm) {
+        if (calm) { zoomAnim.snapTo(BACKDROP_ZOOM); return@LaunchedEffect }
+        zoomAnim.snapTo(BACKDROP_ZOOM + 0.08f)
+        zoomAnim.animateTo(BACKDROP_ZOOM, tween(1_200, easing = LinearOutSlowInEasing))
+    }
 
     BoxWithConstraints(modifier.fillMaxWidth().testTag("hero")) {
         val wide = maxWidth > 600.dp
@@ -113,10 +117,12 @@ fun HeroCarousel(
                     ChannelArtwork(
                         ch,
                         Modifier.fillMaxSize().graphicsLayer {
-                            scaleX = zoom; scaleY = zoom; alpha = 0.6f
+                            val z = if (page == pager.settledPage) zoomAnim.value else BACKDROP_ZOOM
+                            scaleX = z; scaleY = z; alpha = 0.6f
                             translationX = pageOffset * size.width * 0.45f // backdrop lags the swipe
-                        }.then(if (Build.VERSION.SDK_INT >= 31) Modifier.blur(40.dp) else Modifier),
+                        },
                         logoPadding = 36.dp,
+                        backdrop = true, // tiny decode drawn large = soft, without a per-frame blur
                     )
                     Box(Modifier.fillMaxSize().background(ShowColors.TopScrim))
                     Box(Modifier.fillMaxSize().background(ShowColors.BottomScrim))
@@ -146,6 +152,33 @@ fun HeroCarousel(
             }
         }
     }
+}
+
+private const val BACKDROP_ZOOM = 1.55f
+
+/** True while the system battery saver is on (re-read when it toggles). */
+@Composable
+internal fun rememberPowerSave(): Boolean {
+    val ctx = androidx.compose.ui.platform.LocalContext.current
+    val pm = remember { ctx.getSystemService(android.os.PowerManager::class.java) }
+    var on by remember { androidx.compose.runtime.mutableStateOf(pm?.isPowerSaveMode == true) }
+    androidx.compose.runtime.DisposableEffect(pm) {
+        val receiver = object : android.content.BroadcastReceiver() {
+            override fun onReceive(c: android.content.Context?, i: android.content.Intent?) { on = pm?.isPowerSaveMode == true }
+        }
+        val filter = android.content.IntentFilter(android.os.PowerManager.ACTION_POWER_SAVE_MODE_CHANGED)
+        androidx.core.content.ContextCompat.registerReceiver(ctx, receiver, filter, androidx.core.content.ContextCompat.RECEIVER_NOT_EXPORTED)
+        onDispose { runCatching { ctx.unregisterReceiver(receiver) } }
+    }
+    return on
+}
+
+/** True while the hosting lifecycle is RESUMED (false behind a dialog-less other activity or when stopped). */
+@Composable
+internal fun rememberIsResumed(): Boolean {
+    val owner = androidx.lifecycle.compose.LocalLifecycleOwner.current
+    val state by owner.lifecycle.currentStateFlow.collectAsState()
+    return state.isAtLeast(androidx.lifecycle.Lifecycle.State.RESUMED)
 }
 
 /** The channel's logo on a frosted plate, standing in for a film's title art. */

@@ -51,36 +51,47 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import app.show.tv.data.Channel
 import app.show.tv.ui.theme.ShowColors
-import coil.compose.SubcomposeAsyncImage
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.mutableStateOf
+import coil.compose.AsyncImage
 import coil.request.ImageRequest
 
 /** Ids of channels whose link failed recently; cards dim and badge them. */
 val LocalUnavailableIds = compositionLocalOf { emptySet<String>() }
 
-/** Logo over a seeded gradient; falls back to a monogram when artwork is missing or broken. */
+/**
+ * Logo over a seeded gradient; falls back to a monogram when artwork is missing or broken.
+ *
+ * 1.5.3: plain [AsyncImage] (SubcomposeAsyncImage ran a subcomposition per tile, the main cause of
+ * scroll jank in rows of hundreds of cards) and decoded at the tile's measured size instead of a fixed
+ * 480x270. [backdrop] decodes a tiny 48x27 copy: drawn full-bleed it is naturally soft, replacing the
+ * per-frame RenderEffect blur the hero used to run.
+ */
 @Composable
-fun ChannelArtwork(channel: Channel, modifier: Modifier = Modifier, logoPadding: Dp = 14.dp, monogramSize: Int = 28) {
+fun ChannelArtwork(channel: Channel, modifier: Modifier = Modifier, logoPadding: Dp = 14.dp, monogramSize: Int = 28, backdrop: Boolean = false) {
     Box(modifier.background(ShowColors.tileBrush(channel.name)), contentAlignment = Alignment.Center) {
         val ctx = LocalContext.current
-        val monogram: @Composable () -> Unit = {
-            Text(
+        var failed by remember(channel.logoUrl) { mutableStateOf(false) }
+        if (channel.logoUrl == null || failed) {
+            if (!backdrop) Text(
                 channel.name.split(' ').filter { it.isNotBlank() }.take(2).joinToString("") { it.take(1) }.uppercase(),
                 color = Color.White.copy(alpha = 0.9f),
                 fontWeight = FontWeight.Black,
                 fontSize = androidx.compose.ui.unit.TextUnit(monogramSize.toFloat(), androidx.compose.ui.unit.TextUnitType.Sp),
             )
-        }
-        if (channel.logoUrl == null) monogram() else {
-            val request = remember(channel.logoUrl) {
-                ImageRequest.Builder(ctx).data(channel.logoUrl).size(480, 270).allowHardware(true).build()
+        } else {
+            val request = remember(channel.logoUrl, backdrop) {
+                ImageRequest.Builder(ctx).data(channel.logoUrl).allowHardware(true)
+                    .apply { if (backdrop) size(48, 27) }
+                    .build()
             }
-            SubcomposeAsyncImage(
+            AsyncImage(
                 model = request,
                 contentDescription = null,
                 contentScale = ContentScale.Fit,
+                filterQuality = if (backdrop) androidx.compose.ui.graphics.FilterQuality.High else androidx.compose.ui.graphics.FilterQuality.Low,
                 modifier = Modifier.fillMaxSize().padding(logoPadding),
-                loading = { Box(Modifier.fillMaxSize()) },
-                error = { Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) { monogram() } },
+                onError = { failed = true },
             )
         }
     }

@@ -97,7 +97,6 @@ class PlayerActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         WindowCompat.setDecorFitsSystemWindows(window, false)
         hideSystemBars()
 
@@ -114,6 +113,14 @@ class PlayerActivity : ComponentActivity() {
             onAudioLanguage = { graph.settings.setAudioLanguage(it) },
         )
         controller = c
+        // 1.5.3: keep the screen on only while video is actually playing or loading to play. 1.5.2 kept it
+        // on for the activity's whole life, so the error screen or the sleep timer's "Paused" card held the
+        // display (and the battery) awake all night.
+        c.player.addListener(object : androidx.media3.common.Player.Listener {
+            override fun onEvents(player: androidx.media3.common.Player, events: androidx.media3.common.Player.Events) {
+                updateKeepScreenOn(player)
+            }
+        })
         savedInstanceState?.getInt(KEY_RESIZE)?.let { resizeMode = it }
         c.start()
         registerNetworkCallback(c)
@@ -333,6 +340,13 @@ class PlayerActivity : ComponentActivity() {
         return super.dispatchKeyEvent(event)
     }
 
+    private fun updateKeepScreenOn(player: androidx.media3.common.Player) {
+        val active = player.playWhenReady &&
+            (player.playbackState == androidx.media3.common.Player.STATE_READY || player.playbackState == androidx.media3.common.Player.STATE_BUFFERING)
+        if (active) window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+        else window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+    }
+
     private fun enterPip() {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return
         runCatching { enterPictureInPictureMode(PictureInPictureParams.Builder().setAspectRatio(Rational(16, 9)).build()) }
@@ -346,22 +360,24 @@ class PlayerActivity : ComponentActivity() {
     override fun onPictureInPictureModeChanged(isInPictureInPictureMode: Boolean, newConfig: Configuration) {
         super.onPictureInPictureModeChanged(isInPictureInPictureMode, newConfig)
         inPip = isInPictureInPictureMode
-        // PiP window dismissed with its X: the activity is stopped; don't keep streaming in the background.
+        // PiP window dismissed with its X: the activity is stopped. Finish so the player, its decoder,
+        // wake lock and network are released instead of lingering in a hidden task.
         if (!isInPictureInPictureMode && !lifecycle.currentState.isAtLeast(androidx.lifecycle.Lifecycle.State.STARTED)) {
-            controller?.player?.pause()
+            controller?.onBackground()
+            finish()
         }
     }
 
     override fun onStop() {
         super.onStop()
-        // Leaving (not PiP): pause so we don't burn data in the background.
-        if (!isInPictureInPictureMode) controller?.player?.pause()
+        // Leaving (not PiP): stop loading and retrying so we don't burn data or battery in the background.
+        if (!isInPictureInPictureMode) controller?.onBackground()
     }
 
     override fun onStart() {
         super.onStart()
         // Resume only if playback was interrupted by leaving, not after an error or the sleep timer.
-        controller?.let { c -> if (c.state.value.issue == null && !c.state.value.sleptByTimer) c.player.play() }
+        controller?.onForeground()
         hideSystemBars()
     }
 
