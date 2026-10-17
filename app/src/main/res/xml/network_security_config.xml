@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Security posture:
+  * The playlist index, artwork CDN and every HTTPS stream use system-trusted CAs only
+    (user-installed CAs are NOT trusted, which blocks trivial MITM via rogue profiles).
+  * About 20% of iptv-org streams are plain http:// so cleartext must stay possible for
+    media segments. The playlist host itself is pinned to HTTPS-only below, and the app
+    code refuses to fetch playlists over cleartext (see PlaylistRepository).
+-->
+<network-security-config>
+    <base-config cleartextTrafficPermitted="true">
+        <trust-anchors>
+            <certificates src="system" />
+        </trust-anchors>
+    </base-config>
+    <domain-config cleartextTrafficPermitted="false">
+        <domain includeSubdomains="true">iptv-org.github.io</domain>
+        <domain includeSubdomains="true">github.io</domain>
+        <domain includeSubdomains="true">githubusercontent.com</domain>
+    </domain-config>
+</network-security-config>

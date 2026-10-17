@@ -1,0 +1,122 @@
+name: Android CI
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: write   # needed to publish GitHub Releases on tags
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Test and build release APK
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: gradle/actions/setup-gradle@v4
+      - name: Decode optional release keystore
+        env:
+          KEYSTORE_B64: ${{ secrets.SHOW_KEYSTORE_BASE64 }}
+        run: |
+          if [ -n "$KEYSTORE_B64" ]; then
+            echo "$KEYSTORE_B64" | base64 -d > "$RUNNER_TEMP/show-release.jks"
+            echo "SHOW_KEYSTORE_FILE=$RUNNER_TEMP/show-release.jks" >> "$GITHUB_ENV"
+          else
+            echo "No SHOW_KEYSTORE_BASE64 secret: release APK will be signed with the debug key."
+          fi
+      - name: Unit and UI tests
+        run: ./gradlew --no-daemon :app:testDebugUnitTest
+      - name: Assemble release APK
+        env:
+          SHOW_KEYSTORE_PASSWORD: ${{ secrets.SHOW_KEYSTORE_PASSWORD }}
+          SHOW_KEY_ALIAS: ${{ secrets.SHOW_KEY_ALIAS }}
+          SHOW_KEY_PASSWORD: ${{ secrets.SHOW_KEY_PASSWORD }}
+        run: |
+          ./gradlew --no-daemon :app:assembleRelease
+          VERSION=$(grep -oP 'versionName = "\K[^"]+' app/build.gradle.kts)
+          mkdir -p dist
+          cp app/build/outputs/apk/release/app-release.apk "dist/Show-$VERSION.apk"
+          (cd dist && sha256sum *.apk > SHA256SUMS.txt)
+          "$ANDROID_HOME"/build-tools/35.0.0/apksigner verify --print-certs "dist/Show-$VERSION.apk"
+      - name: Upload test reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-reports
+          path: app/build/reports/tests/
+      - uses: actions/upload-artifact@v4
+        with:
+          name: show-apk
+          path: dist/
+
+  install-smoke:
+    name: Install and launch on an emulator
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: show-apk
+          path: dist
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules && sudo udevadm trigger --name-match=kvm
+      - name: Install, launch and check for crashes (API 34)
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 34
+          arch: x86_64
+          target: google_apis
+          disable-animations: true
+          emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim
+          script: |
+            adb install -r dist/*.apk
+            adb logcat -c
+            adb shell am start -W -n app.show.tv/.MainActivity
+            sleep 25
+            adb shell pidof app.show.tv
+            adb exec-out screencap -p > dist/home.png
+            ! adb logcat -d -b crash | grep -E "FATAL EXCEPTION|app.show.tv"
+            echo "Show launched and stayed alive with no crash."
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: emulator-screenshot
+          path: dist/home.png
+
+  release:
+    name: Publish GitHub Release
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: [build, install-smoke]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: show-apk
+          path: dist
+      - name: Extract release notes from CHANGELOG
+        run: |
+          awk '/^## /{if (found) exit; found=1} found' CHANGELOG.md > notes.md
+          cat notes.md
+      - uses: softprops/action-gh-release@v2
+        with:
+          name: Show ${{ github.ref_name }}
+          body_path: notes.md
+          files: |
+            dist/Show-*.apk
+            dist/SHA256SUMS.txt

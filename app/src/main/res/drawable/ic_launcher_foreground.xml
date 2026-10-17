@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Show logomark centred in the 66dp adaptive-icon safe zone (black on the white background). -->
+<inset xmlns:android="http://schemas.android.com/apk/res/android"
+    android:drawable="@drawable/ic_show_mark"
+    android:inset="27dp" />

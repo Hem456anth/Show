@@ -1,0 +1,86 @@
+{
+  "india": {
+    "http": 200,
+    "bytes": 193955,
+    "entries": 783,
+    "channels": 783,
+    "duplicates_merged": 0,
+    "groups": 25,
+    "probed": 40,
+    "reachable": 32,
+    "seconds": 0.2,
+    "failures": {
+      "URLError": 1,
+      "TimeoutError": 1,
+      "http 401": 1,
+      "http 404": 3,
+      "http 403": 2
+    }
+  },
+  "global": {
+    "http": 200,
+    "bytes": 2573780,
+    "entries": 11346,
+    "channels": 11346,
+    "duplicates_merged": 0,
+    "groups": 30,
+    "probed": 40,
+    "reachable": 20,
+    "seconds": 0.3,
+    "failures": {
+      "URLError": 3,
+      "TimeoutError": 1,
+      "http 500": 1,
+      "http 404": 12,
+      "http 403": 3
+    }
+  },
+  "countries": {
+    "http": 200,
+    "bytes": 2994234,
+    "entries": 12873,
+    "channels": 11346,
+    "duplicates_merged": 1527,
+    "groups": 189,
+    "probed": 40,
+    "reachable": 22,
+    "seconds": 0.5,
+    "failures": {
+      "URLError": 5,
+      "http 404": 11,
+      "http 403": 2
+    }
+  },
+  "languages": {
+    "http": 200,
+    "bytes": 2897664,
+    "entries": 12813,
+    "channels": 11346,
+    "duplicates_merged": 1467,
+    "groups": 207,
+    "probed": 40,
+    "reachable": 21,
+    "seconds": 0.2,
+    "failures": {
+      "URLError": 2,
+      "http 404": 14,
+      "http 403": 3
+    }
+  },
+  "categories": {
+    "http": 200,
+    "bytes": 2735669,
+    "entries": 12054,
+    "channels": 11346,
+    "duplicates_merged": 708,
+    "groups": 30,
+    "probed": 40,
+    "reachable": 25,
+    "seconds": 0.3,
+    "failures": {
+      "URLError": 3,
+      "http 404": 10,
+      "http 403": 2
+    }
+  }
+}

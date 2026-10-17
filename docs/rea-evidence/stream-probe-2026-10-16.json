@@ -1,0 +1,23 @@
+{
+  "playlist_channels": 12054,
+  "sampled": 80,
+  "reachable": 48,
+  "reachable_pct": 60.0,
+  "by_result": {
+    "ok-hls": 44,
+    "ok-other": 4,
+    "http-404": 19,
+    "URLError": 12,
+    "http-403": 1
+  },
+  "examples_ok": [
+    "UMTV (1080p) [Not 24/7]",
+    "Hitradio O3 (720p)",
+    "Pluto TV Sci-Fi (United States) LatAm",
+    "Strongman (720p)",
+    "3ABN Canada (720p)",
+    "Mana Church Online (1080p) [Not 24/7]",
+    "Monster Jam (720p)",
+    "Radio America TV (720p)"
+  ]
+}
