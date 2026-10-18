@@ -54,6 +54,7 @@ fun SettingsSheet(
     onHideGeo: (Boolean) -> Unit,
     onHideUnavailable: (Boolean) -> Unit,
     onExtraSources: (Boolean) -> Unit = {},
+    onEmbeds: (Boolean) -> Unit = {},
     onClearHistory: () -> Unit,
     onSource: (PlaylistSource) -> Unit = {},
 ) {
@@ -106,6 +107,11 @@ fun SettingsSheet(
                 "Add verified Free-TV channels",
                 "Free-to-air channels from the Free-TV project, each link tested before release. Duplicates become backup links.",
                 settings.extraSources, onExtraSources, "toggle_extra",
+            )
+            if (!settings.isCustomPlaylist && settings.extraSources) ToggleRow(
+                "Include YouTube & Dailymotion live",
+                "Live channels checked as on air, played in the platform's own player. They may show the platform's ads.",
+                settings.embeds, onEmbeds, "toggle_embeds",
             )
 
             HorizontalDivider(Modifier.padding(vertical = 18.dp), color = Color.White.copy(alpha = 0.08f))

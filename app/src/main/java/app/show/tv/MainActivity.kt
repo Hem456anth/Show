@@ -209,6 +209,7 @@ fun ShowRoot() {
         onPlaylistUrl = vm::setPlaylistUrl, onHideGeo = vm::setHideGeoBlocked,
         onHideUnavailable = vm::setHideUnavailable, onClearHistory = vm::clearHistory,
         onExtraSources = vm::setExtraSources,
+        onEmbeds = { vm.setEmbeds(it) },
         onSource = { vm.setSource(it); showSettings = false },
     )
 

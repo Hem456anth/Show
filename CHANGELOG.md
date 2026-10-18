@@ -1,5 +1,22 @@
 # Changelog
 
+## 1.5.4 (2026-10-18): Sources review, stricter verification, YouTube & Dailymotion live
+* **Sources reviewed** (`docs/SOURCES_1.5.4.md`):
+  * Free-TV is kept. iptv-org `streams/` is skipped, because it's the same data Show already uses.
+  * YouTube and Dailymotion live are integrated through their official embedded players only.
+* **Verifier bug fixed:** web pages and DASH manifests passed the 1.5.0 check as "verified" (for example `lcp.fr/le-live-…`,
+  `citizentv.co.ke/live`). `tools/verify_extra_sources.py` v2 checks real media bytes for HLS (init + segment), DASH (init)
+  and progressive streams, rejects DRM, and retries transient failures 3 times. 898 of 1,692 links pass; 37 are dropped and 38 added.
+* **Automatic updates:** the allowlist is re-verified every Monday (`.github/workflows/verify-free-tv.yml`), and installed apps
+  fetch it at most daily (`data/AllowlistStore.kt`: https only, 2 MB cap, validated, keeps the newer of bundled/remote, keeps the last good copy).
+* **YouTube / Dailymotion live** (`player/EmbedPlayerActivity.kt`, `data/Embeds.kt`, `tools/verify_embeds.py`):
+  * Added only when the platform's API reports the channel live and embeddable. YouTube needs `YT_API_KEY`.
+  * Natively available channels win, and an embed never becomes a backup link.
+  * Unloads off-screen, keeps the screen on only while playing, and runs in a hardened WebView. New Settings toggle.
+* Free-TV's Ⓢ mark now shows as "SD" quality.
+* Tests: Release154Test (embed URL validation, routing, merge and dedupe, bundled list sanity), AllowlistStore (newer remote,
+  cache, broken/oversized/500/non-https fallbacks), Ⓢ parsing.
+
 ## 1.5.3 (2026-10-17): Battery, lag and background audit
 * **Lag and battery drain on Home (root cause):** the hero's Ken Burns zoom was an infinite 16 s animation over three pager pages,
   each a ~1.6x-zoomed layer with a 40 dp RenderEffect blur, so the GPU re-blurred full-screen artwork every frame for as long as

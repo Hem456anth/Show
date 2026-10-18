@@ -1,0 +1,43 @@
+name: Re-verify Free-TV
+
+# Free-TV links rotate. Every Monday this re-runs tools/verify_extra_sources.py (HLS/DASH/progressive
+# media check, DRM rejected, 3 attempts) and commits the refreshed allowlist. Installed apps pick it up
+# within a day (data/AllowlistStore.kt); the next release bundles it.
+on:
+  schedule:
+    - cron: '30 2 * * 1'   # Mondays 02:30 UTC (08:00 IST)
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify
+        run: python3 tools/verify_extra_sources.py --workers 40 --attempts 3
+      - name: Verify YouTube / Dailymotion live (official APIs)
+        env:
+          YT_API_KEY: ${{ secrets.YT_API_KEY }}
+        run: python3 tools/verify_embeds.py
+      - name: Sanity gate
+        run: |
+          python3 - <<'PY'
+          import json, sys
+          d = json.load(open("app/src/main/assets/verified_extra.json"))["sources"]["freetv"]
+          print(d["candidates"], "candidates,", d["verified"], "verified", d["results"])
+          # A network outage on the runner must not wipe the list: refuse to publish a collapse.
+          if d["verified"] < 300:
+              sys.exit("too few verified links, keeping the previous allowlist")
+          PY
+      - name: Commit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898283+github-actions[bot]@users.noreply.github.com"
+          git add app/src/main/assets/verified_extra.json docs/freetv/verify-report.json docs/freetv/embeds-report.json
+          git commit -m "Free-TV allowlist re-verified $(date -u +%F)" || exit 0
+          git pull --rebase
+          git push

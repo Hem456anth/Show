@@ -58,6 +58,8 @@ data class Channel(
 
     /** Same channel but from a different source of links ([Channel.flags] carries it). */
     val isExtra: Boolean get() = EXTRA_FLAG in flags
+    /** Plays in YouTube's or Dailymotion's own embedded player, not Media3 (1.5.4). */
+    val isEmbed: Boolean get() = protocol == StreamProtocol.EMBED
 
     companion object {
         const val UNCATEGORISED = "Undefined"

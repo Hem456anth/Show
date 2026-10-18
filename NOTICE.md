@@ -12,7 +12,12 @@ Not affiliated with VideoLAN, Netflix, or iptv-org.
 
 * **Free-TV/IPTV**: https://github.com/Free-TV/IPTV (no licence declared). Show fetches its public playlist at run
   time and uses only entries whose stream URL passed Show's own verification (`assets/verified_extra.json`, a list of
-  public stream addresses). Channel names and logos belong to their broadcasters.
+  public stream addresses). Channel names and logos belong to their broadcasters. Because the project declares no licence,
+  Show bundles none of its files: only the URLs Show itself verified, which are facts about public streams.
+
+* **YouTube and Dailymotion live channels** (1.5.4) play only in each platform's own embedded player (YouTube IFrame Player
+  API, Dailymotion embed player) under their terms of service. Show never downloads or extracts their media. Live status is
+  checked with the YouTube Data API v3 and Dailymotion's public Data API. Ads, if any, are the platform's.
 
 ## Third-party libraries (all Apache License 2.0)
 * AndroidX Media3 (ExoPlayer, HLS, DASH, SmoothStreaming, RTSP, OkHttp and RTMP data sources, UI): The Android Open Source Project

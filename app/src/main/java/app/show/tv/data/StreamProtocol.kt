@@ -15,6 +15,8 @@ enum class StreamProtocol(val label: String, val playableInApp: Boolean) {
     RTSP("RTSP", true),
     RTMP("RTMP", true),
     PROGRESSIVE("HTTP progressive", true),
+    /** YouTube / Dailymotion live, played in the platform's official embedded player (1.5.4). */
+    EMBED("Official player", true),
     MMS("MMS", false),
     SRT("SRT", false),
     UDP_RTP("UDP/RTP multicast", false),
@@ -22,6 +24,7 @@ enum class StreamProtocol(val label: String, val playableInApp: Boolean) {
 
     companion object {
         fun of(url: String): StreamProtocol {
+            if (Embeds.isEmbed(url)) return EMBED
             val lower = url.trim().lowercase()
             val scheme = lower.substringBefore("://", missingDelimiterValue = "")
             val path = lower.substringAfter("://").substringBefore('?').substringBefore('#')

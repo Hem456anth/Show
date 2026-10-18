@@ -198,6 +198,8 @@ object M3uParser {
         val (name, resolution, tagFlags) = splitTags(rawName)
         // Free-TV marks geo-blocked channels with Ⓖ in the display title (tvg-name has it stripped).
         val flags = if ('\u24BC' in title && tagFlags.none { it.equals("Geo-blocked", true) }) tagFlags + "Geo-blocked" else tagFlags
+        // 1.5.4: Free-TV marks channels that aren't HD with Ⓢ; show that instead of no quality at all.
+        val res = resolution ?: if ('\u24C8' in title) "SD" else null
         val group = attrs["group-title"]?.takeIf { it.isNotBlank() } ?: extGroup
         val groups = group?.split(';')?.map { it.trim() }?.filter { it.isNotEmpty() }?.distinct().orEmpty()
         val tvgId = attrs["tvg-id"]?.takeIf { it.isNotBlank() }
@@ -222,7 +224,7 @@ object M3uParser {
             tvgId = tvgId,
             language = languages.firstOrNull(),
             country = countries.firstOrNull(),
-            resolution = resolution,
+            resolution = res,
             flags = flags,
             userAgent = opts["http-user-agent"] ?: attrs["http-user-agent"],
             referrer = opts["http-referrer"] ?: opts["http-referer"] ?: attrs["http-referrer"] ?: attrs["http-referer"],

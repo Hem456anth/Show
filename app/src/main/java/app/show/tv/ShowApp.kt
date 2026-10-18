@@ -1,5 +1,6 @@
 package app.show.tv
 
+import app.show.tv.data.AllowlistStore
 import android.app.Application
 import android.content.Context
 import app.show.tv.data.LibraryStore
@@ -61,11 +62,15 @@ class AppGraph(
     val extraRepository: (() -> PlaylistRepository)? =
         if (enrichFromIndexes) ({ playlistRepository.forUrl(ExtraSources.FREETV_URL, PlaylistSource.Grouping.CATEGORY) }) else null
 
-    /** Verified Free-TV URLs, shipped in assets and read once off the main thread. */
-    val extraAllowlist: ExtraSources.Allowlist by lazy {
-        runCatching { app.assets.open("verified_extra.json").bufferedReader().use { it.readText() } }
-            .map(ExtraSources::parseAllowlist).getOrDefault(ExtraSources.Allowlist.EMPTY)
-    }
+    /**
+     * Verified Free-TV URLs: the copy shipped in assets, or the weekly re-verified copy from Show's
+     * repository when that one is newer (1.5.4, [app.show.tv.data.AllowlistStore]). Read off the main thread.
+     */
+    val allowlistStore = AllowlistStore(
+        httpClient, File(app.filesDir, "allowlist"),
+        bundled = { runCatching { app.assets.open("verified_extra.json").bufferedReader().use { it.readText() } }.getOrNull() },
+    )
+    val extraAllowlist: ExtraSources.Allowlist get() = allowlistStore.current()
 
     val libraryStore = LibraryStore(app.getSharedPreferences("library", Context.MODE_PRIVATE))
     val streamEngine = StreamEngine(app, mediaClient)

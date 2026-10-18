@@ -412,7 +412,11 @@ class PlayerActivity : ComponentActivity() {
         private const val KEY_RESIZE = "resize"
 
         fun start(context: Context, channel: Channel, queue: List<Channel>) {
-            context.startActivity(PlaybackQueue.intent(context, channel, queue))
+            // YouTube/Dailymotion live plays in the platform's own player; Media3 zaps only through native streams.
+            val intent = if (channel.isEmbed) EmbedPlayerActivity.intent(context, channel.streamUrl, channel.name)
+            else PlaybackQueue.intent(context, channel, queue.filterNot { it.isEmbed })
+            if (context !is android.app.Activity) intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            context.startActivity(intent)
         }
     }
 }

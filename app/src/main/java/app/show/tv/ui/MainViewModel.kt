@@ -115,7 +115,7 @@ class MainViewModel(
                     when {
                         now.playlistUrl != last.playlistUrl -> { raw = emptyList(); rawById = emptyMap(); _state.value = CatalogState(); load() }
                         now.hideGeoBlocked != last.hideGeoBlocked && raw.isNotEmpty() -> publish(raw, rawAt, rawNotice, _state.value.loading)
-                        now.extraSources != last.extraSources -> load()
+                        now.extraSources != last.extraSources || now.embeds != last.embeds -> load()
                     }
                     last = now
                 }
@@ -186,13 +186,13 @@ class MainViewModel(
         val s = settings.value
         val source = s.source ?: return
         if (!s.extraSources) return
-        val allow = withContext(compute) { allowlist() }
+        val allow = withContext(kotlinx.coroutines.Dispatchers.IO) { allowlist() } // may refresh over the network (daily)
         if (allow.isEmpty) return
         val extra = runCatching { repo.refreshIfOlderThan(SECONDARY_MAX_AGE_MS).playlist.channels }
             .onFailure { if (it is kotlinx.coroutines.CancellationException) throw it }
             .getOrNull() ?: return
         val merged = withContext(compute) {
-            ExtraSources.merge(base, extra, allow, countryFilter = if (source == PlaylistSource.INDIA) "India" else null)
+            ExtraSources.merge(base, extra, allow, countryFilter = if (source == PlaylistSource.INDIA) "India" else null, includeEmbeds = s.embeds)
         }
         if (merged !== base) publish(merged, at, notice, stillLoading = false)
     }
@@ -237,6 +237,7 @@ class MainViewModel(
         settingsStore?.setPlaylistUrl(url) ?: SettingsStore.UrlResult.Invalid("Settings unavailable")
     fun setHideGeoBlocked(v: Boolean) { settingsStore?.setHideGeoBlocked(v) }
     fun setHideUnavailable(v: Boolean) { settingsStore?.setHideUnavailable(v) }
+    fun setEmbeds(v: Boolean) = settingsStore?.setEmbeds(v)
     fun setExtraSources(v: Boolean) { settingsStore?.setExtraSources(v) }
 
     /** Called when the app returns to the foreground: links rotate daily, so re-check a stale list. */

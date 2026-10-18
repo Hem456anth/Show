@@ -15,6 +15,8 @@ data class Settings(
     val audioLanguage: String? = null,
     /** Merge independently verified Free-TV links into the catalog (new channels + backup links). */
     val extraSources: Boolean = true,
+    /** Include verified YouTube / Dailymotion live channels (official embedded players, 1.5.4). */
+    val embeds: Boolean = true,
 ) {
     /** The iptv-org index in use, or null for the viewer's own playlist. */
     val source: PlaylistSource? get() = PlaylistSource.byUrl(playlistUrl)
@@ -51,6 +53,7 @@ class SettingsStore(private val prefs: SharedPreferences) {
         if (clean != _settings.value.audioLanguage) update(_settings.value.copy(audioLanguage = clean))
     }
     fun setExtraSources(v: Boolean) = update(_settings.value.copy(extraSources = v))
+    fun setEmbeds(v: Boolean) = update(_settings.value.copy(embeds = v))
 
     private fun update(s: Settings) {
         _settings.value = s
@@ -60,6 +63,7 @@ class SettingsStore(private val prefs: SharedPreferences) {
             .putBoolean(KEY_DEAD, s.hideUnavailable)
             .putString(KEY_AUDIO, s.audioLanguage)
             .putBoolean(KEY_EXTRA, s.extraSources)
+            .putBoolean(KEY_EMBEDS, s.embeds)
             .apply()
     }
 
@@ -68,6 +72,7 @@ class SettingsStore(private val prefs: SharedPreferences) {
         return Settings(
             url, prefs.getBoolean(KEY_GEO, false), prefs.getBoolean(KEY_DEAD, false),
             audioLanguage = prefs.getString(KEY_AUDIO, null), extraSources = prefs.getBoolean(KEY_EXTRA, true),
+            embeds = prefs.getBoolean(KEY_EMBEDS, true),
         )
     }
 
@@ -77,6 +82,7 @@ class SettingsStore(private val prefs: SharedPreferences) {
         private const val KEY_DEAD = "hide_dead"
         private const val KEY_AUDIO = "audio_language"
         private const val KEY_EXTRA = "extra_sources"
+        private const val KEY_EMBEDS = "embeds"
 
         /** Returns a reason the URL is unusable, or null when it's fine. */
         fun validate(url: String): String? {

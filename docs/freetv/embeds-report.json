@@ -1,0 +1,1090 @@
+[
+ {
+  "name": "Euronews Albania",
+  "group": "Albania",
+  "source_url": "https://www.youtube.com/@EuronewsAlbania/live",
+  "kind": "youtube",
+  "embed_url": null,
+  "result": "skipped: no YT_API_KEY"
+ },
+ {
+  "name": "TN Todo Noticias",
+  "group": "Argentina",
+  "source_url": "https://www.youtube.com/c/todonoticias/live",
+  "kind": "youtube",
+  "embed_url": null,
+  "result": "skipped: no YT_API_KEY"
+ },
+ {
+  "name": "Encuentro Ⓨ",
+  "group": "Argentina",
+  "source_url": "https://www.youtube.com/user/encuentro/live",
+  "kind": "youtube",
+  "embed_url": null,
+  "result": "skipped: no YT_API_KEY"
+ },
+ {
+  "name": "Pakapaka Ⓨ",
+  "group": "Argentina",
+  "source_url": "https://www.youtube.com/user/CanalPakapaka/live",
+  "kind": "youtube",
+  "embed_url": null,
+  "result": "skipped: no YT_API_KEY"
+ },
+ {
+  "name": "Televisión Pública",
+  "group": "Argentina",
+  "source_url": "https://www.youtube.com/user/TVPublicaArgentina/live",
+  "kind": "youtube",
+  "embed_url": null,
+  "result": "skipped: no YT_API_KEY"
+ },
+ {
+  "name": "Crónica TV",
+  "group": "Argentina",
+  "source_url": "https://www.youtube.com/c/cronicatv/live",
+  "kind": "youtube",
+  "embed_url": null,
+  "result": "skipped: no YT_API_KEY"
+ },
+ {
+  "name": "Argentina 12",
+  "group": "Argentina",
+  "source_url": "https://www.youtube.com/c/IPNoticiasEnVivo/live",
+  "kind": "youtube",
+  "embed_url": null,
+  "result": "skipped: no YT_API_KEY"
+ },
+ {
+  "name": "El Destape",
+  "group": "Argentina",
+  "source_url": "https://www.youtube.com/c/eldestapetv/live",
+  "kind": "youtube",
+  "embed_url": null,
+  "result": "skipped: no YT_API_KEY"
+ },
+ {
+  "name": "C5N",
+  "group": "Argentina",
+  "source_url": "https://www.youtube.com/c/c5n/live",
+  "kind": "youtube",
+  "embed_url": null,
+  "result": "skipped: no YT_API_KEY"
+ },
+ {
+  "name": "LN+",
+  "group": "Argentina",
+  "source_url": "https://www.youtube.com/c/LaNacionMas/live",
+  "kind": "youtube",
+  "embed_url": null,
+  "result": "skipped: no YT_API_KEY"
+ },
+ {
+  "name": "Barricada TV",
+  "group": "Argentina",
+  "source_url": "https://www.youtube.com/channel/UC6YundoLrEuBJaPp_oEPWaA/live",
+  "kind": "youtube",
+  "embed_url": null,
+  "result": "skipped: no YT_API_KEY"
+ },
+ {
+  "name": "Urbana Tevé",
+  "group": "Argentina",
+  "source_url": "https://www.youtube.com/channel/UCTnbbQUGmWEKeCq9wWoyN0g/live",
+  "kind": "youtube",
+  "embed_url": null,
+  "result": "skipped: no YT_API_KEY"
+ },
+ {
+  "name": "Comarca TV",
+  "group": "Argentina",
+  "source_url": "https://www.youtube.com/c/ComarcaTV/live",
+  "kind": "youtube",
+  "embed_url": null,
+  "result": "skipped: no YT_API_KEY"
+ },
+ {
+  "name": "A24",
+  "group": "Argentina",
+  "source_url": "https://www.youtube.com/c/A24com/live",
+  "kind": "youtube",
+  "embed_url": null,
+  "result": "skipped: no YT_API_KEY"
+ },
+ {
+  "name": "Muz TV",
+  "group": "Azerbaijan",
+  "source_url": "https://www.youtube.com/channel/UCgHYcHd2SuX0ees5q0OWicQ/live",
+  "kind": "youtube",
+  "embed_url": null,
+  "result": "skipped: no YT_API_KEY"
+ },
+ {
+  "name": "Real TV",
+  "group": "Azerbaijan",
+  "source_url": "https://www.youtube.com/channel/UCjpoTfA8TXO6QfAWiAB67eA/live",
+  "kind": "youtube",
+  "embed_url": null,
+  "result": "skipped: no YT_API_KEY"
+ },
+ {
+  "name": "MTV Azerbaijan Ⓢ",
+  "group": "Azerbaijan",
+  "source_url": "https://www.youtube.com/@MTVAzerbaijan/live",
+  "kind": "youtube",
+  "embed_url": null,
+  "result": "skipped: no YT_API_KEY"
+ },
+ {
+  "name": "RTV USK",
+  "group": "Bosnia and Herzegovina",
+  "source_url": "https://www.youtube.com/@rtvusk/live",
+  "kind": "youtube",
+  "embed_url": null,
+  "result": "skipped: no YT_API_KEY"
+ },
+ {
+  "name": "SBT",
+  "group": "Brazil",
+  "source_url": "https://www.youtube.com/watch?v=ABVQXgr2LW4",
+  "kind": "youtube",
+  "embed_url": null,
+  "result": "skipped: no YT_API_KEY"
+ },
+ {
+  "name": "RBC",
+  "group": "Brazil",
+  "source_url": "https://www.youtube.com/watch?v=oUdd3CsxYaE",
+  "kind": "youtube",
+  "embed_url": null,
+  "result": "skipped: no YT_API_KEY"
+ },
+ {
+  "name": "Euronews Bulgaria",
+  "group": "Bulgaria",
+  "source_url": "https://www.youtube.com/channel/UCU1i6qBMjY9El6q5L2OK8hA/live",
+  "kind": "youtube",
+  "embed_url": null,
+  "result": "skipped: no YT_API_KEY"
+ },
+ {
+  "name": "CTV News",
+  "group": "Canada",
+  "source_url": "https://www.youtube.com/c/CTVNews/live",
+  "kind": "youtube",
+  "embed_url": null,
+  "result": "skipped: no YT_API_KEY"
+ },
+ {
+  "name": "Z1",
+  "group": "Croatia",
+  "source_url": "https://www.youtube.com/@z1televizija/live",
+  "kind": "youtube",
+  "embed_url": null,
+  "result": "skipped: no YT_API_KEY"
+ },
+ {
+  "name": "TV Dalmacija",
+  "group": "Croatia",
+  "source_url": "https://www.youtube.com/channel/UCvNIJIY4CM-T28UQgbUE4rQ/live",
+  "kind": "youtube",
+  "embed_url": null,
+  "result": "skipped: no YT_API_KEY"
+ },
+ {
+  "name": "N1 Hrvatska",
+  "group": "Croatia",
+  "source_url": "https://www.youtube.com/@N1_Hrvatska/live",
+  "kind": "youtube",
+  "embed_url": null,
+  "result": "skipped: no YT_API_KEY"
+ },
+ {
+  "name": "TV 2020",
+  "group": "Cyprus",
+  "source_url": "https://www.youtube.com/@TV2020KIBRIS/live",
+  "kind": "youtube",
+  "embed_url": null,
+  "result": "skipped: no YT_API_KEY"
+ },
+ {
+  "name": "Sundom TV",
+  "group": "Finland",
+  "source_url": "https://www.youtube.com/@SundomTV/live",
+  "kind": "youtube",
+  "embed_url": null,
+  "result": "skipped: no YT_API_KEY"
+ },
+ {
+  "name": "Wör TV",
+  "group": "Finland",
+  "source_url": "https://www.youtube.com/@wor-tvr.f.4461/live",
+  "kind": "youtube",
+  "embed_url": null,
+  "result": "skipped: no YT_API_KEY"
+ },
+ {
+  "name": "CNews",
+  "group": "France",
+  "source_url": "https://www.dailymotion.com/video/x3b68jn",
+  "kind": "dailymotion",
+  "embed_url": "https://geo.dailymotion.com/player.html?video=x3b68jn",
+  "result": "ok"
+ },
+ {
+  "name": "franceinfo:",
+  "group": "France",
+  "source_url": "https://www.youtube.com/c/franceinfo/live",
+  "kind": "youtube",
+  "embed_url": null,
+  "result": "skipped: no YT_API_KEY"
+ },
+ {
+  "name": "France 24",
+  "group": "France",
+  "source_url": "https://www.youtube.com/c/FRANCE24/live",
+  "kind": "youtube",
+  "embed_url": null,
+  "result": "skipped: no YT_API_KEY"
+ },
+ {
+  "name": "Euronews Français",
+  "group": "France",
+  "source_url": "https://www.youtube.com/euronewsfr/live",
+  "kind": "youtube",
+  "embed_url": null,
+  "result": "skipped: no YT_API_KEY"
+ },
+ {
+  "name": "Africanews",
+  "group": "France",
+  "source_url": "https://www.youtube.com/c/Africanewsfr/live",
+  "kind": "youtube",
+  "embed_url": null,
+  "result": "skipped: no YT_API_KEY"
+ },
+ {
+  "name": "L'Équipe",
+  "group": "France",
+  "source_url": "https://www.dailymotion.com/video/x2lefik",
+  "kind": "dailymotion",
+  "embed_url": null,
+  "result": "off air"
+ },
+ {
+  "name": "France Inter",
+  "group": "France",
+  "source_url": "https://www.youtube.com/c/FranceInter/live",
+  "kind": "youtube",
+  "embed_url": null,
+  "result": "skipped: no YT_API_KEY"
+ },
+ {
+  "name": "L'Équipe",
+  "group": "France",
+  "source_url": "https://www.youtube.com/@lequipe/live",
+  "kind": "youtube",
+  "embed_url": null,
+  "result": "skipped: no YT_API_KEY"
+ },
+ {
+  "name": "Euronews Deutsch",
+  "group": "Germany",
+  "source_url": "https://www.youtube.com/euronewsde/live",
+  "kind": "youtube",
+  "embed_url": null,
+  "result": "skipped: no YT_API_KEY"
+ },
+ {
+  "name": "Euronews Greek",
+  "group": "Greece",
+  "source_url": "https://www.youtube.com/euronewsGreek/live",
+  "kind": "youtube",
+  "embed_url": null,
+  "result": "skipped: no YT_API_KEY"
+ },
+ {
+  "name": "Blue Sky",
+  "group": "Greece",
+  "source_url": "https://www.youtube.com/channel/UCBuEruzW_f-Qpj_sABmuYSg/live",
+  "kind": "youtube",
+  "embed_url": null,
+  "result": "skipped: no YT_API_KEY"
+ },
+ {
+  "name": "Mad",
+  "group": "Greece",
+  "source_url": "https://www.youtube.com/c/madtvgreece/live",
+  "kind": "youtube",
+  "embed_url": null,
+  "result": "skipped: no YT_API_KEY"
+ },
+ {
+  "name": "DION",
+  "group": "Greece",
+  "source_url": "https://www.youtube.com/@diontileorash/live",
+  "kind": "youtube",
+  "embed_url": null,
+  "result": "skipped: no YT_API_KEY"
+ },
+ {
+  "name": "Pontos",
+  "group": "Greece",
+  "source_url": "https://www.youtube.com/@PontosTV/live",
+  "kind": "youtube",
+  "embed_url": null,
+  "result": "skipped: no YT_API_KEY"
+ },
+ {
+  "name": "Thessalia",
+  "group": "Greece",
+  "source_url": "https://www.youtube.com/c/thessaliatv1/live",
+  "kind": "youtube",
+  "embed_url": null,
+  "result": "skipped: no YT_API_KEY"
+ },
+ {
+  "name": "KNR1 Ⓨ",
+  "group": "Greenland",
+  "source_url": "https://www.youtube.com/@KNRgreenland/live",
+  "kind": "youtube",
+  "embed_url": null,
+  "result": "skipped: no YT_API_KEY"
+ },
+ {
+  "name": "KNR2",
+  "group": "Greenland",
+  "source_url": "https://www.youtube.com/@nutaarsiassat/live",
+  "kind": "youtube",
+  "embed_url": null,
+  "result": "skipped: no YT_API_KEY"
+ },
+ {
+  "name": "M1 Hiradó",
+  "group": "Hungary",
+  "source_url": "https://www.youtube.com/@M1-Hirado/live",
+  "kind": "youtube",
+  "embed_url": null,
+  "result": "skipped: no YT_API_KEY"
+ },
+ {
+  "name": "ErdélyTV",
+  "group": "Hungary",
+  "source_url": "https://www.youtube.com/channel/UCS5t4xWMT6lIZ9tcPROUd5A/live",
+  "kind": "youtube",
+  "embed_url": null,
+  "result": "skipped: no YT_API_KEY"
+ },
+ {
+  "name": "Radio 1",
+  "group": "Hungary",
+  "source_url": "https://www.youtube.com/@radio1hungary/live",
+  "kind": "youtube",
+  "embed_url": null,
+  "result": "skipped: no YT_API_KEY"
+ },
+ {
+  "name": "DikhTv",
+  "group": "Hungary",
+  "source_url": "https://www.youtube.com/c/DikhTvGipsyTv/live",
+  "kind": "youtube",
+  "embed_url": null,
+  "result": "skipped: no YT_API_KEY"
+ },
+ {
+  "name": "Euronews Hungarian",
+  "group": "Hungary",
+  "source_url": "https://www.youtube.com/channel/UC4Ct8gIf9f0n4mdyGsFiZRA/live",
+  "kind": "youtube",
+  "embed_url": null,
+  "result": "skipped: no YT_API_KEY"
+ },
+ {
+  "name": "DD National",
+  "group": "India",
+  "source_url": "https://www.youtube.com/doordarshan/live",
+  "kind": "youtube",
+  "embed_url": null,
+  "result": "skipped: no YT_API_KEY"
+ },
+ {
+  "name": "DD News",
+  "group": "India",
+  "source_url": "https://www.youtube.com/c/ddnews/live",
+  "kind": "youtube",
+  "embed_url": null,
+  "result": "skipped: no YT_API_KEY"
+ },
+ {
+  "name": "DD India",
+  "group": "India",
+  "source_url": "https://www.youtube.com/DDIndia/live",
+  "kind": "youtube",
+  "embed_url": null,
+  "result": "skipped: no YT_API_KEY"
+ },
+ {
+  "name": "DD Bharati",
+  "group": "India",
+  "source_url": "https://www.youtube.com/@ddbharati/live",
+  "kind": "youtube",
+  "embed_url": null,
+  "result": "skipped: no YT_API_KEY"
+ },
+ {
+  "name": "DD Kisan",
+  "group": "India",
+  "source_url": "https://www.youtube.com/@DDKisan/live",
+  "kind": "youtube",
+  "embed_url": null,
+  "result": "skipped: no YT_API_KEY"
+ },
+ {
+  "name": "DD Urdu",
+  "group": "India",
+  "source_url": "https://www.youtube.com/@DDUrdu/live",
+  "kind": "youtube",
+  "embed_url": null,
+  "result": "skipped: no YT_API_KEY"
+ },
+ {
+  "name": "India Today",
+  "group": "India",
+  "source_url": "https://www.youtube.com/watch?v=sYZtOFzM78M",
+  "kind": "youtube",
+  "embed_url": null,
+  "result": "skipped: no YT_API_KEY"
+ },
+ {
+  "name": "Aaj Tak",
+  "group": "India",
+  "source_url": "https://www.youtube.com/watch?v=Nq2wYlWFucg",
+  "kind": "youtube",
+  "embed_url": null,
+  "result": "skipped: no YT_API_KEY"
+ },
+ {
+  "name": "India TV",
+  "group": "India",
+  "source_url": "https://www.youtube.com/watch?v=e1FIApIafWE",
+  "kind": "youtube",
+  "embed_url": null,
+  "result": "skipped: no YT_API_KEY"
+ },
+ {
+  "name": "TV9 Bharatvarsh",
+  "group": "India",
+  "source_url": "https://www.youtube.com/watch?v=nSpwwcHVp80",
+  "kind": "youtube",
+  "embed_url": null,
+  "result": "skipped: no YT_API_KEY"
+ },
+ {
+  "name": "Republic Bharat",
+  "group": "India",
+  "source_url": "https://www.youtube.com/@RepublicBharat/live",
+  "kind": "youtube",
+  "embed_url": null,
+  "result": "skipped: no YT_API_KEY"
+ },
+ {
+  "name": "Asianet News",
+  "group": "India",
+  "source_url": "https://www.youtube.com/@asianetnews/live",
+  "kind": "youtube",
+  "embed_url": null,
+  "result": "skipped: no YT_API_KEY"
+ },
+ {
+  "name": "Asianet Suvarna News",
+  "group": "India",
+  "source_url": "https://www.youtube.com/@AsianetSuvarnaNews/live",
+  "kind": "youtube",
+  "embed_url": null,
+  "result": "skipped: no YT_API_KEY"
+ },
+ {
+  "name": "Asianet News Telugu",
+  "group": "India",
+  "source_url": "https://www.youtube.com/@AsianetNewsTelugu/live",
+  "kind": "youtube",
+  "embed_url": null,
+  "result": "skipped: no YT_API_KEY"
+ },
+ {
+  "name": "News18 UP Uttarakhand",
+  "group": "India",
+  "source_url": "https://www.youtube.com/@News18UPUttarakhand/live",
+  "kind": "youtube",
+  "embed_url": null,
+  "result": "skipped: no YT_API_KEY"
+ },
+ {
+  "name": "News18 Telugu",
+  "group": "India",
+  "source_url": "https://www.youtube.com/@News18Telugu/live",
+  "kind": "youtube",
+  "embed_url": null,
+  "result": "skipped: no YT_API_KEY"
+ },
+ {
+  "name": "News18 Marathi",
+  "group": "India",
+  "source_url": "https://www.youtube.com/@News18Marathi/live",
+  "kind": "youtube",
+  "embed_url": null,
+  "result": "skipped: no YT_API_KEY"
+ },
+ {
+  "name": "WION",
+  "group": "India",
+  "source_url": "https://www.youtube.com/@WION/live",
+  "kind": "youtube",
+  "embed_url": null,
+  "result": "skipped: no YT_API_KEY"
+ },
+ {
+  "name": "Mirror Now",
+  "group": "India",
+  "source_url": "https://www.youtube.com/@mirrornow/live",
+  "kind": "youtube",
+  "embed_url": null,
+  "result": "skipped: no YT_API_KEY"
+ },
+ {
+  "name": "ZEE News",
+  "group": "India",
+  "source_url": "https://www.youtube.com/@ZEENews/live",
+  "kind": "youtube",
+  "embed_url": null,
+  "result": "skipped: no YT_API_KEY"
+ },
+ {
+  "name": "News24",
+  "group": "India",
+  "source_url": "https://www.youtube.com/@News24thinkfirst/live",
+  "kind": "youtube",
+  "embed_url": null,
+  "result": "skipped: no YT_API_KEY"
+ },
+ {
+  "name": "Good News Today",
+  "group": "India",
+  "source_url": "https://www.youtube.com/@GoodNewsTodayOfficial/live",
+  "kind": "youtube",
+  "embed_url": null,
+  "result": "skipped: no YT_API_KEY"
+ },
+ {
+  "name": "9 канал",
+  "group": "Israel",
+  "source_url": "https://www.youtube.com/@israel9tv/live",
+  "kind": "youtube",
+  "embed_url": null,
+  "result": "skipped: no YT_API_KEY"
+ },
+ {
+  "name": "Gambero Rosso",
+  "group": "Italy",
+  "source_url": "https://cdndirector.dailymotion.com/cdn/live/video/x9us6y4.m3u8?sec=h5bGwJYFZy9AO66NpfTxbhTni9e637DUu_SUPhn3MewWKmiD4Rmw0UuwfufSVb3G",
+  "kind": "dailymotion",
+  "embed_url": null,
+  "result": "api 403"
+ },
+ {
+  "name": "Radio Colonna Tv",
+  "group": "Italy",
+  "source_url": "https://www.youtube.com/radiocolonna/live",
+  "kind": "youtube",
+  "embed_url": null,
+  "result": "skipped: no YT_API_KEY"
+ },
+ {
+  "name": "TRM h24",
+  "group": "Italy",
+  "source_url": "https://www.youtube.com/user/trmh24/live",
+  "kind": "youtube",
+  "embed_url": null,
+  "result": "skipped: no YT_API_KEY"
+ },
+ {
+  "name": "Euronews Italian",
+  "group": "Italy",
+  "source_url": "https://www.youtube.com/user/euronewsit/live",
+  "kind": "youtube",
+  "embed_url": null,
+  "result": "skipped: no YT_API_KEY"
+ },
+ {
+  "name": "NTV Kenya",
+  "group": "Kenya",
+  "source_url": "https://www.youtube.com/c/NTVKenyaOnline/live",
+  "kind": "youtube",
+  "embed_url": null,
+  "result": "skipped: no YT_API_KEY"
+ },
+ {
+  "name": "MBC TV",
+  "group": "Korea",
+  "source_url": "https://www.youtube.com/c/mbctvlive/live",
+  "kind": "youtube",
+  "embed_url": null,
+  "result": "skipped: no YT_API_KEY"
+ },
+ {
+  "name": "KBS World",
+  "group": "Korea",
+  "source_url": "https://www.youtube.com/@kbsworldtv/live",
+  "kind": "youtube",
+  "embed_url": null,
+  "result": "skipped: no YT_API_KEY"
+ },
+ {
+  "name": "KBS Korea",
+  "group": "Korea",
+  "source_url": "https://www.youtube.com/c/kbsworldtv/live",
+  "kind": "youtube",
+  "embed_url": null,
+  "result": "skipped: no YT_API_KEY"
+ },
+ {
+  "name": "All the K-Pop",
+  "group": "Korea",
+  "source_url": "https://www.youtube.com/c/ALLTHEKPOP/live",
+  "kind": "youtube",
+  "embed_url": null,
+  "result": "skipped: no YT_API_KEY"
+ },
+ {
+  "name": "TVM Ⓢ",
+  "group": "Malta",
+  "source_url": "https://www.youtube.com/channel/UChlf9r1rzhJ_SVM_WCKFL1g/live",
+  "kind": "youtube",
+  "embed_url": null,
+  "result": "skipped: no YT_API_KEY"
+ },
+ {
+  "name": "Mongol TV",
+  "group": "Mongolia",
+  "source_url": "https://www.youtube.com/c/MONGOLTVnow/live",
+  "kind": "youtube",
+  "embed_url": null,
+  "result": "skipped: no YT_API_KEY"
+ },
+ {
+  "name": "Channels TV",
+  "group": "Nigeria",
+  "source_url": "https://www.youtube.com/@ChannelsTelevision/live",
+  "kind": "youtube",
+  "embed_url": null,
+  "result": "skipped: no YT_API_KEY"
+ },
+ {
+  "name": "Soundcity TV",
+  "group": "Nigeria",
+  "source_url": "https://www.youtube.com/channel/UCGuIbAVY4_O-KOQmLkU0IKQ/live",
+  "kind": "youtube",
+  "embed_url": null,
+  "result": "skipped: no YT_API_KEY"
+ },
+ {
+  "name": "TVC News",
+  "group": "Nigeria",
+  "source_url": "https://www.youtube.com/tvcnewsnigeria/live",
+  "kind": "youtube",
+  "embed_url": null,
+  "result": "skipped: no YT_API_KEY"
+ },
+ {
+  "name": "Kanal 10 Norge",
+  "group": "Norway",
+  "source_url": "https://www.youtube.com/c/Kanal10Norge/live",
+  "kind": "youtube",
+  "embed_url": null,
+  "result": "skipped: no YT_API_KEY"
+ },
+ {
+  "name": "Unicanal",
+  "group": "Paraguay",
+  "source_url": "https://www.youtube.com/@unicanalpy/live",
+  "kind": "youtube",
+  "embed_url": null,
+  "result": "skipped: no YT_API_KEY"
+ },
+ {
+  "name": "ABC TV",
+  "group": "Paraguay",
+  "source_url": "https://www.youtube.com/user/canalabctv/live",
+  "kind": "youtube",
+  "embed_url": null,
+  "result": "skipped: no YT_API_KEY"
+ },
+ {
+  "name": "ATV+ Noticias",
+  "group": "Peru",
+  "source_url": "https://www.youtube.com/c/ATVNoticiasOficial/live",
+  "kind": "youtube",
+  "embed_url": null,
+  "result": "skipped: no YT_API_KEY"
+ },
+ {
+  "name": "Euronews em Português",
+  "group": "Portugal",
+  "source_url": "https://www.youtube.com/euronewspt/live",
+  "kind": "youtube",
+  "embed_url": null,
+  "result": "skipped: no YT_API_KEY"
+ },
+ {
+  "name": "Euronews România",
+  "group": "Romania",
+  "source_url": "https://www.youtube.com/euronewsro/live",
+  "kind": "youtube",
+  "embed_url": null,
+  "result": "skipped: no YT_API_KEY"
+ },
+ {
+  "name": "Euronews по-русски",
+  "group": "Russia",
+  "source_url": "https://www.youtube.com/euronewsru/live",
+  "kind": "youtube",
+  "embed_url": null,
+  "result": "skipped: no YT_API_KEY"
+ },
+ {
+  "name": "Banaadir TV",
+  "group": "Somalia",
+  "source_url": "https://www.youtube.com/channel/UC_IzgGt0bVMXBR_Eu6AcqRw/live",
+  "kind": "youtube",
+  "embed_url": null,
+  "result": "skipped: no YT_API_KEY"
+ },
+ {
+  "name": "Bulsho TV",
+  "group": "Somalia",
+  "source_url": "https://www.youtube.com/@Bulshotv/live",
+  "kind": "youtube",
+  "embed_url": null,
+  "result": "skipped: no YT_API_KEY"
+ },
+ {
+  "name": "Galmudug TV",
+  "group": "Somalia",
+  "source_url": "https://www.youtube.com/channel/UCaEZkCJVKUoQNK42y-bC2Uw/live",
+  "kind": "youtube",
+  "embed_url": null,
+  "result": "skipped: no YT_API_KEY"
+ },
+ {
+  "name": "Horn Cable TV",
+  "group": "Somalia",
+  "source_url": "https://www.youtube.com/@HornCableTV1/live",
+  "kind": "youtube",
+  "embed_url": null,
+  "result": "skipped: no YT_API_KEY"
+ },
+ {
+  "name": "Jubbaland TV",
+  "group": "Somalia",
+  "source_url": "https://www.youtube.com/@JLTVOfficial1/live",
+  "kind": "youtube",
+  "embed_url": null,
+  "result": "skipped: no YT_API_KEY"
+ },
+ {
+  "name": "KGS TV",
+  "group": "Somalia",
+  "source_url": "https://www.youtube.com/channel/UCiaAZAG_vm6cx3znkIqYErQ/live",
+  "kind": "youtube",
+  "embed_url": null,
+  "result": "skipped: no YT_API_KEY"
+ },
+ {
+  "name": "MM Somali TV",
+  "group": "Somalia",
+  "source_url": "https://www.youtube.com/@mmsomalitv/live",
+  "kind": "youtube",
+  "embed_url": null,
+  "result": "skipped: no YT_API_KEY"
+ },
+ {
+  "name": "Rejo TV",
+  "group": "Somalia",
+  "source_url": "https://www.youtube.com/channel/UCf_ntY4qKz0jFV2dRTWselQ/live",
+  "kind": "youtube",
+  "embed_url": null,
+  "result": "skipped: no YT_API_KEY"
+ },
+ {
+  "name": "Sahan TV",
+  "group": "Somalia",
+  "source_url": "https://www.youtube.com/channel/UCGn3y_geehf1ZgAlwtbNt2w/live",
+  "kind": "youtube",
+  "embed_url": null,
+  "result": "skipped: no YT_API_KEY"
+ },
+ {
+  "name": "Shabelle TV",
+  "group": "Somalia",
+  "source_url": "https://www.youtube.com/channel/UCXSorfoPFZbMraJP4XCtDQw/live",
+  "kind": "youtube",
+  "embed_url": null,
+  "result": "skipped: no YT_API_KEY"
+ },
+ {
+  "name": "Somaliland National TV",
+  "group": "Somalia",
+  "source_url": "https://www.youtube.com/c/SLNTVLIVESTREAM/live",
+  "kind": "youtube",
+  "embed_url": null,
+  "result": "skipped: no YT_API_KEY"
+ },
+ {
+  "name": "IB3 Global",
+  "group": "Spain",
+  "source_url": "https://www.youtube.com/c/ib3/live",
+  "kind": "youtube",
+  "embed_url": null,
+  "result": "skipped: no YT_API_KEY"
+ },
+ {
+  "name": "Lokal-TV Uddevalla / Fyrbodal-TV",
+  "group": "Sweden",
+  "source_url": "https://www.youtube.com/@LtvuSeTube/live",
+  "kind": "youtube",
+  "embed_url": null,
+  "result": "skipped: no YT_API_KEY"
+ },
+ {
+  "name": "CTV (中視)",
+  "group": "Taiwan",
+  "source_url": "https://www.youtube.com/c/twctvnews/live",
+  "kind": "youtube",
+  "embed_url": null,
+  "result": "skipped: no YT_API_KEY"
+ },
+ {
+  "name": "CTV News Channel (中視新聞台)",
+  "group": "Taiwan",
+  "source_url": "https://www.youtube.com/watch?v=TCnaIE_SAtM",
+  "kind": "youtube",
+  "embed_url": null,
+  "result": "skipped: no YT_API_KEY"
+ },
+ {
+  "name": "PTS (公視主頻)",
+  "group": "Taiwan",
+  "source_url": "https://www.youtube.com/channel/UCXgIO9jJVsX5_2ideiSkfvA/live",
+  "kind": "youtube",
+  "embed_url": null,
+  "result": "skipped: no YT_API_KEY"
+ },
+ {
+  "name": "PTS Taigi (公視台語台) Ⓨ",
+  "group": "Taiwan",
+  "source_url": "https://www.youtube.com/watch?v=6KlRR_DGhmI",
+  "kind": "youtube",
+  "embed_url": null,
+  "result": "skipped: no YT_API_KEY"
+ },
+ {
+  "name": "TaiwanPlus",
+  "group": "Taiwan",
+  "source_url": "https://www.youtube.com/watch?v=dZp87qnWelE",
+  "kind": "youtube",
+  "embed_url": null,
+  "result": "skipped: no YT_API_KEY"
+ },
+ {
+  "name": "FTV News (民視新聞台)",
+  "group": "Taiwan",
+  "source_url": "https://www.youtube.com/watch?v=ylYJSBUgaMA",
+  "kind": "youtube",
+  "embed_url": null,
+  "result": "skipped: no YT_API_KEY"
+ },
+ {
+  "name": "TTV Main Channel (臺灣電視台) Ⓨ",
+  "group": "Taiwan",
+  "source_url": "https://www.youtube.com/watch?v=uDqQo8a7Xmk",
+  "kind": "youtube",
+  "embed_url": null,
+  "result": "skipped: no YT_API_KEY"
+ },
+ {
+  "name": "TTV News (台視新聞台)",
+  "group": "Taiwan",
+  "source_url": "https://www.youtube.com/@TTV_NEWS/live",
+  "kind": "youtube",
+  "embed_url": null,
+  "result": "skipped: no YT_API_KEY"
+ },
+ {
+  "name": "Congress Channel 1",
+  "group": "Taiwan",
+  "source_url": "https://www.youtube.com/watch?v=x6XVbD7Ln78",
+  "kind": "youtube",
+  "embed_url": null,
+  "result": "skipped: no YT_API_KEY"
+ },
+ {
+  "name": "Congress Channel 2",
+  "group": "Taiwan",
+  "source_url": "https://www.youtube.com/watch?v=Lj8OWF6nzcg",
+  "kind": "youtube",
+  "embed_url": null,
+  "result": "skipped: no YT_API_KEY"
+ },
+ {
+  "name": "France 24",
+  "group": "UK",
+  "source_url": "https://www.youtube.com/c/france24english/live",
+  "kind": "youtube",
+  "embed_url": null,
+  "result": "skipped: no YT_API_KEY"
+ },
+ {
+  "name": "CNBC",
+  "group": "USA",
+  "source_url": "https://www.youtube.com/c/CNBC/live",
+  "kind": "youtube",
+  "embed_url": null,
+  "result": "skipped: no YT_API_KEY"
+ },
+ {
+  "name": "France 24 العربية",
+  "group": "News (AR)",
+  "source_url": "https://www.youtube.com/c/FRANCE24Arabic/live",
+  "kind": "youtube",
+  "embed_url": null,
+  "result": "skipped: no YT_API_KEY"
+ },
+ {
+  "name": "Sky News (UK)",
+  "group": "News",
+  "source_url": "https://www.youtube.com/channel/UCoMdktPbSTixAyNGwb-UYkQ/live",
+  "kind": "youtube",
+  "embed_url": null,
+  "result": "skipped: no YT_API_KEY"
+ },
+ {
+  "name": "Euronews",
+  "group": "News",
+  "source_url": "https://www.youtube.com/euronews/live",
+  "kind": "youtube",
+  "embed_url": null,
+  "result": "skipped: no YT_API_KEY"
+ },
+ {
+  "name": "Africanews",
+  "group": "News",
+  "source_url": "https://www.youtube.com/africanews/live",
+  "kind": "youtube",
+  "embed_url": null,
+  "result": "skipped: no YT_API_KEY"
+ },
+ {
+  "name": "France 24",
+  "group": "News",
+  "source_url": "https://www.youtube.com/france24english/live",
+  "kind": "youtube",
+  "embed_url": null,
+  "result": "skipped: no YT_API_KEY"
+ },
+ {
+  "name": "Channel News Asia",
+  "group": "News",
+  "source_url": "https://www.youtube.com/channel/UC83jt4dlz1Gjl58fzQrrKZg/live",
+  "kind": "youtube",
+  "embed_url": null,
+  "result": "skipped: no YT_API_KEY"
+ },
+ {
+  "name": "ABC News (AU)",
+  "group": "News",
+  "source_url": "https://www.youtube.com/@abcnewsaustralia/live",
+  "kind": "youtube",
+  "embed_url": null,
+  "result": "skipped: no YT_API_KEY"
+ },
+ {
+  "name": "NDTV 24x7",
+  "group": "News",
+  "source_url": "https://www.youtube.com/channel/UCZFMm1mMw0F81Z37aaEzTUA/live",
+  "kind": "youtube",
+  "embed_url": null,
+  "result": "skipped: no YT_API_KEY"
+ },
+ {
+  "name": "TRT World",
+  "group": "News",
+  "source_url": "https://www.youtube.com/channel/UC7fWeaHhqgM4Ry-RMpM2YYw/live",
+  "kind": "youtube",
+  "embed_url": null,
+  "result": "skipped: no YT_API_KEY"
+ },
+ {
+  "name": "NHK World Japan",
+  "group": "News",
+  "source_url": "https://www.youtube.com/channel/UCSPEjw8F2nQDtmUKPFNF7_A/live",
+  "kind": "youtube",
+  "embed_url": null,
+  "result": "skipped: no YT_API_KEY"
+ },
+ {
+  "name": "DD India",
+  "group": "News",
+  "source_url": "https://www.youtube.com/channel/UCGDQNvybfDDeGTf4GtigXaw/live",
+  "kind": "youtube",
+  "embed_url": null,
+  "result": "skipped: no YT_API_KEY"
+ },
+ {
+  "name": "WION",
+  "group": "News",
+  "source_url": "https://www.youtube.com/channel/UC_gUM8rL-Lrg6O3adPW9K1g/live",
+  "kind": "youtube",
+  "embed_url": null,
+  "result": "skipped: no YT_API_KEY"
+ },
+ {
+  "name": "TVC News",
+  "group": "News",
+  "source_url": "https://www.youtube.com/tvcnewsnigeria/live",
+  "kind": "youtube",
+  "embed_url": null,
+  "result": "skipped: no YT_API_KEY"
+ },
+ {
+  "name": "Channels 24",
+  "group": "News",
+  "source_url": "https://www.youtube.com/channelstelevision/live",
+  "kind": "youtube",
+  "embed_url": null,
+  "result": "skipped: no YT_API_KEY"
+ },
+ {
+  "name": "GB News",
+  "group": "News",
+  "source_url": "https://www.youtube.com/channel/UC0vn8ISa4LKMunLbzaXLnOQ/live",
+  "kind": "youtube",
+  "embed_url": null,
+  "result": "skipped: no YT_API_KEY"
+ },
+ {
+  "name": "Joy News",
+  "group": "News",
+  "source_url": "https://www.youtube.com/channel/UChd1DEecCRlxaa0-hvPACCw/live",
+  "kind": "youtube",
+  "embed_url": null,
+  "result": "skipped: no YT_API_KEY"
+ },
+ {
+  "name": "Euronews Español",
+  "group": "News (ES)",
+  "source_url": "https://www.youtube.com/euronewses/live",
+  "kind": "youtube",
+  "embed_url": null,
+  "result": "skipped: no YT_API_KEY"
+ }
+]

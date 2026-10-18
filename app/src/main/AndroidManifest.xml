@@ -43,5 +43,13 @@
             android:screenOrientation="sensorLandscape"
             android:supportsPictureInPicture="true"
             android:theme="@style/Theme.Show.Player" />
+
+        <activity
+            android:name=".player.EmbedPlayerActivity"
+            android:exported="false"
+            android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|keyboardHidden|uiMode"
+            android:screenOrientation="sensorLandscape"
+            android:hardwareAccelerated="true"
+            android:theme="@style/Theme.Show.Player" />
     </application>
 </manifest>

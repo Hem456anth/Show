@@ -3,7 +3,7 @@
 [![Android CI](https://github.com/Hem456anth/Show/actions/workflows/android.yml/badge.svg)](https://github.com/Hem456anth/Show/actions/workflows/android.yml)
 [![Latest release](https://img.shields.io/github/v/release/Hem456anth/Show)](https://github.com/Hem456anth/Show/releases/latest)
 
-> Version 1.5.2 (fixes the grey overlay on the Home hero). 1.5.0: Zee channels fixed at the root (saved channels follow rotated links), an audio-track picker, smoother 1080p, verified Free-TV channels and a liquid-glass tab bar. See `CHANGELOG.md` and `docs/STREAMING_1.5.md`.
+> Version 1.5.4: stricter Free-TV verification refreshed weekly, plus verified YouTube and Dailymotion live channels in their official players (see `docs/SOURCES_1.5.4.md`). 1.5.3: battery and lag audit. 1.5.2 fixed the grey overlay on the Home hero. 1.5.0: Zee channels fixed at the root (saved channels follow rotated links), an audio-track picker, smoother 1080p, verified Free-TV channels and a liquid-glass tab bar. See `CHANGELOG.md` and `docs/STREAMING_1.5.md`.
 
 ## Download
 
@@ -91,7 +91,7 @@ delivered APK was built.
 Live stream reachability probe (no decoding): `python3 tools/probe_streams.py --sample 80`.
 In-app live diagnostic (real parser, engine and Media3, needs network):
 `SHOW_LIVE_PLAYLIST=/path/index.m3u SHOW_LIVE_FILTER='^zee' ./gradlew :app:testDebugUnitTest --tests '*LiveStreamDiagnostic'`.
-Re-verify Free-TV before a release: `python3 tools/verify_extra_sources.py`.
+Re-verify Free-TV before a release: `python3 tools/verify_extra_sources.py && YT_API_KEY=... python3 tools/verify_embeds.py`. `.github/workflows/verify-free-tv.yml` does this every Monday and installed apps pick up the result within a day.
 
 ## Project layout and design
 

@@ -154,4 +154,13 @@ class M3uParserTest {
         assertTrue("parse took $ms ms", ms < 5_000)
         println("Parsed ${p.channels.size} channels, ${cats.size} categories, skipped ${p.skippedEntries}, in $ms ms")
     }
+
+    @Test fun `free-tv SD mark becomes an SD resolution`() {
+        val text = "#EXTM3U\n#EXTINF:-1 tvg-name=\"Kanali 7\" tvg-id=\"Kanali7.al\" tvg-country=\"AL\" group-title=\"Albania\",Kanali 7 \u24C8\nhttps://fe.example/1200_1.m3u8\n" +
+            "#EXTINF:-1 tvg-name=\"Rai 1\" group-title=\"Italy\",Rai 1\nhttps://rai.example/1.m3u8\n"
+        val chs = app.show.tv.data.M3uParser.parse(java.io.StringReader(text)).channels
+        org.junit.Assert.assertEquals("Kanali 7", chs[0].name)
+        org.junit.Assert.assertEquals("SD", chs[0].resolution)
+        org.junit.Assert.assertEquals(null, chs[1].resolution)
+    }
 }
