@@ -51,5 +51,12 @@
             android:screenOrientation="sensorLandscape"
             android:hardwareAccelerated="true"
             android:theme="@style/Theme.Show.Player" />
+
+        <activity
+            android:name=".vod.VodPlayerActivity"
+            android:exported="false"
+            android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|keyboardHidden|uiMode"
+            android:screenOrientation="sensorLandscape"
+            android:theme="@style/Theme.Show.Player" />
     </application>
 </manifest>

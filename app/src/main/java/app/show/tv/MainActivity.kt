@@ -20,6 +20,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Bookmarks
 import androidx.compose.material.icons.rounded.Home
 import androidx.compose.material.icons.rounded.LiveTv
+import androidx.compose.material.icons.rounded.Movie
 import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
@@ -78,6 +79,8 @@ import androidx.compose.ui.Alignment
 enum class Tab(val route: String, val label: String, val icon: ImageVector) {
     Home("home", "Home", Icons.Rounded.Home),
     Live("live", "Live TV", Icons.Rounded.LiveTv),
+    /** Movies & Series (1.6.0): an independent on-demand experience with its own sections and players. */
+    Movies("vod", "Movies", Icons.Rounded.Movie),
     Search("search", "Search", Icons.Rounded.Search),
     MyList("mylist", "My List", Icons.Rounded.Bookmarks),
 }
@@ -162,6 +165,10 @@ fun ShowRoot() {
                     LiveTvScreen(state, favoriteIds, metrics, actions, onRetry = { vm.load(forceNetwork = true) },
                         hideUnavailable = settings.hideUnavailable, onHideUnavailable = vm::setHideUnavailable,
                         preset = liveFilter, onPresetConsumed = { liveFilter = null })
+                }
+                composable(Tab.Movies.route) {
+                    val vodVm: app.show.tv.vod.VodViewModel = viewModel(factory = app.show.tv.vod.VodViewModel.Factory(graph.vodRepository, graph.vodLibrary, graph.vodSettings))
+                    app.show.tv.vod.VodTab(vodVm, metrics)
                 }
                 composable(Tab.Search.route) {
                     SearchScreen(search, query, state.catalog.categories, searchCategory, favoriteIds, metrics, actions, vm::onQueryChange, vm::onSearchCategory, history)

@@ -1,5 +1,21 @@
 # Changelog
 
+## 1.6.0 (2026-10-20): Movies & Series
+* **New Movies tab**, independent from Live TV (its own Browse / Search / My List, detail pages and players). Live TV is unchanged.
+  See `docs/MOVIES_1.6.md` for the architecture audit, source research, rejected sources and credentials.
+* **Playable sources:** Internet Archive public-domain / Creative Commons films and classic TV (no account), and your own
+  **Jellyfin** server (sign in from Movies settings; only the token is stored; progress syncs back to the server).
+* **Metadata:** TMDB (trending, now playing, popular, top rated, on the air, cast & crew, trailers, recommendations, seasons,
+  episodes, studios, networks) with your free key or a build-time `TMDB_API_KEY`; TVmaze series info when no key is set.
+  TMDB-only titles are labelled "Info" and play only when your Jellyfin has the same title.
+* **Continue Watching** with per-episode resume, **My List** for titles plus studio, network and cast shortcuts.
+* **VOD player:** resume with Start over, quality menu with automatic fallback, movie and episodic layouts (previous/next,
+  episode list, auto-advance), progress saved every 10 s, stops off-screen, screen awake only while playing.
+* Trailers open in the existing hardened YouTube embed player.
+* Tests: Release160Test (Archive rights filter, renditions, episodes, taken-down items; TMDB parsing, trailer choice, auth
+  modes; Jellyfin auth, catalog, header-only tokens, progress sync, server-address validation; library/progress; settings;
+  repository caching, partial failure and dedupe; Movies tab UI flow).
+
 ## 1.5.4 (2026-10-18): Sources review, stricter verification, YouTube & Dailymotion live
 * **Sources reviewed** (`docs/SOURCES_1.5.4.md`):
   * Free-TV is kept. iptv-org `streams/` is skipped, because it's the same data Show already uses.

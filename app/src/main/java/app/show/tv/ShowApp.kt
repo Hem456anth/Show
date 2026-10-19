@@ -13,6 +13,10 @@ import coil.disk.DiskCache
 import coil.memory.MemoryCache
 import okhttp3.ConnectionPool
 import okhttp3.OkHttpClient
+import app.show.tv.vod.VodHttp
+import app.show.tv.vod.VodLibrary
+import app.show.tv.vod.VodRepository
+import app.show.tv.vod.VodSettings
 import app.show.tv.data.ExtraSources
 import app.show.tv.data.PlaylistSource
 import okhttp3.Protocol
@@ -74,6 +78,15 @@ class AppGraph(
 
     val libraryStore = LibraryStore(app.getSharedPreferences("library", Context.MODE_PRIVATE))
     val streamEngine = StreamEngine(app, mediaClient)
+
+    // ---- Movies & Series (1.6.0): independent from Live TV, shares the HTTP stack and image loader.
+    /** Outlives activities, for fire-and-forget calls such as the final Jellyfin progress report. */
+    val vodScope = kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.SupervisorJob() + kotlinx.coroutines.Dispatchers.IO)
+    val vodSettings = VodSettings(app.getSharedPreferences("vod_settings", Context.MODE_PRIVATE), BuildConfig.TMDB_API_KEY)
+    val vodLibrary = VodLibrary(app.getSharedPreferences("vod_library", Context.MODE_PRIVATE))
+    val vodRepository: VodRepository by lazy {
+        VodRepository(VodHttp(mediaClient.newBuilder().readTimeout(15, TimeUnit.SECONDS).build()), { vodSettings.config.value })
+    }
 
     val imageLoader: ImageLoader by lazy { ImageLoader.Builder(app)
         .okHttpClient(mediaClient.newBuilder().readTimeout(10, TimeUnit.SECONDS).build())

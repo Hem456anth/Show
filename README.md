@@ -102,3 +102,10 @@ See `docs/ARCHITECTURE.md` (modules, data flow, recovery state machine, security
 
 See `NOTICE.md`. Show hosts and redistributes no video. It reads a public index of links that
 broadcasters make freely available. Some streams are geo-restricted or intermittent, and availability is up to each broadcaster.
+
+
+## Movies & Series (1.6.0)
+A separate Movies tab plays free public-domain / Creative Commons films and TV from the Internet Archive and your own
+Jellyfin library, with TMDB (or TVmaze) for discovery, cast and trailers. Setup: open Movies → ⚙ and add a free TMDB key
+and/or your Jellyfin server. To bake a TMDB key into a build: `./gradlew assembleRelease -PTMDB_API_KEY=<key>` (CI: repository
+secret `TMDB_API_KEY`). Details and source decisions: `docs/MOVIES_1.6.md`.

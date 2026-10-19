@@ -19,6 +19,12 @@ Not affiliated with VideoLAN, Netflix, or iptv-org.
   API, Dailymotion embed player) under their terms of service. Show never downloads or extracts their media. Live status is
   checked with the YouTube Data API v3 and Dailymotion's public Data API. Ads, if any, are the platform's.
 
+## Movies & Series data (1.6.0)
+* Internet Archive (archive.org): public-domain and Creative Commons items only, as declared by each item's `licenseurl`.
+* TMDB: "This product uses the TMDB API but is not endorsed or certified by TMDB." (themoviedb.org)
+* TVmaze (tvmaze.com): TV data under CC BY-SA 4.0.
+* Jellyfin (jellyfin.org): Show talks to the viewer's own server over its public API; no Jellyfin code is included.
+
 ## Third-party libraries (all Apache License 2.0)
 * AndroidX Media3 (ExoPlayer, HLS, DASH, SmoothStreaming, RTSP, OkHttp and RTMP data sources, UI): The Android Open Source Project
 * `media3-datasource-rtmp` bundles LibRtmp-Client-for-Android (Apache 2.0 wrapper of librtmp; librtmp is LGPL-2.1, dynamically loaded `.so`)

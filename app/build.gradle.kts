@@ -10,11 +10,14 @@ android {
     buildToolsVersion = "35.0.0"
 
     defaultConfig {
+        // Optional TMDB key baked in at build time (Gradle property or env TMDB_API_KEY); viewers can also enter their own.
+        val tmdbKey = (project.findProperty("TMDB_API_KEY") as String?) ?: System.getenv("TMDB_API_KEY") ?: ""
+        buildConfigField("String", "TMDB_API_KEY", "\"${tmdbKey.replace("\"", "")}\"")
         applicationId = "app.show.tv"
         minSdk = 26
         targetSdk = 35
-        versionCode = 10
-        versionName = "1.5.4"
+        versionCode = 11
+        versionName = "1.6.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables { useSupportLibrary = true }
     }
