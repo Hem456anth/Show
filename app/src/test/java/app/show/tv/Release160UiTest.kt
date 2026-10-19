@@ -38,7 +38,13 @@ import java.util.zip.GZIPInputStream
 @ConscryptMode(ConscryptMode.Mode.OFF)
 @GraphicsMode(GraphicsMode.Mode.LEGACY)
 class Release160UiTest {
-    @get:Rule val compose = createComposeRule()
+    private val compose = createComposeRule()
+    /** The CI skip has to run outside the Compose rule, or the rule still waits for idle after the skipped body. */
+    @get:Rule val rules: org.junit.rules.RuleChain = org.junit.rules.RuleChain
+        .outerRule(org.junit.rules.TestRule { base, _ -> object : org.junit.runners.model.Statement() {
+            override fun evaluate() { org.junit.Assume.assumeTrue(System.getenv("CI") == null); base.evaluate() }
+        } })
+        .around(compose)
     private val http = VodHttp(OkHttpClient())
     private val ctx: Context get() = ApplicationProvider.getApplicationContext()
     private fun title(id: String, kind: VodKind = VodKind.MOVIE, p: Provider = Provider.ARCHIVE, year: Int? = 1940) =
@@ -56,7 +62,6 @@ class Release160UiTest {
     // Runs locally (passes in the full suite); on GitHub's slower runners Compose never reports idle at teardown
     // (AppNotIdleException after the body passed), so CI skips it rather than block releases. Tracked in docs/MOVIES_1.6.md.
     @Test fun `movies tab browses, opens a detail page, saves to my list and searches`() {
-        org.junit.Assume.assumeTrue(System.getenv("CI") == null)
         val playable = title("his_girl_friday", year = 1940)
         val info = title("dune", p = Provider.TMDB, year = 2024)
         val sources = listOf(
