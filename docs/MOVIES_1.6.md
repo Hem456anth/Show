@@ -71,3 +71,4 @@ A TMDB title becomes playable only when the viewer's Jellyfin has the same TMDB 
 * Archive licences are uploader-declared; Show trusts the Archive's metadata and re-checks it per item.
 * Jellyfin transcoded qualities depend on the server allowing transcoding.
 * Real-device playback still needs a QA pass (sandbox has no device; CI runs emulator install/launch).
+* Release160UiTest (Movies tab UI flow) passes locally but is skipped on GitHub Actions: Compose never reports idle at teardown on those runners. Investigate before relying on it in CI.
