@@ -268,8 +268,8 @@
   "group": "France",
   "source_url": "https://www.dailymotion.com/video/x2lefik",
   "kind": "dailymotion",
-  "embed_url": null,
-  "result": "off air"
+  "embed_url": "https://geo.dailymotion.com/player.html?video=x2lefik",
+  "result": "ok"
  },
  {
   "name": "France Inter",

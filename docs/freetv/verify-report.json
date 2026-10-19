@@ -1,5 +1,5 @@
 {
- "verified_at": "2026-10-18T04:26:44+00:00",
+ "verified_at": "2026-10-19T08:01:34+00:00",
  "sources": {
   "freetv": [
    {
@@ -38,9 +38,9 @@
     "name": "CNA",
     "group": "Albania",
     "url": "https://live1.mediadesk.al/cnatvlive.m3u8",
-    "result": "ok",
-    "format": "hls-ts",
-    "attempts": 1
+    "result": "flaky",
+    "why": "curl 60",
+    "attempts": 3
    },
    {
     "name": "News 24 Ⓢ",
@@ -54,9 +54,9 @@
     "name": "Ora News",
     "group": "Albania",
     "url": "https://live1.mediadesk.al/oranews.m3u8",
-    "result": "ok",
-    "format": "hls-ts",
-    "attempts": 1
+    "result": "flaky",
+    "why": "curl 60",
+    "attempts": 3
    },
    {
     "name": "Panorama TV Ⓢ",
@@ -246,8 +246,8 @@
     "name": "Armenia TV Ⓢ",
     "group": "Armenia",
     "url": "http://stream.mcquack.net/175/index.m3u8",
-    "result": "ok",
-    "format": "hls-ts",
+    "result": "dead",
+    "why": "variant not a playlist",
     "attempts": 1
    },
    {
@@ -294,8 +294,8 @@
     "name": "10 Peach",
     "group": "Australia",
     "url": "https://i.mjh.nz/.r/10peach-nsw.m3u8",
-    "result": "ok",
-    "format": "hls-ts",
+    "result": "blocked",
+    "why": "http 403",
     "attempts": 1
    },
    {
@@ -542,8 +542,8 @@
     "name": "AZTV Ⓢ",
     "group": "Azerbaijan",
     "url": "https://str.yodacdn.net/azertv/index.m3u8",
-    "result": "dead",
-    "why": "http 404",
+    "result": "ok",
+    "format": "hls-ts",
     "attempts": 1
    },
    {
@@ -566,16 +566,16 @@
     "name": "Kanal S",
     "group": "Azerbaijan",
     "url": "https://lives.atv.az:5443/KANAL-S/streams/kanals.m3u8",
-    "result": "dead",
-    "why": "http 404",
+    "result": "ok",
+    "format": "hls-ts",
     "attempts": 1
    },
    {
     "name": "Mədəniyyət TV Ⓢ",
     "group": "Azerbaijan",
     "url": "https://str.yodacdn.net/medeniyyettele/index.m3u8",
-    "result": "dead",
-    "why": "http 404",
+    "result": "ok",
+    "format": "hls-ts",
     "attempts": 1
    },
    {
@@ -646,8 +646,8 @@
     "name": "СТВ",
     "group": "Belarus",
     "url": "https://ctv.dc.beltelecom.by/ctv/ctv.stream/playlist.m3u8",
-    "result": "dead",
-    "why": "not media",
+    "result": "ok",
+    "format": "hls-ts",
     "attempts": 1
    },
    {
@@ -846,16 +846,16 @@
     "name": "Televizija Republike Srpske (RTRS)",
     "group": "Bosnia and Herzegovina",
     "url": "https://parh.rtrs.tv/tv/live/playlist.m3u8",
-    "result": "blocked",
-    "why": "http 403",
+    "result": "ok",
+    "format": "hls-ts",
     "attempts": 1
    },
    {
     "name": "RTRS PLUS Ⓢ",
     "group": "Bosnia and Herzegovina",
     "url": "https://pluslive.rtrs.tv/plus/plus/playlist.m3u8",
-    "result": "blocked",
-    "why": "http 403",
+    "result": "ok",
+    "format": "hls-ts",
     "attempts": 1
    },
    {
@@ -1406,8 +1406,8 @@
     "name": "UCL",
     "group": "Chile",
     "url": "https://redirector.rudo.video/hls-video/c54ac2799874375c81c1672abb700870537c5223/ucl/ucl.smil/playlist.m3u8",
-    "result": "dead",
-    "why": "http 404",
+    "result": "ok",
+    "format": "hls-ts",
     "attempts": 1
    },
    {
@@ -1830,8 +1830,8 @@
     "name": "TV Jadran",
     "group": "Croatia",
     "url": "https://tvjadran.stream.agatin.hr:3412/live/tvjadranlive.m3u8",
-    "result": "ok",
-    "format": "hls-ts",
+    "result": "dead",
+    "why": "http 404",
     "attempts": 1
    },
    {
@@ -1934,9 +1934,9 @@
     "name": "TV Nova Ⓢ",
     "group": "Czech Republic",
     "url": "https://sktv.mxnticek.eu/new/stream.php?ch=Nova",
-    "result": "ok",
-    "format": "hls-aes",
-    "attempts": 3
+    "result": "dead",
+    "why": "web page, not a stream",
+    "attempts": 1
    },
    {
     "name": "Nova Cinema",
@@ -1944,47 +1944,47 @@
     "url": "https://sktv.mxnticek.eu/new/stream.php?ch=NovaCinema",
     "result": "ok",
     "format": "hls-aes",
-    "attempts": 3
+    "attempts": 1
    },
    {
     "name": "Nova Action",
     "group": "Czech Republic",
     "url": "https://sktv.mxnticek.eu/new/stream.php?ch=NovaAction",
-    "result": "dead",
-    "why": "web page, not a stream",
-    "attempts": 3
+    "result": "ok",
+    "format": "hls-aes",
+    "attempts": 1
    },
    {
     "name": "Nova Fun",
     "group": "Czech Republic",
     "url": "https://sktv.mxnticek.eu/new/stream.php?ch=NovaFun",
-    "result": "dead",
-    "why": "web page, not a stream",
-    "attempts": 3
+    "result": "ok",
+    "format": "hls-aes",
+    "attempts": 1
    },
    {
     "name": "Nova Gold",
     "group": "Czech Republic",
     "url": "https://sktv.mxnticek.eu/new/stream.php?ch=NovaGold",
-    "result": "dead",
-    "why": "web page, not a stream",
-    "attempts": 3
+    "result": "ok",
+    "format": "hls-aes",
+    "attempts": 1
    },
    {
     "name": "Nova Lady",
     "group": "Czech Republic",
     "url": "https://sktv.mxnticek.eu/new/stream.php?ch=NovaLady",
-    "result": "dead",
-    "why": "web page, not a stream",
-    "attempts": 3
+    "result": "ok",
+    "format": "hls-aes",
+    "attempts": 1
    },
    {
     "name": "TN Live",
     "group": "Czech Republic",
     "url": "https://sktv.mxnticek.eu/new/stream.php?ch=Nova%20TN%20Live",
-    "result": "dead",
-    "why": "web page, not a stream",
-    "attempts": 3
+    "result": "ok",
+    "format": "hls-aes",
+    "attempts": 1
    },
    {
     "name": "CNN Prima News",
@@ -2006,8 +2006,8 @@
     "name": "Prima MAX",
     "group": "Czech Republic",
     "url": "https://sktv.mxnticek.eu/new/stream.php?ch=PrimaMax",
-    "result": "dead",
-    "why": "http 404",
+    "result": "ok",
+    "format": "hls-aes",
     "attempts": 1
    },
    {
@@ -2360,7 +2360,7 @@
     "url": "https://router.euddn.net/862366dd346d6b6392d5231546f3d179/smil:rk_live_1.smil/playlist.m3u8?c=8005",
     "result": "ok",
     "format": "hls-ts",
-    "attempts": 2
+    "attempts": 1
    },
    {
     "name": "Taevas TV7",
@@ -2430,9 +2430,9 @@
     "name": "MTV3",
     "group": "Finland",
     "url": "https://live-fi.tvkaista.net/mtv3/live.m3u8?src=freetv",
-    "result": "ok",
-    "format": "hls-ts",
-    "attempts": 1
+    "result": "flaky",
+    "why": "curl 28",
+    "attempts": 3
    },
    {
     "name": "Nelonen",
@@ -2464,47 +2464,47 @@
     "url": "https://live-fi.tvkaista.net/tv5/live.m3u8?src=freetv",
     "result": "dead",
     "why": "http 404",
-    "attempts": 1
+    "attempts": 2
    },
    {
     "name": "Liv",
     "group": "Finland",
     "url": "https://live-fi.tvkaista.net/liv/live.m3u8?src=freetv",
-    "result": "dead",
-    "why": "http 404",
+    "result": "ok",
+    "format": "hls-ts",
     "attempts": 1
    },
    {
     "name": "Jim",
     "group": "Finland",
     "url": "https://live-fi.tvkaista.net/jim/live.m3u8?src=freetv",
-    "result": "dead",
-    "why": "http 404",
+    "result": "ok",
+    "format": "hls-ts",
     "attempts": 1
    },
    {
     "name": "Kutonen",
     "group": "Finland",
     "url": "https://live-fi.tvkaista.net/kutonen/live.m3u8?src=freetv",
-    "result": "dead",
-    "why": "http 404",
-    "attempts": 1
+    "result": "flaky",
+    "why": "curl 28",
+    "attempts": 3
    },
    {
     "name": "TLC Finland",
     "group": "Finland",
     "url": "https://live-fi.tvkaista.net/tlc/live.m3u8?src=freetv",
-    "result": "ok",
-    "format": "hls-ts",
-    "attempts": 1
+    "result": "flaky",
+    "why": "curl 28",
+    "attempts": 3
    },
    {
     "name": "Star Channel Finland",
     "group": "Finland",
     "url": "https://live-fi.tvkaista.net/star-channel/live.m3u8?src=freetv",
-    "result": "dead",
-    "why": "http 404",
-    "attempts": 1
+    "result": "flaky",
+    "why": "curl 28",
+    "attempts": 3
    },
    {
     "name": "MTV Ava",
@@ -2518,17 +2518,17 @@
     "name": "Hero",
     "group": "Finland",
     "url": "https://live-fi.tvkaista.net/hero/live.m3u8?src=freetv",
-    "result": "dead",
-    "why": "http 404",
-    "attempts": 1
+    "result": "flaky",
+    "why": "curl 28",
+    "attempts": 3
    },
    {
     "name": "Frii",
     "group": "Finland",
     "url": "https://live-fi.tvkaista.net/frii/live.m3u8?src=freetv",
-    "result": "ok",
-    "format": "hls-ts",
-    "attempts": 1
+    "result": "flaky",
+    "why": "curl 28",
+    "attempts": 3
    },
    {
     "name": "Alfa Ⓢ",
@@ -2543,7 +2543,7 @@
     "group": "Finland",
     "url": "https://live-fi.tvkaista.net/tapahtumatv-eveo/live.m3u8?src=freetv",
     "result": "dead",
-    "why": "http 404",
+    "why": "http 301",
     "attempts": 1
    },
    {
@@ -2567,7 +2567,7 @@
     "group": "Finland",
     "url": "https://onnitv.digitacdn.net/live/ott/onnitv/playlist.m3u8?organizationId=83459409&suiteItemId=83459780",
     "result": "dead",
-    "why": "variant not a playlist",
+    "why": "not media",
     "attempts": 1
    },
    {
@@ -3478,8 +3478,8 @@
     "name": "Lychnos",
     "group": "Greece",
     "url": "https://thor.mental-media.gr:19360/imp/imp.m3u8",
-    "result": "ok",
-    "format": "hls-ts",
+    "result": "dead",
+    "why": "http 404",
     "attempts": 1
    },
    {
@@ -3710,8 +3710,8 @@
     "name": "Parlamenti közvetítés",
     "group": "Hungary",
     "url": "https://plenaris.parlament.hu:446/edgelive/smil:mkogyplen.smil/playlist.m3u8",
-    "result": "dead",
-    "why": "http 404",
+    "result": "ok",
+    "format": "hls-ts",
     "attempts": 1
    },
    {
@@ -4136,7 +4136,7 @@
     "url": "https://ncdn.telewebion.ir/ofogh/live/playlist.m3u8",
     "result": "ok",
     "format": "hls-ts",
-    "attempts": 1
+    "attempts": 2
    },
    {
     "name": "IRIB Varzesh",
@@ -4168,7 +4168,7 @@
     "url": "https://ncdn.telewebion.ir/nasim/live/playlist.m3u8",
     "result": "ok",
     "format": "hls-ts",
-    "attempts": 1
+    "attempts": 2
    },
    {
     "name": "IRIB Omid Ⓢ",
@@ -4198,8 +4198,8 @@
     "name": "IRIB UHD-HDR",
     "group": "Iran",
     "url": "https://ncdn.telewebion.ir/faratar/live/playlist.m3u8",
-    "result": "dead",
-    "why": "http 302",
+    "result": "ok",
+    "format": "hls-ts",
     "attempts": 1
    },
    {
@@ -4582,8 +4582,8 @@
     "name": "Rai 1 Ⓖ",
     "group": "Italy",
     "url": "https://mediapolis.rai.it/relinker/relinkerServlet.htm?cont=2606803&output=7&forceUserAgent=rainet/4.0.5",
-    "result": "blocked",
-    "why": "http 403",
+    "result": "ok",
+    "format": "progressive-mp4",
     "attempts": 1
    },
    {
@@ -4598,8 +4598,8 @@
     "name": "Rai 2 Ⓖ",
     "group": "Italy",
     "url": "https://mediapolis.rai.it/relinker/relinkerServlet.htm?cont=308718&output=7&forceUserAgent=rainet/4.0.5",
-    "result": "blocked",
-    "why": "http 403",
+    "result": "ok",
+    "format": "progressive-mp4",
     "attempts": 1
    },
    {
@@ -4614,8 +4614,8 @@
     "name": "Rai 3 Ⓖ",
     "group": "Italy",
     "url": "https://mediapolis.rai.it/relinker/relinkerServlet.htm?cont=308709&output=7&forceUserAgent=rainet/4.0.5",
-    "result": "blocked",
-    "why": "http 403",
+    "result": "ok",
+    "format": "progressive-mp4",
     "attempts": 1
    },
    {
@@ -4678,8 +4678,8 @@
     "name": "Rai 4 Ⓖ",
     "group": "Italy",
     "url": "https://mediapolis.rai.it/relinker/relinkerServlet.htm?cont=746966&output=7&forceUserAgent=rainet/4.0.5",
-    "result": "blocked",
-    "why": "http 403",
+    "result": "ok",
+    "format": "progressive-mp4",
     "attempts": 1
    },
    {
@@ -4694,16 +4694,16 @@
     "name": "Rai 5 Ⓖ",
     "group": "Italy",
     "url": "https://mediapolis.rai.it/relinker/relinkerServlet.htm?cont=395276&output=7&forceUserAgent=rainet/4.0.5",
-    "result": "blocked",
-    "why": "http 403",
+    "result": "ok",
+    "format": "progressive-mp4",
     "attempts": 1
    },
    {
     "name": "Rai Movie Ⓖ",
     "group": "Italy",
     "url": "https://mediapolis.rai.it/relinker/relinkerServlet.htm?cont=747002&output=7&forceUserAgent=rainet/4.0.5",
-    "result": "blocked",
-    "why": "http 403",
+    "result": "ok",
+    "format": "progressive-mp4",
     "attempts": 1
    },
    {
@@ -4718,8 +4718,8 @@
     "name": "Rai Premium Ⓖ",
     "group": "Italy",
     "url": "https://mediapolis.rai.it/relinker/relinkerServlet.htm?cont=746992&output=7&forceUserAgent=rainet/4.0.5",
-    "result": "blocked",
-    "why": "http 403",
+    "result": "ok",
+    "format": "progressive-mp4",
     "attempts": 1
    },
    {
@@ -4846,16 +4846,16 @@
     "name": "Rai Gulp Ⓖ",
     "group": "Italy",
     "url": "https://mediapolis.rai.it/relinker/relinkerServlet.htm?cont=746953&output=7&forceUserAgent=rainet/4.0.5",
-    "result": "blocked",
-    "why": "http 403",
+    "result": "ok",
+    "format": "progressive-mp4",
     "attempts": 1
    },
    {
     "name": "Rai YoYo Ⓖ",
     "group": "Italy",
     "url": "https://mediapolis.rai.it/relinker/relinkerServlet.htm?cont=746899&output=7&forceUserAgent=rainet/4.0.5",
-    "result": "blocked",
-    "why": "http 403",
+    "result": "ok",
+    "format": "progressive-mp4",
     "attempts": 1
    },
    {
@@ -4942,8 +4942,8 @@
     "name": "Rai Storia Ⓖ",
     "group": "Italy",
     "url": "https://mediapolis.rai.it/relinker/relinkerServlet.htm?cont=746990&output=7&forceUserAgent=rainet/4.0.5",
-    "result": "blocked",
-    "why": "http 403",
+    "result": "ok",
+    "format": "progressive-mp4",
     "attempts": 1
    },
    {
@@ -4974,16 +4974,16 @@
     "name": "Rai Scuola Ⓖ",
     "group": "Italy",
     "url": "https://mediapolis.rai.it/relinker/relinkerServlet.htm?cont=747011&output=7&forceUserAgent=rainet/4.0.5",
-    "result": "blocked",
-    "why": "http 403",
+    "result": "ok",
+    "format": "progressive-mp4",
     "attempts": 1
    },
    {
     "name": "Rai Sport Ⓖ",
     "group": "Italy",
     "url": "https://mediapolis.rai.it/relinker/relinkerServlet.htm?cont=358025&output=7&forceUserAgent=rainet/4.0.5",
-    "result": "blocked",
-    "why": "http 403",
+    "result": "ok",
+    "format": "progressive-mp4",
     "attempts": 1
    },
    {
@@ -5078,8 +5078,8 @@
     "name": "Rai Radio 2 Visual Radio",
     "group": "Italy",
     "url": "https://mediapolis.rai.it/relinker/relinkerServlet.htm?cont=5674080&output=7&forceUserAgent=rainet/4.0.5",
-    "result": "blocked",
-    "why": "http 403",
+    "result": "ok",
+    "format": "progressive-mp4",
     "attempts": 1
    },
    {
@@ -5374,8 +5374,8 @@
     "name": "Antenna Sud",
     "group": "Italy",
     "url": "https://live-antennasud.cdn.netrw.it/antennasud/hls/ccr/antennasud/master.m3u8",
-    "result": "ok",
-    "format": "hls-ts",
+    "result": "dead",
+    "why": "segment not media",
     "attempts": 1
    },
    {
@@ -5390,8 +5390,8 @@
     "name": "Aristanis SuperTv",
     "group": "Italy",
     "url": "https://video2.azotosolutions.com:1936/supertvoristano/supertvoristano/playlist.m3u8",
-    "result": "dead",
-    "why": "http 404",
+    "result": "ok",
+    "format": "hls-ts",
     "attempts": 1
    },
    {
@@ -5654,8 +5654,8 @@
     "name": "Digital Tv7 Benevento",
     "group": "Italy",
     "url": "http://streaming.senecadot.com/live/flv:tv7.sdp/playlist.m3u8",
-    "result": "ok",
-    "format": "hls-ts",
+    "result": "dead",
+    "why": "http 404",
     "attempts": 1
    },
    {
@@ -5710,9 +5710,9 @@
     "name": "Equos Tv",
     "group": "Italy",
     "url": "https://dacastmmd.mmdlive.lldns.net/dacastmmd/2824fb123d5e44b797232c7abf8195da/playlist.m3u8",
-    "result": "dead",
-    "why": "curl 6",
-    "attempts": 2
+    "result": "flaky",
+    "why": "curl 28",
+    "attempts": 3
    },
    {
     "name": "Espansione Tv",
@@ -5846,9 +5846,9 @@
     "name": "Globus Television",
     "group": "Italy",
     "url": "https://cdn.cubws.com/live/globus.m3u8",
-    "result": "ok",
-    "format": "hls-ts",
-    "attempts": 1
+    "result": "flaky",
+    "why": "http 521",
+    "attempts": 3
    },
    {
     "name": "Gold Tv",
@@ -6134,16 +6134,16 @@
     "name": "Nuova Tv 1",
     "group": "Italy",
     "url": "https://nuovatv.net:8443/tv/stream.m3u8",
-    "result": "dead",
-    "why": "http 404",
+    "result": "ok",
+    "format": "hls-ts",
     "attempts": 1
    },
    {
     "name": "Nuova Tv 2",
     "group": "Italy",
     "url": "https://nuovatv.net:8443/tv2/stream.m3u8",
-    "result": "dead",
-    "why": "http 404",
+    "result": "ok",
+    "format": "hls-ts",
     "attempts": 1
    },
    {
@@ -6582,8 +6582,8 @@
     "name": "Radio Televisione Sarda",
     "group": "Italy",
     "url": "https://stream.ejatv.com/memfs/dff807e1-b3b2-49f5-92d6-5b178be4eb6d.m3u8",
-    "result": "ok",
-    "format": "hls-ts",
+    "result": "dead",
+    "why": "http 404",
     "attempts": 1
    },
    {
@@ -6600,7 +6600,7 @@
     "url": "https://load-balancer.azotosolutions.com/cdnedge34/ranfriul/playlist.m3u8",
     "result": "ok",
     "format": "hls-ts",
-    "attempts": 2
+    "attempts": 1
    },
    {
     "name": "RDE Tv",
@@ -7120,7 +7120,7 @@
     "url": "https://load-balancer.azotosolutions.com/cdnedge40/telecupole/playlist.m3u8",
     "result": "ok",
     "format": "hls-ts",
-    "attempts": 2
+    "attempts": 1
    },
    {
     "name": "Tele Estense",
@@ -7198,8 +7198,8 @@
     "name": "Tele Laser",
     "group": "Italy",
     "url": "https://585b674743bbb.streamlock.net/9022/9022/playlist.m3u8",
-    "result": "ok",
-    "format": "hls-ts",
+    "result": "dead",
+    "why": "http 404",
     "attempts": 1
    },
    {
@@ -7686,16 +7686,16 @@
     "name": "Teleromagna",
     "group": "Italy",
     "url": "https://livetr.teleromagna.it/teleromagna/live/playlist.m3u8",
-    "result": "ok",
-    "format": "hls-ts",
+    "result": "dead",
+    "why": "http 404",
     "attempts": 1
    },
    {
     "name": "Teleromagna 24",
     "group": "Italy",
     "url": "https://livetr.teleromagna.it/mia/live/playlist.m3u8",
-    "result": "ok",
-    "format": "hls-ts",
+    "result": "dead",
+    "why": "http 404",
     "attempts": 1
    },
    {
@@ -8046,40 +8046,40 @@
     "name": "NHK総合 (東京)",
     "group": "日本 / Japan",
     "url": "https://nhk4.mov3.co/hls/nhk.m3u8",
-    "result": "ok",
-    "format": "hls-ts",
+    "result": "blocked",
+    "why": "http 403",
     "attempts": 1
    },
    {
     "name": "テレビ朝日",
     "group": "日本 / Japan",
     "url": "https://tvasahi.mov3.co/hls/tvasahi.m3u8",
-    "result": "ok",
-    "format": "hls-ts",
+    "result": "blocked",
+    "why": "http 403",
     "attempts": 1
    },
    {
     "name": "TBSテレビ",
     "group": "日本 / Japan",
     "url": "https://tbs5.mov3.co/hls/tbs.m3u8",
-    "result": "ok",
-    "format": "hls-ts",
+    "result": "blocked",
+    "why": "http 403",
     "attempts": 1
    },
    {
     "name": "テレビ東京",
     "group": "日本 / Japan",
     "url": "https://tvtokyo.mov3.co/hls/tvtokyo.m3u8",
-    "result": "ok",
-    "format": "hls-ts",
+    "result": "blocked",
+    "why": "http 403",
     "attempts": 1
    },
    {
     "name": "フジテレビ",
     "group": "日本 / Japan",
     "url": "https://fujitv4.mov3.co/hls/fujitv.m3u8",
-    "result": "ok",
-    "format": "hls-ts",
+    "result": "blocked",
+    "why": "http 403",
     "attempts": 1
    },
    {
@@ -8118,8 +8118,8 @@
     "name": "ウェザーニュースLiVE",
     "group": "日本 / Japan",
     "url": "https://rch01e-alive-hls.akamaized.net/38fb45b25cdb05a1/out/v1/4e907bfabc684a1dae10df8431a84d21/index.m3u8",
-    "result": "ok",
-    "format": "hls-ts",
+    "result": "dead",
+    "why": "not media",
     "attempts": 1
    },
    {
@@ -8159,7 +8159,7 @@
     "group": "Kazakhstan",
     "url": "https://balapantv-stream.qazcdn.com/balapantv/balapantv/playlist.m3u8",
     "result": "dead",
-    "why": "variant not a playlist",
+    "why": "not media",
     "attempts": 1
    },
    {
@@ -8286,8 +8286,8 @@
     "name": "CJB TV",
     "group": "Korea",
     "url": "http://1.222.207.80:1935/live/cjbtv/playlist.m3u8",
-    "result": "blocked",
-    "why": "http 403",
+    "result": "ok",
+    "format": "hls-ts",
     "attempts": 1
    },
    {
@@ -8510,8 +8510,8 @@
     "name": "LRT TV",
     "group": "Lithuania",
     "url": "http://stream.mcquack.net/31/index.m3u8",
-    "result": "ok",
-    "format": "hls-ts",
+    "result": "dead",
+    "why": "not media",
     "attempts": 1
    },
    {
@@ -8550,8 +8550,8 @@
     "name": "TV3 Ⓢ",
     "group": "Lithuania",
     "url": "http://stream.mcquack.net/29/index.m3u8",
-    "result": "dead",
-    "why": "not media",
+    "result": "ok",
+    "format": "hls-ts",
     "attempts": 1
    },
    {
@@ -8574,8 +8574,8 @@
     "name": "LNK",
     "group": "Lithuania",
     "url": "http://stream.mcquack.net/30/index.m3u8",
-    "result": "ok",
-    "format": "hls-ts",
+    "result": "dead",
+    "why": "not media",
     "attempts": 1
    },
    {
@@ -9318,8 +9318,8 @@
     "name": "News Central",
     "group": "Nigeria",
     "url": "https://wf.newscentral.ng:8443/hls/stream.m3u8",
-    "result": "dead",
-    "why": "http 404",
+    "result": "ok",
+    "format": "hls-ts",
     "attempts": 1
    },
    {
@@ -9502,25 +9502,25 @@
     "name": "M»Net",
     "group": "North Macedonia",
     "url": "http://ares.mnet.mk/hls/mnet.m3u8",
-    "result": "flaky",
-    "why": "curl 7",
-    "attempts": 3
+    "result": "dead",
+    "why": "web page, not a stream",
+    "attempts": 1
    },
    {
     "name": "M»Net Sport",
     "group": "North Macedonia",
     "url": "http://ares.mnet.mk/hls/mnet-sport.m3u8",
-    "result": "flaky",
-    "why": "curl 7",
-    "attempts": 3
+    "result": "dead",
+    "why": "web page, not a stream",
+    "attempts": 1
    },
    {
     "name": "M»Net Info",
     "group": "North Macedonia",
     "url": "http://ares.mnet.mk/hls/mnet-info.m3u8",
-    "result": "flaky",
-    "why": "curl 7",
-    "attempts": 3
+    "result": "dead",
+    "why": "web page, not a stream",
+    "attempts": 1
    },
    {
     "name": "MTM 1 Скопска Ⓖ",
@@ -9735,7 +9735,7 @@
     "group": "Portugal",
     "url": "https://streaming-live.rtp.pt/liverepeater/smil:rtp1HD.smil/playlist.m3u8",
     "result": "dead",
-    "why": "not media",
+    "why": "variant not a playlist",
     "attempts": 1
    },
    {
@@ -9751,7 +9751,7 @@
     "group": "Portugal",
     "url": "https://streaming-live.rtp.pt/livetvhlsDVR/rtpnHDdvr.smil/playlist.m3u8?DVR=",
     "result": "dead",
-    "why": "variant not a playlist",
+    "why": "not media",
     "attempts": 1
    },
    {
@@ -9775,7 +9775,7 @@
     "group": "Portugal",
     "url": "https://streaming-live.rtp.pt/liverepeater/smil:rtpacoresHD.smil/playlist.m3u8",
     "result": "dead",
-    "why": "variant not a playlist",
+    "why": "not media",
     "attempts": 1
    },
    {
@@ -9790,8 +9790,8 @@
     "name": "RTP notícias",
     "group": "Portugal",
     "url": "https://streaming-live.rtp.pt/liverepeater/smil:rtpnHD.smil/playlist.m3u8",
-    "result": "dead",
-    "why": "not media",
+    "result": "ok",
+    "format": "hls-ts",
     "attempts": 1
    },
    {
@@ -9806,8 +9806,8 @@
     "name": "RTP Mundo",
     "group": "Portugal",
     "url": "https://streaming-live.rtp.pt/liverepeater/smil:rtpi.smil/playlist.m3u8",
-    "result": "dead",
-    "why": "variant not a playlist",
+    "result": "ok",
+    "format": "hls-ts",
     "attempts": 1
    },
    {
@@ -9838,8 +9838,8 @@
     "name": "RTP África",
     "group": "Portugal",
     "url": "https://streaming-live.rtp.pt/liverepeater/smil:rtpafrica.smil/playlist.m3u8",
-    "result": "dead",
-    "why": "not media",
+    "result": "ok",
+    "format": "hls-ts",
     "attempts": 1
    },
    {
@@ -10270,8 +10270,8 @@
     "name": "Астрахан 24",
     "group": "Russia",
     "url": "https://streaming.astrakhan.ru/astrakhan24/playlist.m3u8",
-    "result": "ok",
-    "format": "hls-ts",
+    "result": "dead",
+    "why": "http 404",
     "attempts": 1
    },
    {
@@ -10327,7 +10327,7 @@
     "group": "Russia",
     "url": "https://cdn.1tvcrimea.ru/24tvcrimea.m3u8",
     "result": "flaky",
-    "why": "curl 60",
+    "why": "curl 28",
     "attempts": 3
    },
    {
@@ -11246,8 +11246,8 @@
     "name": "La 2 (Catalunya)",
     "group": "Spain",
     "url": "https://rtvelivestream.rtve.es/rtvesec/cat/la2_cat_main_dvr.m3u8",
-    "result": "ok",
-    "format": "hls-ts",
+    "result": "blocked",
+    "why": "http 403",
     "attempts": 1
    },
    {
@@ -11486,16 +11486,16 @@
     "name": "TRT 1",
     "group": "Turkey",
     "url": "https://tv-trt1.medya.trt.com.tr/master.m3u8",
-    "result": "dead",
-    "why": "not media",
+    "result": "ok",
+    "format": "hls-ts",
     "attempts": 1
    },
    {
     "name": "TRT 2 Ⓖ",
     "group": "Turkey",
     "url": "https://tv-trt2.medya.trt.com.tr/master.m3u8",
-    "result": "blocked",
-    "why": "http 403",
+    "result": "dead",
+    "why": "not media",
     "attempts": 1
    },
    {
@@ -11526,16 +11526,16 @@
     "name": "TRT Çocuk",
     "group": "Turkey",
     "url": "https://tv-trtcocuk.medya.trt.com.tr/master.m3u8",
-    "result": "ok",
-    "format": "hls-ts",
+    "result": "dead",
+    "why": "variant not a playlist",
     "attempts": 1
    },
    {
     "name": "TRT Müzik",
     "group": "Turkey",
     "url": "https://tv-trtmuzik.medya.trt.com.tr/master.m3u8",
-    "result": "ok",
-    "format": "hls-ts",
+    "result": "dead",
+    "why": "not media",
     "attempts": 1
    },
    {
@@ -11550,16 +11550,16 @@
     "name": "TRT Avaz",
     "group": "Turkey",
     "url": "https://tv-trtavaz.medya.trt.com.tr/master.m3u8",
-    "result": "dead",
-    "why": "not media",
+    "result": "ok",
+    "format": "hls-ts",
     "attempts": 1
    },
    {
     "name": "TRT Kurdî",
     "group": "Turkey",
     "url": "https://tv-trtkurdi.medya.trt.com.tr/master.m3u8",
-    "result": "ok",
-    "format": "hls-ts",
+    "result": "dead",
+    "why": "not media",
     "attempts": 1
    },
    {
@@ -11591,15 +11591,15 @@
     "group": "Turkey",
     "url": "https://tv-e-okul00.medya.trt.com.tr/master.m3u8",
     "result": "dead",
-    "why": "not media",
+    "why": "http 404",
     "attempts": 1
    },
    {
     "name": "TRT EBA Ortaokul",
     "group": "Turkey",
     "url": "https://tv-e-okul01.medya.trt.com.tr/master.m3u8",
-    "result": "dead",
-    "why": "not media",
+    "result": "ok",
+    "format": "hls-ts",
     "attempts": 1
    },
    {
@@ -11607,7 +11607,7 @@
     "group": "Turkey",
     "url": "https://tv-e-okul02.medya.trt.com.tr/master.m3u8",
     "result": "dead",
-    "why": "not media",
+    "why": "http 404",
     "attempts": 1
    },
    {
@@ -11694,9 +11694,9 @@
     "name": "ITV 1",
     "group": "UK",
     "url": "http://45.14.84.37/itv1/index.m3u8",
-    "result": "dead",
-    "why": "web page, not a stream",
-    "attempts": 1
+    "result": "flaky",
+    "why": "curl 28",
+    "attempts": 3
    },
    {
     "name": "STV Ⓖ",
@@ -11726,9 +11726,9 @@
     "name": "ITV 2",
     "group": "UK",
     "url": "http://45.14.84.37/itv2/index.m3u8",
-    "result": "dead",
-    "why": "web page, not a stream",
-    "attempts": 1
+    "result": "flaky",
+    "why": "curl 28",
+    "attempts": 3
    },
    {
     "name": "BBC Alba Ⓖ",
@@ -11758,9 +11758,9 @@
     "name": "ITV 3",
     "group": "UK",
     "url": "http://45.14.84.37/itv3/index.m3u8",
-    "result": "dead",
-    "why": "web page, not a stream",
-    "attempts": 1
+    "result": "flaky",
+    "why": "curl 28",
+    "attempts": 3
    },
    {
     "name": "QVC UK Ⓢ",
@@ -11790,9 +11790,9 @@
     "name": "ITV 4",
     "group": "UK",
     "url": "http://45.14.84.37/itv4/index.m3u8",
-    "result": "dead",
-    "why": "web page, not a stream",
-    "attempts": 1
+    "result": "flaky",
+    "why": "curl 28",
+    "attempts": 3
    },
    {
     "name": "Great! Movies Ⓢ",
@@ -12040,7 +12040,7 @@
     "url": "https://lsn.lv/bbcradio.m3u8?station=bbc_radio_three&bitrate=320000",
     "result": "ok",
     "format": "hls-ts",
-    "attempts": 2
+    "attempts": 1
    },
    {
     "name": "BBC Radio 4",
@@ -12096,7 +12096,7 @@
     "url": "https://lsn.lv/bbcradio.m3u8?station=bbc_asian_network&bitrate=320000",
     "result": "ok",
     "format": "hls-ts",
-    "attempts": 2
+    "attempts": 1
    },
    {
     "name": "BBC World Service",
@@ -12119,15 +12119,15 @@
     "group": "Ukraine",
     "url": "http://stream.mcquack.net/219/index.m3u8",
     "result": "dead",
-    "why": "not media",
+    "why": "variant not a playlist",
     "attempts": 1
    },
    {
     "name": "Suspilne Kultura",
     "group": "Ukraine",
     "url": "http://stream.mcquack.net/435/index.m3u8",
-    "result": "ok",
-    "format": "hls-ts",
+    "result": "dead",
+    "why": "not media",
     "attempts": 1
    },
    {
@@ -12174,24 +12174,24 @@
     "name": "Novyi Kanal",
     "group": "Ukraine",
     "url": "http://stream.mcquack.net/157/index.m3u8",
-    "result": "dead",
-    "why": "not media",
+    "result": "ok",
+    "format": "hls-ts",
     "attempts": 1
    },
    {
     "name": "TET Ⓢ",
     "group": "Ukraine",
     "url": "http://stream.mcquack.net/338/index.m3u8",
-    "result": "ok",
-    "format": "hls-ts",
+    "result": "dead",
+    "why": "not media",
     "attempts": 1
    },
    {
     "name": "2+2 Ⓢ",
     "group": "Ukraine",
     "url": "http://stream.mcquack.net/173/index.m3u8",
-    "result": "ok",
-    "format": "hls-ts",
+    "result": "dead",
+    "why": "variant not a playlist",
     "attempts": 1
    },
    {
@@ -12558,8 +12558,8 @@
     "name": "MBC Drama",
     "group": "United Arab Emirates",
     "url": "https://shd-gcp-live.edgenextcdn.net/live/bitmovin-mbc-drama/2c28a458e2f3253e678b07ac7d13fe71/index.m3u8",
-    "result": "ok",
-    "format": "hls-ts",
+    "result": "dead",
+    "why": "variant not a playlist",
     "attempts": 1
    },
    {
@@ -12822,8 +12822,8 @@
     "name": "CNN",
     "group": "USA",
     "url": "https://turnerlive.warnermediacdn.com/hls/live/586495/cnngo/cnn_slate/VIDEO_0_3564000.m3u8",
-    "result": "dead",
-    "why": "http 404",
+    "result": "ok",
+    "format": "hls-aes",
     "attempts": 1
    },
    {
@@ -12998,16 +12998,16 @@
     "name": "Televen",
     "group": "Venezuela",
     "url": "http://181.78.8.199:8000/play/a09j/index.m3u8",
-    "result": "dead",
-    "why": "http 404",
+    "result": "ok",
+    "format": "hls-ts",
     "attempts": 1
    },
    {
     "name": "Globovisión",
     "group": "Venezuela",
     "url": "http://181.78.8.199:8000/play/a09k/index.m3u8",
-    "result": "dead",
-    "why": "http 404",
+    "result": "ok",
+    "format": "hls-ts",
     "attempts": 1
    },
    {
@@ -13038,16 +13038,16 @@
     "name": "inter TV",
     "group": "Venezuela",
     "url": "https://streamtv.intervenhosting.net:3439/hybrid/play.m3u8",
-    "result": "ok",
-    "format": "hls-ts",
+    "result": "dead",
+    "why": "http 404",
     "attempts": 1
    },
    {
     "name": "Aguacate TV",
     "group": "Venezuela",
     "url": "https://streamtv.intervenhosting.net:3040/hybrid/play.m3u8",
-    "result": "ok",
-    "format": "hls-ts",
+    "result": "dead",
+    "why": "http 404",
     "attempts": 1
    },
    {
@@ -13152,7 +13152,7 @@
     "url": "https://arabic-livews.cgtn.com/hls/LSveq57bErWLinBnxosqjisZ220802LSTefTAS9zc9mpU08y3np9TH220802cd/playlist.m3u8",
     "result": "dead",
     "why": "http 404",
-    "attempts": 2
+    "attempts": 1
    },
    {
     "name": "Sky News العربية",
@@ -13358,8 +13358,8 @@
     "name": "CNN International",
     "group": "News",
     "url": "https://turnerlive.warnermediacdn.com/hls/live/586495/cnngo/cnn_slate/VIDEO_0_3564000.m3u8",
-    "result": "dead",
-    "why": "http 404",
+    "result": "ok",
+    "format": "hls-aes",
     "attempts": 1
    },
    {
