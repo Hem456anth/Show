@@ -69,7 +69,7 @@ import androidx.media3.common.Player
 import androidx.media3.common.Tracks
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.datasource.okhttp.OkHttpDataSource
-import androidx.media3.exoplayer.DefaultLoadControl
+import androidx.media3.exoplayer.DefaultRenderersFactory
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.source.DefaultMediaSourceFactory
 import androidx.media3.ui.PlayerView
@@ -121,6 +121,9 @@ class VodPlayerActivity : ComponentActivity() {
     private var resumedAt by mutableStateOf<Long?>(null)
     private var tickJob: Job? = null
     private val failedRenditions = mutableSetOf<Int>()
+    /** Same-rendition retries for the current failure streak (1.9.0); reset once playback is READY. */
+    private var retryAttempt = 0
+    private var retryJob: Job? = null
     private var tracks by mutableStateOf(Tracks.EMPTY)
     private var playing by mutableStateOf(false)
     private var playbackSpeed by mutableStateOf(1f)
@@ -160,16 +163,18 @@ class VodPlayerActivity : ComponentActivity() {
 
     /** The viewer's preferred height (Movies settings), else the best rendition. */
     private fun pickRendition(list: List<VodVideo>): Int {
-        val pref = appGraph.vodSettings.config.value.preferredHeight ?: return 0
+        val pref = appGraph.vodSettings.config.value.preferredHeight ?: return appGraph.vodHealth.firstHealthy(list.map { it.url }, 0)
         val i = list.indexOfFirst { it.height != null && it.height <= pref }
-        return if (i >= 0) i else 0
+        return appGraph.vodHealth.firstHealthy(list.map { it.url }, if (i >= 0) i else 0)
     }
 
     private fun buildPlayer(): ExoPlayer {
         val headers = videos().firstOrNull()?.headers ?: emptyMap()
         val ds = OkHttpDataSource.Factory(appGraph.mediaClient).setUserAgent("Show/${app.show.tv.BuildConfig.VERSION_NAME}").setDefaultRequestProperties(headers)
-        val load = DefaultLoadControl.Builder().setBufferDurationsMs(15_000, 60_000, 2_500, 5_000).build()
-        return ExoPlayer.Builder(this)
+        val load = appGraph.vodSettings.player.value.buffer.loadControl()
+        // 1.9.0: if a hardware decoder fails to start, Media3 tries the next decoder (often software) instead of erroring.
+        val renderers = DefaultRenderersFactory(this).setEnableDecoderFallback(true)
+        return ExoPlayer.Builder(this, renderers)
             .setMediaSourceFactory(DefaultMediaSourceFactory(this).setDataSourceFactory(ds))
             .setLoadControl(load)
             .setAudioAttributes(AudioAttributes.Builder().setUsage(C.USAGE_MEDIA).setContentType(C.AUDIO_CONTENT_TYPE_MOVIE).build(), true)
@@ -186,6 +191,7 @@ class VodPlayerActivity : ComponentActivity() {
         val p = player ?: return
         val v = videos().getOrNull(renditionIndex) ?: return
         error = null; buffering = true
+        retryJob?.cancel()
         p.setMediaItem(mediaItem(v), startMs)
         p.prepare()
         p.playWhenReady = playWhenReady
@@ -226,6 +232,7 @@ class VodPlayerActivity : ComponentActivity() {
     private val listener = object : Player.Listener {
         override fun onPlaybackStateChanged(state: Int) {
             buffering = state == Player.STATE_BUFFERING
+            if (state == Player.STATE_READY) { retryAttempt = 0; videos().getOrNull(renditionIndex)?.let { appGraph.vodHealth.markOk(it.url) } }
             if (state == Player.STATE_READY && player?.playWhenReady == true) scrobble(TraktClient.Scrobble.START)
             if (state == Player.STATE_ENDED) onEnded()
         }
@@ -241,18 +248,23 @@ class VodPlayerActivity : ComponentActivity() {
             if (isPlaying) startTicks() else { tickJob?.cancel(); save() }
         }
         override fun onPlayerError(e: PlaybackException) {
-            // Fall back through the other renditions (Jellyfin: transcode -> original) before giving up.
-            failedRenditions += renditionIndex
-            val next = videos().indices.firstOrNull { it !in failedRenditions }
             val pos = player?.currentPosition ?: 0
+            // 1.9.0: a transient failure (drop, timeout, 5xx/429) retries the same rendition after 1 s, 2 s, 4 s.
+            val wait = if (VodRetry.isTransient(e)) VodRetry.delayMs(retryAttempt) else null
+            if (wait != null) {
+                retryAttempt++; buffering = true
+                retryJob?.cancel()
+                retryJob = lifecycleScope.launch { delay(wait); prepare(pos, true) }
+                return
+            }
+            // Then fall back through the other renditions (Jellyfin: transcode -> original) before giving up.
+            videos().getOrNull(renditionIndex)?.let { appGraph.vodHealth.markFailed(it.url) }
+            failedRenditions += renditionIndex
+            retryAttempt = 0
+            val next = videos().indices.firstOrNull { it !in failedRenditions }
             if (next != null) { renditionIndex = next; prepare(pos, true); return }
             keepAwake(false)
-            error = when (e.errorCode) {
-                PlaybackException.ERROR_CODE_IO_NETWORK_CONNECTION_FAILED, PlaybackException.ERROR_CODE_IO_NETWORK_CONNECTION_TIMEOUT -> "Connection lost. Check your network and try again."
-                PlaybackException.ERROR_CODE_IO_BAD_HTTP_STATUS -> "The server refused this video."
-                PlaybackException.ERROR_CODE_DECODING_FORMAT_UNSUPPORTED, PlaybackException.ERROR_CODE_PARSING_CONTAINER_UNSUPPORTED -> "This device can't play this video's format."
-                else -> "This video couldn't play."
-            }
+            error = VodErrors.message(e)
         }
     }
 
@@ -368,7 +380,7 @@ class VodPlayerActivity : ComponentActivity() {
                     Column(Modifier.widthIn(max = 420.dp).padding(24.dp), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(12.dp)) {
                         Text(msg, color = Color.White, style = MaterialTheme.typography.titleMedium, textAlign = TextAlign.Center, modifier = Modifier.testTag("vod_error"))
                         Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                            ShowPrimaryButton(onClick = { failedRenditions.clear(); renditionIndex = 0; prepare(player?.currentPosition ?: 0, true) }) { Text("Try again") }
+                            ShowPrimaryButton(onClick = { failedRenditions.clear(); retryAttempt = 0; renditionIndex = pickRendition(videos()); prepare(player?.currentPosition ?: 0, true) }) { Text("Try again") }
                             ShowSecondaryButton(onClick = { finish() }) { Text("Close") }
                         }
                     }
@@ -477,6 +489,7 @@ class VodPlayerActivity : ComponentActivity() {
             p.stop() // keeps the item and position; frees the network, decoder and buffer while off-screen
         }
         tickJob?.cancel()
+        retryJob?.cancel() // a pending network retry must not re-prepare while off-screen
         keepAwake(false)
         super.onStop()
     }

@@ -1,5 +1,7 @@
 package app.show.tv.vod
 
+import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.rememberScrollState
 import android.content.Context
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
@@ -649,6 +651,9 @@ private fun VodSettingsSheet(vm: VodViewModel, onDismiss: () -> Unit) {
             TraktSettings(vm, fieldColors)
 
             HorizontalDivider(color = Color.White.copy(alpha = 0.08f))
+            BufferSettings(vm)
+
+            HorizontalDivider(color = Color.White.copy(alpha = 0.08f))
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Column(Modifier.weight(1f)) {
                     Text("Internet Archive classics", color = Color.White, style = MaterialTheme.typography.titleMedium)
@@ -718,5 +723,22 @@ private fun TraktSettings(vm: VodViewModel, fieldColors: TextFieldColors) {
         }
         if (vm.settings.hasOwnTraktApp && !signedIn) TextButton(onClick = { setup = true }) { Text("Change Trakt app", color = Color.White) }
         Text(TraktClient.ATTRIBUTION, color = ShowColors.Mist, style = MaterialTheme.typography.labelSmall)
+    }
+}
+
+/** Buffer depth for the Movies player (1.9.0). Applies from the next video opened. */
+@Composable
+private fun BufferSettings(vm: VodViewModel) {
+    val prefs by vm.settings.player.collectAsStateWithLifecycle()
+    Column(Modifier.testTag("buffer_section"), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        Text("Buffering", style = MaterialTheme.typography.titleMedium, color = Color.White)
+        Row(Modifier.horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            BufferPreset.entries.forEach { b ->
+                val mod = Modifier.testTag("buffer_${b.name.lowercase()}")
+                if (b == prefs.buffer) ShowPrimaryButton(onClick = {}, modifier = mod) { Text(b.label) }
+                else ShowSecondaryButton(onClick = { vm.settings.setBufferPreset(b) }, modifier = mod) { Text(b.label) }
+            }
+        }
+        Text(prefs.buffer.detail, color = ShowColors.Mist, style = MaterialTheme.typography.bodySmall)
     }
 }

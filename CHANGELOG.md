@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.9.0 (2026-10-20): Steadier Movies playback
+Version code 14. Research and verdicts: `docs/RESEARCH_1.9.md`. Live TV is unchanged.
+* **Network retries:** a dropped connection, timeout or server error (5xx/429) retries the same video after 1 s, 2 s and 4 s before switching to another quality.
+* **Remembers bad files:** a rendition that fails twice is tried last for 14 days; one good play clears it.
+* **Decoder fallback:** if the hardware decoder won't start, Media3 tries the next decoder instead of failing.
+* **Buffering setting:** Data saver, Balanced (default) or Smooth, with a back buffer so short rewinds don't re-download.
+* **Clearer errors** that name the HTTP status (gone, refused, server trouble) or a damaged file.
+* Reviewed Anshu78780/json, Spyou/Zangetsu and truelockmc/streambert: they rely on unlicensed scraped/embedded streams (and json publishes live session cookies), so none of their sources or code were used.
+
 ## 1.8.1 (2026-10-20): Movies that actually play
 Version code 13.
 * **Fix:** Internet Archive shelves listed items whose video had been removed (only metadata left), so their pages had no Play button. Search now requires an MP4 rendition, so every Archive title you see can play.

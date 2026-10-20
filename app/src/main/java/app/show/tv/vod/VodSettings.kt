@@ -23,6 +23,8 @@ data class VodPlayerPrefs(
     /** Remembered subtitle language, [VodTracks.OFF] = off, null = the stream's default. */
     val subtitleLang: String? = null,
     val resizeMode: ResizeMode = ResizeMode.FIT,
+    /** Buffer depth (1.9.0). */
+    val buffer: BufferPreset = BufferPreset.BALANCED,
 )
 
 /** Trakt app credentials: build-time values, or the viewer's own from Movies settings (1.8.0). */
@@ -78,6 +80,7 @@ class VodSettings(
 
     fun setAudioLang(lang: String?) { prefs.edit().putString(K_AUDIO, lang).apply(); _player.value = readPlayer() }
     fun setSubtitleLang(lang: String?) { prefs.edit().putString(K_SUBS, lang).apply(); _player.value = readPlayer() }
+    fun setBufferPreset(b: BufferPreset) { prefs.edit().putString(K_BUFFER, b.name).apply(); _player.value = readPlayer() }
     fun setResizeMode(m: ResizeMode) { prefs.edit().putString(K_RESIZE, m.name).apply(); _player.value = readPlayer() }
 
     /** The viewer's own Trakt app (from trakt.tv/oauth/applications). Blank id clears it (the built-in one, if any, applies). */
@@ -89,7 +92,8 @@ class VodSettings(
     }
     val hasOwnTraktApp: Boolean get() = prefs.getString(K_TRAKT_ID, null) != null
 
-    private fun readPlayer() = VodPlayerPrefs(prefs.getString(K_AUDIO, null), prefs.getString(K_SUBS, null), ResizeMode.parse(prefs.getString(K_RESIZE, null)))
+    private fun readPlayer() = VodPlayerPrefs(prefs.getString(K_AUDIO, null), prefs.getString(K_SUBS, null), ResizeMode.parse(prefs.getString(K_RESIZE, null)),
+        BufferPreset.parse(prefs.getString(K_BUFFER, null)))
 
     private fun readTrakt(): TraktApp? {
         val id = prefs.getString(K_TRAKT_ID, null); val secret = prefs.getString(K_TRAKT_SECRET, null)
@@ -114,7 +118,7 @@ class VodSettings(
         private const val K_TMDB = "tmdb_key"; private const val K_JF_SERVER = "jf_server"; private const val K_JF_USER = "jf_user"
         private const val K_JF_TOKEN = "jf_token"; private const val K_JF_NAME = "jf_name"; private const val K_ARCHIVE = "archive"
         private const val K_HEIGHT = "pref_height"; private const val K_DEVICE = "device_id"
-        private const val K_AUDIO = "pref_audio_lang"; private const val K_SUBS = "pref_sub_lang"; private const val K_RESIZE = "pref_resize"
+        private const val K_AUDIO = "pref_audio_lang"; private const val K_SUBS = "pref_sub_lang"; private const val K_RESIZE = "pref_resize"; private const val K_BUFFER = "pref_buffer"
         private const val K_TRAKT_ID = "trakt_client_id"; private const val K_TRAKT_SECRET = "trakt_client_secret"
         private val HEX64 = Regex("[0-9a-f]{64}")
     }

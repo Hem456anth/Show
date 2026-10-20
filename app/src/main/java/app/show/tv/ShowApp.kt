@@ -89,6 +89,8 @@ class AppGraph(
     val vodSecrets = KeystoreSecretStore(app.getSharedPreferences("vod_secrets", Context.MODE_PRIVATE))
     val vodSettings = VodSettings(app.getSharedPreferences("vod_settings", Context.MODE_PRIVATE), BuildConfig.TMDB_API_KEY,
         TraktApp(BuildConfig.TRAKT_CLIENT_ID, BuildConfig.TRAKT_CLIENT_SECRET), vodSecrets)
+    /** Renditions that keep failing are tried last for 14 days (1.9.0). */
+    val vodHealth = app.show.tv.vod.RenditionHealth(app.getSharedPreferences("vod_health", Context.MODE_PRIVATE))
     val vodLibrary = VodLibrary(app.getSharedPreferences("vod_library", Context.MODE_PRIVATE))
     val vodRepository: VodRepository by lazy {
         VodRepository(VodHttp(mediaClient.newBuilder().readTimeout(15, TimeUnit.SECONDS).build()), { vodSettings.config.value })
