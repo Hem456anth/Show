@@ -66,6 +66,7 @@ class Release160Test {
         assertEquals(VodKind.SHOW, src.parseDoc(pd, null)!!.kind)
         val url = src.searchUrl("collection:feature_films", 30, "downloads desc")
         assertTrue(url.contains("licenseurl%3A%28*publicdomain*%20OR%20*creativecommons*%29"))
+        assertTrue("dead items without an MP4 are filtered", url.contains("format%3A%28%22h.264%22"))
     }
 
     @Test fun `archive movie detail returns renditions best first and a series returns ordered episodes`() = runBlocking {

@@ -449,7 +449,7 @@ private fun VodDetailPage(st: VodDetailState, vm: VodViewModel, metrics: Metrics
                             }
                         }
                         st.twin != null -> GlassPlayButton(onClick = { vm.open(st.twin) }, label = "Play on Jellyfin", modifier = Modifier.testTag("vod_play_twin"))
-                        d != null && t.playable -> Text("No playable file in this item.", color = ShowColors.Mist)
+                        d != null && t.playable -> Text("This item has no video file on Internet Archive any more.", color = ShowColors.Mist)
                     }
                     d?.trailerYoutubeId?.let { id ->
                         ShowSecondaryButton(onClick = { ctx.startActivity(EmbedPlayerActivity.intent(ctx, "https://www.youtube.com/embed/$id", "${t.title} trailer")) },

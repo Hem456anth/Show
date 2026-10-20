@@ -50,7 +50,9 @@ class VodRepository(
         val c = config()
         cached?.let { (cc, at, rows) -> if (!force && cc == c && clock() - at < TTL_MS) return Catalog(rows, emptyList()) }
         val results = coroutineScope { sources().map { s -> async { s.provider to runCatching { s.rows() } } }.awaitAll() }
+        // 1.8.1: rows you can actually play (Jellyfin, Internet Archive) come before info-only ones.
         val rows = results.flatMap { it.second.getOrNull() ?: emptyList() }
+            .sortedBy { r -> if (r.items.any { it.playable }) 0 else 1 }
         val failed = results.filter { it.second.isFailure || it.second.getOrNull().isNullOrEmpty() }.map { it.first }
         if (rows.isNotEmpty()) cached = Triple(c, clock(), rows)
         Catalog(rows, failed)

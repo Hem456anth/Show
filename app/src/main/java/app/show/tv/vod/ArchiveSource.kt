@@ -33,7 +33,9 @@ class ArchiveSource(private val http: VodHttp, private val base: String = "https
         Shelf("ia_new", "Recently Added", "collection:feature_films", VodKind.MOVIE, sort = "addeddate desc"),
     )
 
-    private val rights = "licenseurl:(*publicdomain* OR *creativecommons*)"
+    // 1.8.1: also require an MP4 derivative, so dead items (video removed, metadata only) never list.
+    private val rights = "licenseurl:(*publicdomain* OR *creativecommons*) AND " +
+        MP4_FORMATS.joinToString(" OR ", "format:(", ")") { "\"$it\"" }
 
     internal fun searchUrl(q: String, rows: Int, sort: String) =
         "$base/advancedsearch.php?q=${"($q) AND mediatype:movies AND $rights".enc()}" +

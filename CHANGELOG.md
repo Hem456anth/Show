@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.8.1 (2026-10-20): Movies that actually play
+Version code 13.
+* **Fix:** Internet Archive shelves listed items whose video had been removed (only metadata left), so their pages had no Play button. Search now requires an MP4 rendition, so every Archive title you see can play.
+* **Fix:** playable rows (Internet Archive, your Jellyfin) now come before info-only TVmaze/TMDB rows, which are marked "Info" and can't be streamed (no licence).
+* Clearer message on the rare Archive item that loses its file after listing.
+
 ## 1.8.0 (2026-10-20): Collections, Studios, track menus, picture modes, Trakt
 Version code 12. There is no 1.7.0. Live TV is unchanged. Details: `docs/MOVIES_1.8.md`; audit: `docs/AUDIT_1.8.md`.
 * **TMDB collections:** a movie that belongs to a collection shows its films in release order and opens a full collection page
