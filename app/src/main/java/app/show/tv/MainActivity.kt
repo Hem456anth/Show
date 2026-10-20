@@ -167,7 +167,7 @@ fun ShowRoot() {
                         preset = liveFilter, onPresetConsumed = { liveFilter = null })
                 }
                 composable(Tab.Movies.route) {
-                    val vodVm: app.show.tv.vod.VodViewModel = viewModel(factory = app.show.tv.vod.VodViewModel.Factory(graph.vodRepository, graph.vodLibrary, graph.vodSettings))
+                    val vodVm: app.show.tv.vod.VodViewModel = viewModel(factory = app.show.tv.vod.VodViewModel.Factory(graph.vodRepository, graph.vodLibrary, graph.vodSettings, graph.trakt))
                     app.show.tv.vod.VodTab(vodVm, metrics)
                 }
                 composable(Tab.Search.route) {

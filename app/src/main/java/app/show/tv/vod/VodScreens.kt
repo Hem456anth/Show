@@ -9,6 +9,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
@@ -20,6 +21,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
+import androidx.compose.material.icons.automirrored.rounded.ArrowForward
 import androidx.compose.material.icons.rounded.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -34,6 +36,7 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.selected
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -53,7 +56,7 @@ import app.show.tv.ui.theme.ShowColors
 import coil.compose.AsyncImage
 import kotlinx.coroutines.launch
 
-enum class VodSection(val label: String) { BROWSE("Browse"), SEARCH("Search"), MYLIST("My List") }
+enum class VodSection(val label: String) { BROWSE("Browse"), STUDIOS("Studios"), SEARCH("Search"), MYLIST("My List") }
 
 /**
  * The Movies & Series tab (1.6.0). Its own sections (Browse, Search, My List), filters, detail page
@@ -64,6 +67,7 @@ fun VodTab(vm: VodViewModel, metrics: Metrics) {
     LaunchedEffect(Unit) { vm.ensureLoaded() }
     val catalog by vm.catalog.collectAsStateWithLifecycle()
     val filter by vm.filter.collectAsStateWithLifecycle()
+    val genre by vm.genre.collectAsStateWithLifecycle()
     val detail by vm.detail.collectAsStateWithLifecycle()
     val shortcut by vm.shortcut.collectAsStateWithLifecycle()
     val progress by vm.library.progress.collectAsStateWithLifecycle()
@@ -75,15 +79,17 @@ fun VodTab(vm: VodViewModel, metrics: Metrics) {
         Column(Modifier.fillMaxSize()) {
             VodHeader(section, { section = it }, onSettings = { showSettings = true })
             when (section) {
-                VodSection.BROWSE -> VodBrowse(catalog, filter, vm::setFilter, progress, metrics, config, onOpen = vm::open, onRetry = { vm.load(force = true) })
+                VodSection.BROWSE -> VodBrowse(catalog, filter, vm::setFilter, genre, vm::setGenre, progress, metrics, config, onOpen = vm::open, onRetry = { vm.load(force = true) })
+                VodSection.STUDIOS -> VodStudiosPage(config.tmdbKey != null, onOpen = vm::openShortcut, onSettings = { showSettings = true })
                 VodSection.SEARCH -> VodSearch(vm, metrics)
                 VodSection.MYLIST -> VodMyList(vm, metrics)
             }
         }
         shortcut?.let { s ->
             BackHandler { vm.closeShortcut() }
+            val savedShortcuts by vm.library.shortcuts.collectAsStateWithLifecycle()
             ShortcutPage(s, metrics, onOpen = vm::open, onClose = vm::closeShortcut,
-                saved = vm.library.hasShortcut(s.shortcut), onToggle = { vm.toggleShortcut(s.shortcut) })
+                saved = savedShortcuts.any { it.key == s.shortcut.key }, onToggle = { vm.toggleShortcut(s.shortcut) }, onMore = vm::loadMoreShortcut)
         }
         detail?.let { d ->
             BackHandler { vm.back() }
@@ -101,8 +107,8 @@ private fun VodHeader(section: VodSection, onSection: (VodSection) -> Unit, onSe
                 modifier = Modifier.weight(1f).semantics { heading() })
             IconButton(onClick = onSettings, modifier = Modifier.testTag("vod_settings")) { Icon(Icons.Rounded.Settings, "Movies settings", tint = Color.White) }
         }
-        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            VodSection.entries.forEach { s -> Pill(s.label, s == section, "vod_section_${s.name.lowercase()}") { onSection(s) } }
+        LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            items(VodSection.entries, key = { it.name }) { s -> Pill(s.label, s == section, "vod_section_${s.name.lowercase()}") { onSection(s) } }
         }
     }
 }
@@ -110,22 +116,29 @@ private fun VodHeader(section: VodSection, onSection: (VodSection) -> Unit, onSe
 @Composable
 internal fun Pill(label: String, selected: Boolean, tag: String, onClick: () -> Unit) {
     val shape = RoundedCornerShape(50)
+    val interaction = remember { MutableInteractionSource() }
+    val focused by interaction.collectIsFocusedAsState()
     Text(label, style = MaterialTheme.typography.labelLarge, color = if (selected) Color.Black else Color.White,
         modifier = Modifier.clip(shape).background(if (selected) Color.White else Color.Transparent)
-            .border(1.dp, if (selected) Color.White else ShowColors.Hairline.copy(alpha = 0.3f), shape)
-            .clickable(role = Role.Tab, onClick = onClick).padding(horizontal = 14.dp, vertical = 7.dp).testTag(tag))
+            // D-pad focus: a thick white ring on TV remotes (1.8.0); touch users never see it.
+            .border(if (focused) 2.dp else 1.dp, if (selected || focused) Color.White else ShowColors.Hairline.copy(alpha = 0.3f), shape)
+            .clickable(interactionSource = interaction, indication = androidx.compose.foundation.LocalIndication.current, role = Role.Tab, onClick = onClick)
+            .semantics { this.selected = selected }
+            .padding(horizontal = 14.dp, vertical = 7.dp).testTag(tag))
 }
 
 // ------------------------------------------------------------------ Browse
 
 @Composable
 private fun VodBrowse(
-    state: VodCatalogState, filter: VodFilter, onFilter: (VodFilter) -> Unit, progress: Map<String, VodProgress>,
-    metrics: Metrics, config: VodConfig, onOpen: (VodTitle) -> Unit, onRetry: () -> Unit,
+    state: VodCatalogState, filter: VodFilter, onFilter: (VodFilter) -> Unit, genre: String?, onGenre: (String?) -> Unit,
+    progress: Map<String, VodProgress>, metrics: Metrics, config: VodConfig, onOpen: (VodTitle) -> Unit, onRetry: () -> Unit,
 ) {
-    val rows = remember(state.rows, filter) {
-        state.rows.map { r -> r.copy(items = r.items.filter { filter == VodFilter.ALL || (filter == VodFilter.MOVIES) == (it.kind == VodKind.MOVIE) }) }
-            .filter { it.items.size >= 3 }
+    // Genre chips (1.8.0): the most common genres in what's loaded, so every chip has titles behind it.
+    val genres = remember(state.rows) { genreChips(state.rows) }
+    val rows = remember(state.rows, filter, genre) {
+        state.rows.map { r -> r.copy(items = r.items.filter { (filter == VodFilter.ALL || (filter == VodFilter.MOVIES) == (it.kind == VodKind.MOVIE)) && (genre == null || genre in it.genres) }) }
+            .filter { it.items.size >= (if (genre == null) 3 else 1) }
     }
     val continueRow = remember(progress) {
         progress.filterKeys { '#' !in it }.values.filter { it.resumable || it.episodeId != null && it.fraction < VodProgress.FINISHED }
@@ -136,10 +149,15 @@ private fun VodBrowse(
     when {
         state.loading && state.rows.isEmpty() -> Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) { CircularProgressIndicator(color = Color.White) }
         state.rows.isEmpty() -> VodMessage(state.error ?: "Nothing to show yet.", "Try again", onRetry)
+        rows.isEmpty() && genre != null -> Column {
+            GenreChips(genres, genre, onGenre)
+            VodMessage("No ${genre.lowercase()} titles in what's loaded.", "Show all genres") { onGenre(null) }
+        }
         else -> LazyColumn(Modifier.fillMaxSize().testTag("vod_rows"), contentPadding = PaddingValues(bottom = bottom + 24.dp), verticalArrangement = Arrangement.spacedBy(22.dp)) {
             item { Row(Modifier.padding(horizontal = 16.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 VodFilter.entries.forEach { f -> Pill(f.label, f == filter, "vod_filter_${f.name.lowercase()}") { onFilter(f) } }
             } }
+            if (genres.isNotEmpty()) item { GenreChips(genres, genre, onGenre) }
             hero?.let { h -> item { VodHero(h, onOpen) } }
             if (continueRow.isNotEmpty()) item {
                 VodRowHeader("Continue Watching")
@@ -161,6 +179,18 @@ private fun VodBrowse(
             }
             item { Attribution(config) }
         }
+    }
+}
+
+/** Up to 12 genres, most common first, that at least 3 loaded titles share. */
+internal fun genreChips(rows: List<VodRow>): List<String> =
+    rows.flatMap { it.items }.distinctBy { it.key }.flatMap { it.genres }.groupingBy { it }.eachCount()
+        .filter { it.value >= 3 }.entries.sortedByDescending { it.value }.take(12).map { it.key }
+
+@Composable
+private fun GenreChips(genres: List<String>, selected: String?, onGenre: (String?) -> Unit) {
+    LazyRow(contentPadding = PaddingValues(horizontal = 16.dp), horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.testTag("vod_genres")) {
+        items(genres, key = { it }) { g -> Pill(g, g == selected, "vod_genre_$g") { onGenre(g) } }
     }
 }
 
@@ -220,7 +250,8 @@ private fun ContinueCard(p: VodProgress, width: Dp, onClick: () -> Unit) {
     val shape = RoundedCornerShape(12.dp)
     Column(Modifier.width(width).testTag("vod_continue_${p.title.key}")) {
         Box(Modifier.fillMaxWidth().aspectRatio(16f / 9f).lift(interaction, shape).clip(shape).background(ShowColors.Surface)
-            .clickable(interactionSource = interaction, indication = null, role = Role.Button, onClick = onClick)) {
+            .clickable(interactionSource = interaction, indication = null, role = Role.Button, onClick = onClick)
+            .semantics { contentDescription = "Continue ${p.title.title}, ${p.episodeLabel ?: "${VodPlayerActivity.formatTime(p.durationMs - p.positionMs)} left"}" }) {
             AsyncImage(p.title.backdropUrl ?: p.title.posterUrl, null, contentScale = ContentScale.Crop, modifier = Modifier.fillMaxSize())
             Box(Modifier.align(Alignment.BottomStart).fillMaxWidth().height(3.dp).background(Color.White.copy(alpha = 0.25f)))
             Box(Modifier.align(Alignment.BottomStart).fillMaxWidth(p.fraction).height(3.dp).background(Color.White))
@@ -232,8 +263,12 @@ private fun ContinueCard(p: VodProgress, width: Dp, onClick: () -> Unit) {
 
 @Composable
 private fun VodMessage(text: String, action: String?, onAction: () -> Unit) {
+    val offline = text.startsWith("You're offline")
     Column(Modifier.fillMaxSize().padding(32.dp), verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
-        Text(text, color = Color.White, style = MaterialTheme.typography.bodyLarge, modifier = Modifier.testTag("vod_message"))
+        if (offline) { Icon(Icons.Rounded.CloudOff, null, tint = ShowColors.Mist, modifier = Modifier.size(40.dp)); Spacer(Modifier.height(12.dp)) }
+        Text(text, color = Color.White, style = MaterialTheme.typography.bodyLarge, textAlign = androidx.compose.ui.text.style.TextAlign.Center, modifier = Modifier.testTag("vod_message"))
+        if (offline) Text("Saved titles in My List and Continue Watching come back when you reconnect.", color = ShowColors.Mist,
+            style = MaterialTheme.typography.bodySmall, textAlign = androidx.compose.ui.text.style.TextAlign.Center, modifier = Modifier.padding(top = 6.dp))
         action?.let { Spacer(Modifier.height(12.dp)); ShowPrimaryButton(onClick = onAction) { Text(it) } }
     }
 }
@@ -245,6 +280,7 @@ private fun VodSearch(vm: VodViewModel, metrics: Metrics) {
     val q by vm.query.collectAsStateWithLifecycle()
     val results by vm.results.collectAsStateWithLifecycle()
     val searching by vm.searching.collectAsStateWithLifecycle()
+    val config by vm.settings.config.collectAsStateWithLifecycle() // lint: never read StateFlow.value in composition
     Column(Modifier.fillMaxSize()) {
         OutlinedTextField(q, vm::onQuery, singleLine = true, placeholder = { Text("Movies, series, people's work…") },
             leadingIcon = { Icon(Icons.Rounded.Search, null) },
@@ -253,7 +289,7 @@ private fun VodSearch(vm: VodViewModel, metrics: Metrics) {
             modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp).testTag("vod_search_field"))
         when {
             searching && results == null -> Box(Modifier.fillMaxWidth().padding(32.dp), contentAlignment = Alignment.Center) { CircularProgressIndicator(color = Color.White) }
-            results == null -> Text("Search Internet Archive classics, your Jellyfin library and ${if (vm.settings.config.value.tmdbKey != null) "TMDB" else "TVmaze"} at once.",
+            results == null -> Text("Search Internet Archive classics, your Jellyfin library and ${if (config.tmdbKey != null) "TMDB" else "TVmaze"} at once.",
                 color = ShowColors.Mist, modifier = Modifier.padding(16.dp))
             results!!.isEmpty() -> Text("No matches for \u201c$q\u201d.", color = ShowColors.Mist, modifier = Modifier.padding(16.dp).testTag("vod_no_results"))
             else -> TitleGrid(results!!, metrics, vm::open, Modifier.testTag("vod_results"))
@@ -262,11 +298,57 @@ private fun VodSearch(vm: VodViewModel, metrics: Metrics) {
 }
 
 @Composable
-internal fun TitleGrid(items: List<VodTitle>, metrics: Metrics, onOpen: (VodTitle) -> Unit, modifier: Modifier = Modifier) {
-    LazyVerticalGrid(GridCells.Adaptive(metrics.gridMin * 0.72f), modifier.fillMaxSize(),
+internal fun TitleGrid(
+    items: List<VodTitle>, metrics: Metrics, onOpen: (VodTitle) -> Unit, modifier: Modifier = Modifier,
+    loadingMore: Boolean = false, onNearEnd: (() -> Unit)? = null,
+) {
+    val state = androidx.compose.foundation.lazy.grid.rememberLazyGridState()
+    if (onNearEnd != null) {
+        val near by remember { derivedStateOf { (state.layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: 0) >= state.layoutInfo.totalItemsCount - 6 } }
+        LaunchedEffect(near, items.size) { if (near && items.isNotEmpty()) onNearEnd() }
+    }
+    LazyVerticalGrid(GridCells.Adaptive(metrics.gridMin * 0.72f), modifier.fillMaxSize(), state = state,
         contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 8.dp, bottom = LocalBottomBarInset.current + 24.dp),
         horizontalArrangement = Arrangement.spacedBy(12.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
         items(items, key = { it.key }) { PosterCard(it, Dp.Unspecified, onOpen) }
+        if (loadingMore) item(span = { androidx.compose.foundation.lazy.grid.GridItemSpan(maxLineSpan) }, key = "more") {
+            Box(Modifier.fillMaxWidth().padding(16.dp), contentAlignment = Alignment.Center) { CircularProgressIndicator(color = Color.White, modifier = Modifier.size(28.dp)) }
+        }
+    }
+}
+
+// ------------------------------------------------------------------ Studios & networks (1.8.0)
+
+@Composable
+private fun VodStudiosPage(hasTmdb: Boolean, onOpen: (VodShortcut) -> Unit, onSettings: () -> Unit) {
+    if (!hasTmdb) { VodMessage(VodRepository.NEEDS_TMDB, "Open Movies settings", onSettings); return }
+    LazyVerticalGrid(GridCells.Adaptive(150.dp), Modifier.fillMaxSize().testTag("vod_studios"),
+        contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 8.dp, bottom = LocalBottomBarInset.current + 24.dp),
+        horizontalArrangement = Arrangement.spacedBy(12.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+        listOf("Studios" to VodStudios.studios, "TV networks" to VodStudios.networks).forEach { (header, orgs) ->
+            item(span = { androidx.compose.foundation.lazy.grid.GridItemSpan(maxLineSpan) }, key = "h_$header") { VodRowHeader(header) }
+            items(orgs, key = { "$header:${it.id}" }) { org -> OrgTile(org) { onOpen(VodStudios.shortcut(org, header == "TV networks")) } }
+        }
+        item(span = { androidx.compose.foundation.lazy.grid.GridItemSpan(maxLineSpan) }, key = "attr") {
+            Text("Logos and listings from TMDB. ${TmdbSource.ATTRIBUTION} Listings are info and trailers; Show doesn't stream them.",
+                style = MaterialTheme.typography.bodySmall, color = ShowColors.Mist, modifier = Modifier.padding(top = 8.dp))
+        }
+    }
+}
+
+private val Desaturate = androidx.compose.ui.graphics.ColorFilter.colorMatrix(androidx.compose.ui.graphics.ColorMatrix().apply { setToSaturation(0f) })
+
+@Composable
+private fun OrgTile(org: VodStudios.Org, onClick: () -> Unit) {
+    val interaction = remember { MutableInteractionSource() }
+    val shape = RoundedCornerShape(14.dp)
+    Box(Modifier.fillMaxWidth().aspectRatio(16f / 9f).lift(interaction, shape).clip(shape).background(ShowColors.Surface)
+        .clickable(interactionSource = interaction, indication = null, role = Role.Button, onClick = onClick)
+        .semantics { contentDescription = org.name }.testTag("vod_org_${org.id}"), contentAlignment = Alignment.Center) {
+        var failed by remember { mutableStateOf(false) }
+        if (!failed) AsyncImage(org.logoUrl, null, contentScale = ContentScale.Fit, colorFilter = Desaturate, onError = { failed = true },
+            modifier = Modifier.fillMaxWidth(0.7f).fillMaxHeight(0.5f))
+        else Text(org.name, color = Color.White, style = MaterialTheme.typography.titleSmall, maxLines = 2, overflow = TextOverflow.Ellipsis, modifier = Modifier.padding(8.dp))
     }
 }
 
@@ -274,16 +356,23 @@ internal fun TitleGrid(items: List<VodTitle>, metrics: Metrics, onOpen: (VodTitl
 private fun VodMyList(vm: VodViewModel, metrics: Metrics) {
     val list by vm.library.myList.collectAsStateWithLifecycle()
     val shortcuts by vm.library.shortcuts.collectAsStateWithLifecycle()
-    if (list.isEmpty() && shortcuts.isEmpty()) {
+    val traktHistory by vm.traktHistory.collectAsStateWithLifecycle()
+    if (list.isEmpty() && shortcuts.isEmpty() && traktHistory.isEmpty()) {
         VodMessage("Save movies, series, studios, networks and cast here with the + on any title.", null) {}
         return
     }
     Column(Modifier.fillMaxSize()) {
         if (shortcuts.isNotEmpty()) LazyRow(contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp), horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.testTag("vod_shortcuts")) {
             items(shortcuts, key = { it.key }) { s ->
-                val icon = when (s.type) { VodShortcut.Type.PERSON -> Icons.Rounded.Person; VodShortcut.Type.NETWORK -> Icons.Rounded.Tv; VodShortcut.Type.COMPANY -> Icons.Rounded.Business }
+                val icon = when (s.type) { VodShortcut.Type.PERSON -> Icons.Rounded.Person; VodShortcut.Type.NETWORK -> Icons.Rounded.Tv; VodShortcut.Type.COMPANY -> Icons.Rounded.Business; VodShortcut.Type.COLLECTION -> Icons.Rounded.Collections }
                 AssistChip(onClick = { vm.openShortcut(s) }, label = { Text(s.name) }, leadingIcon = { Icon(icon, null, Modifier.size(16.dp)) },
                     colors = AssistChipDefaults.assistChipColors(labelColor = Color.White, leadingIconContentColor = Color.White))
+            }
+        }
+        if (traktHistory.isNotEmpty()) {
+            VodRowHeader("Recently watched on Trakt")
+            LazyRow(contentPadding = PaddingValues(horizontal = 16.dp), horizontalArrangement = Arrangement.spacedBy(12.dp), modifier = Modifier.testTag("vod_trakt_history")) {
+                items(traktHistory, key = { it.key }) { t -> PosterCard(t, metrics.cardWidth * 0.55f, vm::open) }
             }
         }
         TitleGrid(list, metrics, vm::open, Modifier.testTag("vod_mylist"))
@@ -291,18 +380,22 @@ private fun VodMyList(vm: VodViewModel, metrics: Metrics) {
 }
 
 @Composable
-private fun ShortcutPage(s: ShortcutState, metrics: Metrics, onOpen: (VodTitle) -> Unit, onClose: () -> Unit, saved: Boolean, onToggle: () -> Unit) {
-    var isSaved by remember(s.shortcut) { mutableStateOf(saved) }
+private fun ShortcutPage(s: ShortcutState, metrics: Metrics, onOpen: (VodTitle) -> Unit, onClose: () -> Unit, saved: Boolean, onToggle: () -> Unit, onMore: () -> Unit) {
+    // Saved state comes from the library flow (1.8.0 audit: a local copy drifted after toggling elsewhere).
     Column(Modifier.fillMaxSize().background(ShowColors.Ink).statusBarsPadding().testTag("vod_shortcut_page")) {
         Row(Modifier.padding(8.dp), verticalAlignment = Alignment.CenterVertically) {
-            IconButton(onClick = onClose) { Icon(Icons.AutoMirrored.Rounded.ArrowBack, "Back", tint = Color.White) }
-            Text(s.shortcut.name, style = MaterialTheme.typography.titleLarge, color = Color.White, modifier = Modifier.weight(1f))
-            IconButton(onClick = { onToggle(); isSaved = !isSaved }) { Icon(if (isSaved) Icons.Rounded.Check else Icons.Rounded.Add, if (isSaved) "Remove from My List" else "Add to My List", tint = Color.White) }
+            IconButton(onClick = onClose, modifier = Modifier.testTag("vod_shortcut_back")) { Icon(Icons.AutoMirrored.Rounded.ArrowBack, "Back", tint = Color.White) }
+            Column(Modifier.weight(1f)) {
+                Text(s.shortcut.name, style = MaterialTheme.typography.titleLarge, color = Color.White, modifier = Modifier.semantics { heading() })
+                val kind = when (s.shortcut.type) { VodShortcut.Type.COMPANY -> "Studio"; VodShortcut.Type.NETWORK -> "TV network"; VodShortcut.Type.PERSON -> "Filmography"; VodShortcut.Type.COLLECTION -> "Collection, in release order" }
+                Text(kind, style = MaterialTheme.typography.labelMedium, color = ShowColors.Mist)
+            }
+            IconButton(onClick = onToggle, modifier = Modifier.testTag("vod_shortcut_save")) { Icon(if (saved) Icons.Rounded.Check else Icons.Rounded.Add, if (saved) "Remove from My List" else "Add to My List", tint = Color.White) }
         }
         when {
             s.loading -> Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) { CircularProgressIndicator(color = Color.White) }
             s.items.isEmpty() -> VodMessage(s.error ?: "Nothing here yet.", null) {}
-            else -> TitleGrid(s.items, metrics, onOpen)
+            else -> TitleGrid(s.items, metrics, onOpen, Modifier.testTag("vod_shortcut_grid"), loadingMore = s.loadingMore, onNearEnd = if (s.hasMore) onMore else null)
         }
     }
 }
@@ -318,8 +411,8 @@ private fun VodDetailPage(st: VodDetailState, vm: VodViewModel, metrics: Metrics
     val saved = listState.any { it.key == t.key }
     val progress by vm.library.progress.collectAsStateWithLifecycle()
     val resume = progress[t.key]
-    var companyIds by remember(t.key) { mutableStateOf<Map<String, String>>(emptyMap()) }
-    LaunchedEffect(t.key, st.detail) { if (t.provider == Provider.TMDB && st.detail != null) companyIds = vm.companyIds(t) }
+    // TMDB org ids now arrive with the detail (1.8.0 audit: saved a second /movie request per page).
+    val companyIds = st.detail?.orgIds.orEmpty()
 
     Box(Modifier.fillMaxSize().background(ShowColors.Ink).testTag("vod_detail")) {
         LazyColumn(Modifier.fillMaxSize(), contentPadding = PaddingValues(bottom = 48.dp)) {
@@ -365,6 +458,12 @@ private fun VodDetailPage(st: VodDetailState, vm: VodViewModel, metrics: Metrics
                     OutlineCircleButton(if (saved) "Remove from My List" else "Add to My List", { vm.toggleList(t) }, "vod_list_toggle", size = 44.dp) {
                         Icon(if (saved) Icons.Rounded.Check else Icons.Rounded.Add, null)
                     }
+                    if (d != null && t.kind == VodKind.MOVIE) {
+                        val watched = (resume?.fraction ?: 0f) >= VodProgress.FINISHED
+                        OutlineCircleButton(if (watched) "Watched" else "Mark as watched", { if (!watched) vm.markWatched(t) }, "vod_mark_watched", size = 44.dp) {
+                            Icon(if (watched) Icons.Rounded.Visibility else Icons.Rounded.VisibilityOff, null)
+                        }
+                    }
                 }
             }
             st.error?.let { e -> item { Column(Modifier.padding(horizontal = 16.dp)) {
@@ -380,7 +479,8 @@ private fun VodDetailPage(st: VodDetailState, vm: VodViewModel, metrics: Metrics
             if (t.genres.isNotEmpty()) item {
                 Text(t.genres.joinToString(" · "), style = MaterialTheme.typography.labelMedium, color = ShowColors.Mist, modifier = Modifier.padding(horizontal = 16.dp))
             }
-            if (d.seasons.isNotEmpty()) item { SeasonsBlock(st, d, onSeason = vm::selectSeason, onPlay = { eps, i -> playEpisode(ctx, vm, t, eps, i) }, progress = progress, title = t) }
+            if (d.seasons.isNotEmpty()) item { SeasonsBlock(st, d, onSeason = vm::selectSeason, onPlay = { eps, i -> playEpisode(ctx, vm, t, eps, i) }, progress = progress, title = t,
+                onMarkWatched = { e -> vm.markWatched(t, e) }) }
             if (d.cast.isNotEmpty()) item {
                 VodRowHeader("Cast")
                 LazyRow(contentPadding = PaddingValues(horizontal = 16.dp), horizontalArrangement = Arrangement.spacedBy(12.dp), modifier = Modifier.testTag("vod_cast")) {
@@ -406,6 +506,18 @@ private fun VodDetailPage(st: VodDetailState, vm: VodViewModel, metrics: Metrics
                     }
                 }
             }
+            val parts = st.collection
+            if (d.collection != null && !parts.isNullOrEmpty()) item {
+                val sc = VodShortcut(VodShortcut.Type.COLLECTION, d.collection.name, Provider.TMDB, d.collection.id)
+                Row(Modifier.fillMaxWidth().clickable(role = Role.Button, onClickLabel = "Open collection") { vm.openShortcut(sc) }.padding(end = 8.dp).testTag("vod_collection_header"),
+                    verticalAlignment = Alignment.CenterVertically) {
+                    Box(Modifier.weight(1f)) { VodRowHeader(d.collection.name, "${parts.size} films, in release order") }
+                    Icon(Icons.AutoMirrored.Rounded.ArrowForward, "Open ${d.collection.name}", tint = Color.White)
+                }
+                LazyRow(contentPadding = PaddingValues(horizontal = 16.dp), horizontalArrangement = Arrangement.spacedBy(12.dp), modifier = Modifier.testTag("vod_collection")) {
+                    items(parts, key = { it.key }) { r -> PosterCard(r, metrics.cardWidth * 0.62f, vm::open) }
+                }
+            }
             if (d.recommendations.isNotEmpty()) item {
                 VodRowHeader("More Like This")
                 LazyRow(contentPadding = PaddingValues(horizontal = 16.dp), horizontalArrangement = Arrangement.spacedBy(12.dp), modifier = Modifier.testTag("vod_recs")) {
@@ -429,7 +541,8 @@ private fun playEpisode(ctx: Context, vm: VodViewModel, t: VodTitle, eps: List<V
 }
 
 @Composable
-private fun SeasonsBlock(st: VodDetailState, d: VodDetail, onSeason: (Int) -> Unit, onPlay: (List<VodEpisode>, Int) -> Unit, progress: Map<String, VodProgress>, title: VodTitle) {
+private fun SeasonsBlock(st: VodDetailState, d: VodDetail, onSeason: (Int) -> Unit, onPlay: (List<VodEpisode>, Int) -> Unit, progress: Map<String, VodProgress>, title: VodTitle,
+                         onMarkWatched: (VodEpisode) -> Unit) {
     Column(Modifier.testTag("vod_seasons")) {
         VodRowHeader("Episodes")
         LazyRow(contentPadding = PaddingValues(horizontal = 16.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -444,7 +557,7 @@ private fun SeasonsBlock(st: VodDetailState, d: VodDetail, onSeason: (Int) -> Un
                 season.episodes.forEach { e ->
                     val p = progress["${title.key}#${e.id}"]
                     val idx = playable.indexOf(e)
-                    Row(Modifier.fillMaxWidth().clickable(enabled = idx >= 0) { onPlay(playable, idx) }.padding(horizontal = 16.dp, vertical = 8.dp).testTag("vod_episode_${e.season}_${e.number}"),
+                    Row(Modifier.fillMaxWidth().clickable(enabled = idx >= 0, role = Role.Button, onClickLabel = "Play ${e.code}") { onPlay(playable, idx) }.padding(horizontal = 16.dp, vertical = 8.dp).testTag("vod_episode_${e.season}_${e.number}"),
                         verticalAlignment = Alignment.CenterVertically) {
                         Box(Modifier.width(128.dp).aspectRatio(16f / 9f).clip(RoundedCornerShape(8.dp)).background(ShowColors.Surface)) {
                             AsyncImage(e.stillUrl, null, contentScale = ContentScale.Crop, modifier = Modifier.fillMaxSize())
@@ -457,6 +570,13 @@ private fun SeasonsBlock(st: VodDetailState, d: VodDetail, onSeason: (Int) -> Un
                                 style = MaterialTheme.typography.labelSmall, color = ShowColors.Mist)
                             e.overview?.let { Text(it, style = MaterialTheme.typography.bodySmall, color = ShowColors.Mist, maxLines = 2, overflow = TextOverflow.Ellipsis) }
                         }
+                        if (title.playable) {
+                            val watched = (p?.fraction ?: 0f) >= VodProgress.FINISHED
+                            IconButton(onClick = { if (!watched) onMarkWatched(e) }, modifier = Modifier.testTag("vod_episode_watched_${e.season}_${e.number}")) {
+                                Icon(if (watched) Icons.Rounded.CheckCircle else Icons.Rounded.RadioButtonUnchecked,
+                                    if (watched) "${e.code} watched" else "Mark ${e.code} as watched", tint = if (watched) Color.White else ShowColors.Mist)
+                            }
+                        }
                     }
                 }
             }
@@ -466,7 +586,7 @@ private fun SeasonsBlock(st: VodDetailState, d: VodDetail, onSeason: (Int) -> Un
 
 @Composable
 private fun PersonChip(p: VodPerson, onClick: () -> Unit) {
-    Column(Modifier.width(84.dp).clickable(onClick = onClick), horizontalAlignment = Alignment.CenterHorizontally) {
+    Column(Modifier.width(84.dp).clickable(role = Role.Button, onClickLabel = "Open filmography", onClick = onClick), horizontalAlignment = Alignment.CenterHorizontally) {
         Box(Modifier.size(72.dp).clip(CircleShape).background(ShowColors.Surface), contentAlignment = Alignment.Center) {
             if (p.photoUrl != null) AsyncImage(p.photoUrl, p.name, contentScale = ContentScale.Crop, modifier = Modifier.fillMaxSize())
             else Text(p.name.split(' ').mapNotNull { it.firstOrNull()?.uppercase() }.take(2).joinToString(""), color = Color.White)
@@ -498,6 +618,8 @@ private fun VodSettingsSheet(vm: VodViewModel, onDismiss: () -> Unit) {
             Text("Jellyfin (your own library, played in full)", style = MaterialTheme.typography.titleMedium, color = Color.White)
             if (config.jellyfin != null) {
                 Text("Signed in to ${config.jellyfin!!.server} as ${config.jellyfin!!.userName}.", color = ShowColors.Mist, style = MaterialTheme.typography.bodySmall)
+                if (config.jellyfin!!.server.startsWith("http://")) Text("This server address isn't encrypted (http). Fine on your home network; use https anywhere else.",
+                    color = ShowColors.Danger, style = MaterialTheme.typography.bodySmall, modifier = Modifier.testTag("jf_cleartext_warning"))
                 ShowSecondaryButton(onClick = { vm.settings.setJellyfin(null) }, modifier = Modifier.testTag("jf_sign_out")) { Text("Sign out") }
             } else {
                 OutlinedTextField(server, { server = it }, label = { Text("Server address") }, singleLine = true, colors = fieldColors, modifier = Modifier.fillMaxWidth().testTag("jf_server"))
@@ -524,6 +646,9 @@ private fun VodSettingsSheet(vm: VodViewModel, onDismiss: () -> Unit) {
             keyMsg?.let { Text(it, color = if (it == "Saved." || it == "Removed.") ShowColors.Mist else ShowColors.Danger, modifier = Modifier.testTag("tmdb_msg")) }
 
             HorizontalDivider(color = Color.White.copy(alpha = 0.08f))
+            TraktSettings(vm, fieldColors)
+
+            HorizontalDivider(color = Color.White.copy(alpha = 0.08f))
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Column(Modifier.weight(1f)) {
                     Text("Internet Archive classics", color = Color.White, style = MaterialTheme.typography.titleMedium)
@@ -534,5 +659,64 @@ private fun VodSettingsSheet(vm: VodViewModel, onDismiss: () -> Unit) {
             }
             TextButton(onClick = { vm.library.clearHistory() }, modifier = Modifier.testTag("vod_clear_history")) { Text("Clear Movies watch history", color = Color.White) }
         }
+    }
+}
+
+/** Trakt (1.8.0): device-code sign-in, sync and sign-out. Hidden behind "Set up Trakt" when no client id is configured. */
+@Composable
+private fun TraktSettings(vm: VodViewModel, fieldColors: TextFieldColors) {
+    val trakt = vm.trakt ?: return
+    val app by vm.settings.traktApp.collectAsStateWithLifecycle()
+    val signedIn by trakt.signedIn.collectAsStateWithLifecycle()
+    val user by trakt.user.collectAsStateWithLifecycle()
+    val ui by vm.traktUi.collectAsStateWithLifecycle()
+    var setup by remember { mutableStateOf(false) }
+    Column(Modifier.testTag("trakt_section"), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        Text("Trakt (watch history sync)", style = MaterialTheme.typography.titleMedium, color = Color.White)
+        if (app == null || setup) {
+            var id by remember { mutableStateOf("") }
+            var secret by remember { mutableStateOf("") }
+            var msg by remember { mutableStateOf<String?>(null) }
+            Text("This build has no Trakt app. Create one at trakt.tv/oauth/applications (redirect uri ${TraktClient.REDIRECT_OOB}) and paste its client id and secret.",
+                color = ShowColors.Mist, style = MaterialTheme.typography.bodySmall)
+            OutlinedTextField(id, { id = it }, label = { Text("Trakt client id") }, singleLine = true, colors = fieldColors, modifier = Modifier.fillMaxWidth().testTag("trakt_client_id"))
+            OutlinedTextField(secret, { secret = it }, label = { Text("Trakt client secret") }, singleLine = true, colors = fieldColors,
+                visualTransformation = androidx.compose.ui.text.input.PasswordVisualTransformation(), modifier = Modifier.fillMaxWidth().testTag("trakt_client_secret"))
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                ShowPrimaryButton(onClick = { msg = vm.settings.setTraktApp(id, secret); if (msg == null) { setup = false; id = ""; secret = "" } },
+                    modifier = Modifier.testTag("trakt_app_save")) { Text("Save Trakt app") }
+                if (vm.settings.hasOwnTraktApp) ShowSecondaryButton(onClick = { vm.settings.setTraktApp("", ""); setup = false }) { Text("Remove") }
+            }
+            msg?.let { Text(it, color = ShowColors.Danger, modifier = Modifier.testTag("trakt_app_msg")) }
+            return@Column
+        }
+        if (signedIn) {
+            Text("Connected${user?.let { " as $it" } ?: ""}. My List and your Trakt watchlist stay in step; playback scrobbles titles with a TMDB id.",
+                color = ShowColors.Mist, style = MaterialTheme.typography.bodySmall, modifier = Modifier.testTag("trakt_connected"))
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                ShowPrimaryButton(onClick = vm::syncTrakt, enabled = ui !is TraktUi.Busy, modifier = Modifier.testTag("trakt_sync")) { Text("Sync now") }
+                ShowSecondaryButton(onClick = vm::signOutTrakt, modifier = Modifier.testTag("trakt_sign_out")) { Text("Disconnect") }
+            }
+        } else when (val u = ui) {
+            is TraktUi.Code -> {
+                Text("On your phone or computer, open ${u.url} and enter:", color = ShowColors.Mist, style = MaterialTheme.typography.bodySmall)
+                Text(u.userCode, style = MaterialTheme.typography.headlineMedium, fontWeight = FontWeight.Bold, color = Color.White,
+                    modifier = Modifier.testTag("trakt_user_code").semantics { contentDescription = "Trakt code ${u.userCode.toList().joinToString(" ")}" })
+                Text("Waiting for approval…", color = ShowColors.Mist, style = MaterialTheme.typography.bodySmall)
+                ShowSecondaryButton(onClick = vm::cancelTrakt, modifier = Modifier.testTag("trakt_cancel")) { Text("Cancel") }
+            }
+            else -> {
+                Text("Sync your watchlist and history with Trakt. Sign-in uses a code on trakt.tv; Show never sees your password.",
+                    color = ShowColors.Mist, style = MaterialTheme.typography.bodySmall)
+                ShowPrimaryButton(onClick = vm::connectTrakt, enabled = ui !is TraktUi.Busy, modifier = Modifier.testTag("trakt_connect")) { Text("Connect Trakt") }
+            }
+        }
+        when (val u = ui) {
+            is TraktUi.Busy -> Text(u.text, color = ShowColors.Mist, style = MaterialTheme.typography.bodySmall, modifier = Modifier.testTag("trakt_status"))
+            is TraktUi.Message -> Text(u.text, color = if (u.error) ShowColors.Danger else ShowColors.Mist, style = MaterialTheme.typography.bodySmall, modifier = Modifier.testTag("trakt_status"))
+            else -> {}
+        }
+        if (vm.settings.hasOwnTraktApp && !signedIn) TextButton(onClick = { setup = true }) { Text("Change Trakt app", color = Color.White) }
+        Text(TraktClient.ATTRIBUTION, color = ShowColors.Mist, style = MaterialTheme.typography.labelSmall)
     }
 }

@@ -25,7 +25,11 @@ import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
+import androidx.compose.material.icons.rounded.AspectRatio
+import androidx.compose.material.icons.rounded.Audiotrack
+import androidx.compose.material.icons.rounded.ClosedCaption
 import androidx.compose.material.icons.rounded.HighQuality
+import androidx.compose.material.icons.rounded.Speed
 import androidx.compose.material.icons.rounded.List
 import androidx.compose.material.icons.rounded.SkipNext
 import androidx.compose.material.icons.rounded.SkipPrevious
@@ -62,6 +66,7 @@ import androidx.media3.common.C
 import androidx.media3.common.MediaItem
 import androidx.media3.common.PlaybackException
 import androidx.media3.common.Player
+import androidx.media3.common.Tracks
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.datasource.okhttp.OkHttpDataSource
 import androidx.media3.exoplayer.DefaultLoadControl
@@ -93,6 +98,10 @@ data class VodPlayRequest(
 }
 
 /**
+ * 1.8.0 adds: audio and subtitle menus (Media3 tracks, embedded and Jellyfin external subtitles; the
+ * chosen languages are remembered), Fit/Fill/Zoom picture modes (remembered), playback speed, Skip intro /
+ * recap / credits from Jellyfin media segments, and Trakt scrobbling (start / pause / stop).
+ *
  * On-demand player for Movies & Series, separate from the live [app.show.tv.player.PlayerActivity]:
  * VOD wants seeking, resume and a deep buffer, not live-edge tuning. Two layouts: a movie (title,
  * quality) and an episodic one (series, S·E code, previous/next, episode list, auto-advance).
@@ -112,6 +121,16 @@ class VodPlayerActivity : ComponentActivity() {
     private var resumedAt by mutableStateOf<Long?>(null)
     private var tickJob: Job? = null
     private val failedRenditions = mutableSetOf<Int>()
+    private var tracks by mutableStateOf(Tracks.EMPTY)
+    private var playing by mutableStateOf(false)
+    private var playbackSpeed by mutableStateOf(1f)
+    private var resizeMode by mutableStateOf(ResizeMode.FIT)
+    private var resizeHint by mutableStateOf<String?>(null)
+    private var segments by mutableStateOf<List<VodSegment>>(emptyList())
+    private var activeSegment by mutableStateOf<VodSegment?>(null)
+    private var segmentsFor: String? = null
+    private var playerView: PlayerView? = null
+    private var scrobbleState: TraktClient.Scrobble? = null
 
     private val library get() = appGraph.vodLibrary
     private val jellyfin: JellyfinSource? get() = appGraph.vodRepository.source(Provider.JELLYFIN) as? JellyfinSource
@@ -127,6 +146,7 @@ class VodPlayerActivity : ComponentActivity() {
             hide(WindowInsetsCompat.Type.systemBars())
             systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
         }
+        resizeMode = appGraph.vodSettings.player.value.resizeMode
         val p = buildPlayer()
         player = p
         renditionIndex = pickRendition(videos())
@@ -155,19 +175,49 @@ class VodPlayerActivity : ComponentActivity() {
             .setAudioAttributes(AudioAttributes.Builder().setUsage(C.USAGE_MEDIA).setContentType(C.AUDIO_CONTENT_TYPE_MOVIE).build(), true)
             .setHandleAudioBecomingNoisy(true)
             .setSeekBackIncrementMs(10_000).setSeekForwardIncrementMs(30_000)
-            .build().also { it.addListener(listener) }
+            .build().also { p ->
+                p.addListener(listener)
+                val prefs = appGraph.vodSettings.player.value
+                p.trackSelectionParameters = VodTracks.preferred(p.trackSelectionParameters, prefs.audioLang, prefs.subtitleLang)
+            }
     }
 
     private fun prepare(startMs: Long, playWhenReady: Boolean) {
         val p = player ?: return
         val v = videos().getOrNull(renditionIndex) ?: return
         error = null; buffering = true
-        p.setMediaItem(MediaItem.Builder().setUri(v.url).apply {
-            if (v.url.contains(".m3u8")) setMimeType(androidx.media3.common.MimeTypes.APPLICATION_M3U8)
-        }.build(), startMs)
+        p.setMediaItem(mediaItem(v), startMs)
         p.prepare()
         p.playWhenReady = playWhenReady
-        jellyfinItem()?.let { id -> lifecycleScope.launch { jellyfin?.report(id, startMs, "start") } }
+        jellyfinItem()?.let { id ->
+            lifecycleScope.launch { jellyfin?.report(id, startMs, "start") }
+            // Skip markers: fetched once per item, not again on a quality switch.
+            if (segmentsFor != id) {
+                segmentsFor = id; segments = emptyList(); activeSegment = null
+                lifecycleScope.launch { val list = jellyfin?.segments(id).orEmpty(); if (segmentsFor == id) segments = list }
+            }
+        }
+    }
+
+    /** The rendition plus any side-loaded subtitle files (Jellyfin external subtitles). */
+    private fun mediaItem(v: VodVideo): MediaItem = MediaItem.Builder().setUri(v.url).apply {
+        if (v.url.contains(".m3u8")) setMimeType(androidx.media3.common.MimeTypes.APPLICATION_M3U8)
+        if (v.subtitles.isNotEmpty()) setSubtitleConfigurations(v.subtitles.map { sub ->
+            MediaItem.SubtitleConfiguration.Builder(android.net.Uri.parse(sub.url)).setMimeType(sub.mimeType)
+                .setLanguage(sub.language).setLabel(sub.label).build()
+        })
+    }.build()
+
+    /** Trakt scrobble for the current movie/episode; each state is sent once, and pause/stop only after a start. */
+    private fun scrobble(action: TraktClient.Scrobble) {
+        val tr = runCatching { appGraph.trakt }.getOrNull() ?: return
+        if (!tr.configured || !tr.signedIn.value) return
+        val item = TraktItem.from(request.title, request.episodes.getOrNull(episodeIndex)) ?: return
+        if (scrobbleState == action || action != TraktClient.Scrobble.START && scrobbleState == null) return
+        scrobbleState = if (action == TraktClient.Scrobble.STOP) null else action
+        val p = player
+        val pct = p?.duration?.takeIf { it != C.TIME_UNSET && it > 0 }?.let { p.currentPosition * 100f / it } ?: 0f
+        appGraph.vodScope.launch { runCatching { tr.scrobble(action, item, pct) } }
     }
 
     private fun jellyfinItem(): String? = if (request.title.provider != Provider.JELLYFIN) null
@@ -176,10 +226,18 @@ class VodPlayerActivity : ComponentActivity() {
     private val listener = object : Player.Listener {
         override fun onPlaybackStateChanged(state: Int) {
             buffering = state == Player.STATE_BUFFERING
+            if (state == Player.STATE_READY && player?.playWhenReady == true) scrobble(TraktClient.Scrobble.START)
             if (state == Player.STATE_ENDED) onEnded()
         }
+        override fun onPlayWhenReadyChanged(playWhenReady: Boolean, reason: Int) {
+            // play/pause intent, not buffering: a rebuffer must not send a Trakt pause.
+            if (playWhenReady && player?.playbackState == Player.STATE_READY) scrobble(TraktClient.Scrobble.START)
+            else if (!playWhenReady) scrobble(TraktClient.Scrobble.PAUSE)
+        }
+        override fun onTracksChanged(t: Tracks) { tracks = t }
         override fun onIsPlayingChanged(isPlaying: Boolean) {
             keepAwake(isPlaying)
+            playing = isPlaying
             if (isPlaying) startTicks() else { tickJob?.cancel(); save() }
         }
         override fun onPlayerError(e: PlaybackException) {
@@ -218,6 +276,7 @@ class VodPlayerActivity : ComponentActivity() {
 
     private fun onEnded() {
         save()
+        scrobble(TraktClient.Scrobble.STOP)
         if (request.isEpisodic && episodeIndex < request.episodes.lastIndex) playEpisode(episodeIndex + 1)
         else { keepAwake(false); finish() }
     }
@@ -225,6 +284,7 @@ class VodPlayerActivity : ComponentActivity() {
     private fun playEpisode(i: Int) {
         if (i !in request.episodes.indices || request.episodes[i].sources.isEmpty()) return
         save()
+        scrobble(TraktClient.Scrobble.STOP)
         jellyfinItem()?.let { id -> val pos = player?.currentPosition ?: 0; lifecycleScope.launch { jellyfin?.report(id, pos, "stop") } }
         episodeIndex = i
         failedRenditions.clear()
@@ -242,21 +302,59 @@ class VodPlayerActivity : ComponentActivity() {
         prepare(pos, true)
     }
 
+    private fun selectTrack(type: Int, option: VodTracks.Option) {
+        val p = player ?: return
+        p.trackSelectionParameters = VodTracks.select(p.trackSelectionParameters, tracks, type, option)
+        val lang = VodTracks.rememberedLanguage(option)
+        if (type == C.TRACK_TYPE_AUDIO) { if (lang != null) appGraph.vodSettings.setAudioLang(lang) }
+        else appGraph.vodSettings.setSubtitleLang(lang)
+    }
+
+    private fun cycleResize() {
+        resizeMode = resizeMode.next()
+        playerView?.resizeMode = resizeMode.media3
+        appGraph.vodSettings.setResizeMode(resizeMode)
+        resizeHint = resizeMode.label
+    }
+
+    private fun changeSpeed(s: Float) { playbackSpeed = s; player?.setPlaybackSpeed(s) }
+
     @Composable
     private fun Screen(p: ExoPlayer) {
         var controls by remember { mutableStateOf(true) }
+        // Skip markers: poll the position only while this item has segments and is playing.
+        LaunchedEffect(segments, playing) {
+            if (segments.isEmpty()) { activeSegment = null; return@LaunchedEffect }
+            if (!playing) return@LaunchedEffect
+            while (true) {
+                val pos = player?.currentPosition ?: 0
+                activeSegment = segments.firstOrNull { it.contains(pos) }
+                delay(500)
+            }
+        }
         Box(Modifier.fillMaxSize().background(Color.Black)) {
             AndroidView(factory = { ctx ->
                 (LayoutInflater.from(ctx).inflate(R.layout.show_player_view, null) as PlayerView).apply {
                     player = p
+                    playerView = this
+                    resizeMode = this@VodPlayerActivity.resizeMode.media3
                     setShowBuffering(PlayerView.SHOW_BUFFERING_NEVER)
-                    setShowSubtitleButton(true)
+                    setShowSubtitleButton(false) // Show's own Subtitles menu (top bar) replaces it
                     setShowNextButton(false); setShowPreviousButton(false)
                     setControllerVisibilityListener(PlayerView.ControllerVisibilityListener { v -> controls = v == android.view.View.VISIBLE })
                 }
             }, modifier = Modifier.fillMaxSize().testTag("vod_player"))
             if (buffering && error == null) CircularProgressIndicator(Modifier.align(Alignment.Center), color = Color.White)
             AnimatedVisibility(controls || error != null, enter = fadeIn(), exit = fadeOut(), modifier = Modifier.align(Alignment.TopCenter)) { TopBar() }
+            activeSegment?.let { seg ->
+                ShowPrimaryButton(onClick = { player?.seekTo(seg.endMs); activeSegment = null },
+                    modifier = Modifier.align(Alignment.BottomEnd).padding(24.dp, 96.dp).testTag("vod_skip_segment")) { Text(seg.type.action) }
+            }
+            resizeHint?.let { hint ->
+                LaunchedEffect(hint, resizeMode) { delay(1_500); resizeHint = null }
+                Text(hint, color = Color.White, style = MaterialTheme.typography.titleMedium,
+                    modifier = Modifier.align(Alignment.Center).clip(RoundedCornerShape(50)).background(ShowColors.GlassStrong).padding(horizontal = 18.dp, vertical = 8.dp).testTag("vod_resize_hint"))
+            }
             resumedAt?.let { at ->
                 LaunchedEffect(at) { delay(6_000); resumedAt = null }
                 Row(Modifier.align(Alignment.BottomStart).padding(24.dp, 96.dp).clip(RoundedCornerShape(50)).background(ShowColors.GlassStrong)
@@ -311,6 +409,23 @@ class VodPlayerActivity : ComponentActivity() {
                     }
                 }
             }
+            val audio = remember(tracks) { VodTracks.audio(tracks) }
+            if (audio.size > 1) TrackMenu("Audio", Icons.Rounded.Audiotrack, "vod_audio", audio) { selectTrack(C.TRACK_TYPE_AUDIO, it) }
+            val subs = remember(tracks) { VodTracks.subtitles(tracks) }
+            if (subs.size > 1) TrackMenu("Subtitles", Icons.Rounded.ClosedCaption, "vod_subtitles", subs) { selectTrack(C.TRACK_TYPE_TEXT, it) }
+            var speedMenu by remember { mutableStateOf(false) }
+            Box {
+                IconButton(onClick = { speedMenu = true }, modifier = Modifier.testTag("vod_speed")) { Icon(Icons.Rounded.Speed, "Playback speed, ${VodSpeeds.label(playbackSpeed)}", tint = Color.White) }
+                DropdownMenu(speedMenu, onDismissRequest = { speedMenu = false }, containerColor = ShowColors.Surface) {
+                    VodSpeeds.all.forEach { v ->
+                        DropdownMenuItem(text = { Text((if (v == playbackSpeed) "✓ " else "") + VodSpeeds.label(v), color = Color.White) },
+                            onClick = { speedMenu = false; changeSpeed(v) }, modifier = Modifier.testTag("vod_speed_$v"))
+                    }
+                }
+            }
+            IconButton(onClick = { cycleResize() }, modifier = Modifier.testTag("vod_resize")) {
+                Icon(Icons.Rounded.AspectRatio, "Picture: ${resizeMode.label}. Change", tint = Color.White)
+            }
             val renditions = videos()
             if (renditions.size > 1) Box {
                 TextButton(onClick = { qualityMenu = true }, modifier = Modifier.testTag("vod_quality")) {
@@ -322,6 +437,22 @@ class VodPlayerActivity : ComponentActivity() {
                         DropdownMenuItem(text = { Text((if (i == renditionIndex) "✓ " else "") + v.label + (v.sizeBytes?.let { "  ·  ${it / 1_000_000} MB" } ?: ""), color = Color.White) },
                             onClick = { qualityMenu = false; selectRendition(i); appGraph.vodSettings.setPreferredHeight(v.height) }, modifier = Modifier.testTag("vod_quality_$i"))
                     }
+                }
+            }
+        }
+    }
+
+    @Composable
+    private fun TrackMenu(name: String, icon: androidx.compose.ui.graphics.vector.ImageVector, tag: String, options: List<VodTracks.Option>, onPick: (VodTracks.Option) -> Unit) {
+        var open by remember { mutableStateOf(false) }
+        Box {
+            IconButton(onClick = { open = true }, modifier = Modifier.testTag(tag)) {
+                Icon(icon, "$name: ${options.firstOrNull { it.selected }?.label ?: "Auto"}", tint = Color.White)
+            }
+            DropdownMenu(open, onDismissRequest = { open = false }, containerColor = ShowColors.Surface) {
+                options.forEachIndexed { i, o ->
+                    DropdownMenuItem(text = { Text((if (o.selected) "✓ " else "") + o.label, color = Color.White, maxLines = 1) },
+                        onClick = { open = false; onPick(o) }, modifier = Modifier.testTag("${tag}_$i"))
                 }
             }
         }
@@ -341,6 +472,7 @@ class VodPlayerActivity : ComponentActivity() {
         save()
         player?.let { p ->
             jellyfinItem()?.let { id -> val pos = p.currentPosition; lifecycleScope.launch { jellyfin?.report(id, pos, "progress", paused = true) } }
+            scrobble(TraktClient.Scrobble.PAUSE)
             p.playWhenReady = false
             p.stop() // keeps the item and position; frees the network, decoder and buffer while off-screen
         }
@@ -358,9 +490,14 @@ class VodPlayerActivity : ComponentActivity() {
     override fun onDestroy() {
         player?.let { p ->
             jellyfinItem()?.let { id -> val pos = p.currentPosition; appGraph.vodScope.launch { jellyfin?.report(id, pos, "stop") } }
+            scrobble(TraktClient.Scrobble.STOP)
             p.removeListener(listener); p.release()
         }
         player = null
+        // 1.8.0 audit: drop the static request once this player is done with it (keep it across rotation/recreation).
+        if (isFinishing && ::request.isInitialized && pending === request) pending = null
+        playerView?.player = null // drop the view -> player link so neither outlives the activity
+        playerView = null
         super.onDestroy()
     }
 

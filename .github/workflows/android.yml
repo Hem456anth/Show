@@ -44,6 +44,8 @@ jobs:
           SHOW_KEY_ALIAS: ${{ secrets.SHOW_KEY_ALIAS }}
           SHOW_KEY_PASSWORD: ${{ secrets.SHOW_KEY_PASSWORD }}
           TMDB_API_KEY: ${{ secrets.TMDB_API_KEY }}
+          TRAKT_CLIENT_ID: ${{ secrets.TRAKT_CLIENT_ID }}
+          TRAKT_CLIENT_SECRET: ${{ secrets.TRAKT_CLIENT_SECRET }}
         run: |
           ./gradlew --no-daemon :app:assembleRelease
           VERSION=$(grep -oP 'versionName = "\K[^"]+' app/build.gradle.kts)

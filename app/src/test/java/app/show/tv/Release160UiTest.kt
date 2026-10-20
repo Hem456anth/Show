@@ -92,6 +92,17 @@ class Release160UiTest {
         compose.onNodeWithTag("vod_card_tmdb:movie:dune").assertIsDisplayed()
         compose.onNodeWithTag("vod_section_search").performClick(); compose.mainClock.advanceTimeBy(400)
         compose.onNodeWithTag("vod_search_field").assertIsDisplayed()
+        releaseClock()
+    }
+
+    /**
+     * 1.8.0: hand the clock back before teardown. With a manual clock, any state change that lands after the last step
+     * (a late coroutine result) waits for a frame that never comes, and the rule's final idle check times out
+     * (AppNotIdleException after the body passed). Auto-advance lets that last frame run; the final screen has no spinner.
+     */
+    private fun releaseClock() {
+        compose.mainClock.autoAdvance = true
+        compose.waitForIdle()
     }
 
 

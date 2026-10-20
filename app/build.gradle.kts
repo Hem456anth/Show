@@ -13,11 +13,16 @@ android {
         // Optional TMDB key baked in at build time (Gradle property or env TMDB_API_KEY); viewers can also enter their own.
         val tmdbKey = (project.findProperty("TMDB_API_KEY") as String?) ?: System.getenv("TMDB_API_KEY") ?: ""
         buildConfigField("String", "TMDB_API_KEY", "\"${tmdbKey.replace("\"", "")}\"")
+        // Optional Trakt app (1.8.0): -PTRAKT_CLIENT_ID/-PTRAKT_CLIENT_SECRET or env (CI secrets). Empty = Trakt hidden
+        // unless the viewer enters their own app in Movies settings. Only [0-9a-f] survives, so nothing can break the Java string.
+        fun buildSecret(name: String) = ((project.findProperty(name) as String?) ?: System.getenv(name) ?: "").filter { it in '0'..'9' || it in 'a'..'f' }
+        buildConfigField("String", "TRAKT_CLIENT_ID", "\"${buildSecret("TRAKT_CLIENT_ID")}\"")
+        buildConfigField("String", "TRAKT_CLIENT_SECRET", "\"${buildSecret("TRAKT_CLIENT_SECRET")}\"")
         applicationId = "app.show.tv"
         minSdk = 26
         targetSdk = 35
-        versionCode = 11
-        versionName = "1.6.0"
+        versionCode = 12
+        versionName = "1.8.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables { useSupportLibrary = true }
     }

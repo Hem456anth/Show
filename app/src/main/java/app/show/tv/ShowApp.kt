@@ -17,6 +17,9 @@ import app.show.tv.vod.VodHttp
 import app.show.tv.vod.VodLibrary
 import app.show.tv.vod.VodRepository
 import app.show.tv.vod.VodSettings
+import app.show.tv.vod.KeystoreSecretStore
+import app.show.tv.vod.TraktApp
+import app.show.tv.vod.TraktClient
 import app.show.tv.data.ExtraSources
 import app.show.tv.data.PlaylistSource
 import okhttp3.Protocol
@@ -82,10 +85,17 @@ class AppGraph(
     // ---- Movies & Series (1.6.0): independent from Live TV, shares the HTTP stack and image loader.
     /** Outlives activities, for fire-and-forget calls such as the final Jellyfin progress report. */
     val vodScope = kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.SupervisorJob() + kotlinx.coroutines.Dispatchers.IO)
-    val vodSettings = VodSettings(app.getSharedPreferences("vod_settings", Context.MODE_PRIVATE), BuildConfig.TMDB_API_KEY)
+    /** Session tokens (Jellyfin, Trakt) encrypted with an Android Keystore key (1.8.0). */
+    val vodSecrets = KeystoreSecretStore(app.getSharedPreferences("vod_secrets", Context.MODE_PRIVATE))
+    val vodSettings = VodSettings(app.getSharedPreferences("vod_settings", Context.MODE_PRIVATE), BuildConfig.TMDB_API_KEY,
+        TraktApp(BuildConfig.TRAKT_CLIENT_ID, BuildConfig.TRAKT_CLIENT_SECRET), vodSecrets)
     val vodLibrary = VodLibrary(app.getSharedPreferences("vod_library", Context.MODE_PRIVATE))
     val vodRepository: VodRepository by lazy {
         VodRepository(VodHttp(mediaClient.newBuilder().readTimeout(15, TimeUnit.SECONDS).build()), { vodSettings.config.value })
+    }
+    /** Trakt sync (1.8.0): hidden unless a client id is built in or entered in Movies settings. Tokens are Keystore-encrypted. */
+    val trakt: TraktClient by lazy {
+        TraktClient(vodRepository.http(), { vodSettings.traktApp.value }, vodSecrets)
     }
 
     val imageLoader: ImageLoader by lazy { ImageLoader.Builder(app)

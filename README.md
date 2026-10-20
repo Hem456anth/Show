@@ -3,7 +3,11 @@
 [![Android CI](https://github.com/Hem456anth/Show/actions/workflows/android.yml/badge.svg)](https://github.com/Hem456anth/Show/actions/workflows/android.yml)
 [![Latest release](https://img.shields.io/github/v/release/Hem456anth/Show)](https://github.com/Hem456anth/Show/releases/latest)
 
-> Version 1.5.4: stricter Free-TV verification refreshed weekly, plus verified YouTube and Dailymotion live channels in their official players (see `docs/SOURCES_1.5.4.md`). 1.5.3: battery and lag audit. 1.5.2 fixed the grey overlay on the Home hero. 1.5.0: Zee channels fixed at the root (saved channels follow rotated links), an audio-track picker, smoother 1080p, verified Free-TV channels and a liquid-glass tab bar. See `CHANGELOG.md` and `docs/STREAMING_1.5.md`.
+> Version 1.8.0: Movies & Series gets TMDB collections, Studios & networks browse pages, audio/subtitle menus with remembered
+> languages, Fit/Fill/Zoom, playback speed, skip-intro markers from Jellyfin, Mark as watched and Trakt sync (see
+> `docs/MOVIES_1.8.md` and the audit in `docs/AUDIT_1.8.md`). There is no 1.7.0. 1.6.0 added the Movies tab.
+>
+> 1.5.4: stricter Free-TV verification refreshed weekly, plus verified YouTube and Dailymotion live channels in their official players (see `docs/SOURCES_1.5.4.md`). 1.5.3: battery and lag audit. 1.5.2 fixed the grey overlay on the Home hero. 1.5.0: Zee channels fixed at the root (saved channels follow rotated links), an audio-track picker, smoother 1080p, verified Free-TV channels and a liquid-glass tab bar. See `CHANGELOG.md` and `docs/STREAMING_1.5.md`.
 
 ## Download
 
@@ -87,6 +91,8 @@ delivered APK was built.
 | `LibraryAndViewModelTest` | favourites/history persistence, dedupe/cap, corrupt data, ViewModel offline load and search |
 | `Release15Test` (`RotatedLinkTest`, `ExtraSourcesTest`, `AudioTracksTest`) | saved channels following rotated links, Free-TV allowlist and merge, audio labels and listing, adaptive step-down, live speed |
 | `NavigationUiTest` | Compose UI: bottom nav across all tabs, category chips, search results, detail sheet → My List → Player launch, tablet navigation rail |
+| `Release160Test`, `Release160UiTest` | Movies & Series providers (Archive rights filter, TMDB, Jellyfin), library/progress, settings, repository, Movies tab UI flow |
+| `Release180Test`, `Release180UiTest` | TMDB collections and studio/network discover paging, audio/subtitle track logic, picture modes, Trakt device flow / refresh / scrobble / sync requests, Jellyfin subtitles and segments, secret storage, new settings; Studios UI |
 
 Live stream reachability probe (no decoding): `python3 tools/probe_streams.py --sample 80`.
 In-app live diagnostic (real parser, engine and Media3, needs network):
@@ -109,3 +115,13 @@ A separate Movies tab plays free public-domain / Creative Commons films and TV f
 Jellyfin library, with TMDB (or TVmaze) for discovery, cast and trailers. Setup: open Movies → ⚙ and add a free TMDB key
 and/or your Jellyfin server. To bake a TMDB key into a build: `./gradlew assembleRelease -PTMDB_API_KEY=<key>` (CI: repository
 secret `TMDB_API_KEY`). Details and source decisions: `docs/MOVIES_1.6.md`.
+
+### 1.8.0 additions
+* **Collections** on movie pages and a **Studios** section (22 studios, 21 TV networks) with paged TMDB discover grids. Both need a TMDB key.
+* **Player:** Audio and Subtitles menus (embedded tracks and Jellyfin external subtitles; languages remembered), Fit / Fill / Zoom
+  (remembered), playback speed, and Skip intro / recap / credits when your Jellyfin server has media segments.
+* **Mark as watched** for movies and episodes (synced to Jellyfin and Trakt), genre chips on Browse, a clearer offline state and D-pad focus rings.
+* **Trakt** (optional): sign in with a code on trakt.tv/activate; My List ↔ watchlist, history, and scrobbling from the player.
+  Build with `-PTRAKT_CLIENT_ID=<id> -PTRAKT_CLIENT_SECRET=<secret>` (or env / CI secrets `TRAKT_CLIENT_ID`, `TRAKT_CLIENT_SECRET`),
+  or enter your own Trakt app in Movies → ⚙. Without a client id Trakt stays hidden. Tokens are encrypted with an Android Keystore key.
+* Details: `docs/MOVIES_1.8.md`; audit: `docs/AUDIT_1.8.md`.

@@ -41,7 +41,8 @@ class JellyfinSource(private val http: VodHttp, val account: JellyfinAccount) : 
 
     /** Every TMDB id in the library -> its Jellyfin title, so TMDB info pages can offer "Play on Jellyfin". */
     suspend fun tmdbIndex(): Map<String, VodTitle> =
-        items(http.json("$s/Users/${account.userId}/Items?IncludeItemTypes=Movie,Series&Recursive=true&Fields=$fields", auth))
+        // Lean fields and no images: large libraries stay well under VodHttp's 4 MB body cap (1.8.0 audit).
+        items(http.json("$s/Users/${account.userId}/Items?IncludeItemTypes=Movie,Series&Recursive=true&Fields=ProviderIds,ProductionYear&EnableImages=false&EnableUserData=false", auth))
             .filter { it.tmdbId != null }.associateBy { "${it.kind}:${it.tmdbId}" }
 
     private fun items(o: JSONObject): List<VodTitle> = o.optJSONArray("Items").objs().mapNotNull(::parse)
@@ -67,7 +68,7 @@ class JellyfinSource(private val http: VodHttp, val account: JellyfinAccount) : 
     }
 
     override suspend fun detail(title: VodTitle): VodDetail {
-        val i = http.json("$s/Users/${account.userId}/Items/${title.providerId}?Fields=$fields,People,Studios,RemoteTrailers,Taglines", auth)
+        val i = http.json("$s/Users/${account.userId}/Items/${title.providerId}?Fields=$fields,People,Studios,RemoteTrailers,Taglines,MediaSources", auth)
         val t = parse(i) ?: title
         val people = i.optJSONArray("People").objs()
         fun photo(p: JSONObject) = p.str("PrimaryImageTag")?.let { "$s/Items/${p.getString("Id")}/Images/Primary?maxHeight=300" }
@@ -86,7 +87,7 @@ class JellyfinSource(private val http: VodHttp, val account: JellyfinAccount) : 
             companies = if (t.kind == VodKind.MOVIE) studios else emptyList(),
             networks = if (t.kind == VodKind.SHOW) studios else emptyList(),
             trailerYoutubeId = trailer, seasons = seasons,
-            sources = if (t.kind == VodKind.MOVIE) videos(title.providerId) else emptyList(),
+            sources = if (t.kind == VodKind.MOVIE) videos(title.providerId, subtitles(title.providerId, i)) else emptyList(),
             sourcePage = "$s/web/#/details?id=${title.providerId}",
             remotePositionMs = position,
         )
@@ -94,12 +95,12 @@ class JellyfinSource(private val http: VodHttp, val account: JellyfinAccount) : 
 
     override suspend fun season(title: VodTitle, season: VodSeason): VodSeason {
         val sid = season.id ?: return season
-        val eps = http.json("$s/Shows/${title.providerId}/Episodes?seasonId=$sid&userId=${account.userId}&Fields=Overview", auth)
+        val eps = http.json("$s/Shows/${title.providerId}/Episodes?seasonId=$sid&userId=${account.userId}&Fields=Overview,MediaSources", auth)
             .optJSONArray("Items").objs().map {
                 val id = it.getString("Id")
                 VodEpisode(id, it.optInt("ParentIndexNumber", season.number), it.optInt("IndexNumber"), it.str("Name") ?: "Episode",
                     it.str("Overview"), "$s/Items/$id/Images/Primary?maxWidth=480", (it.optLong("RunTimeTicks") / TICKS_PER_MS / 1000).toInt().takeIf { r -> r > 0 },
-                    videos(id))
+                    videos(id, subtitles(id, it)))
             }
         return season.copy(episodes = eps, episodeCount = eps.size)
     }
@@ -109,14 +110,42 @@ class JellyfinSource(private val http: VodHttp, val account: JellyfinAccount) : 
      * fixed bitrates for slow networks. The player falls back to the original if a transcode fails
      * (some servers, like the demo, disable transcoding).
      */
-    fun videos(itemId: String): List<VodVideo> {
+    fun videos(itemId: String, subtitles: List<VodSubtitle> = emptyList()): List<VodVideo> {
         val h = mapOf("Authorization" to authHeader(account.deviceId, account.token))
-        val original = VodVideo("Original", "$s/Videos/$itemId/stream?static=true&MediaSourceId=$itemId", headers = h)
+        val original = VodVideo("Original", "$s/Videos/$itemId/stream?static=true&MediaSourceId=$itemId", headers = h, subtitles = subtitles)
         val transcodes = listOf(1080 to 8_000_000, 720 to 4_000_000, 480 to 1_500_000).map { (height, bitrate) ->
             VodVideo("${height}p", "$s/Videos/$itemId/master.m3u8?MediaSourceId=$itemId&VideoCodec=h264&AudioCodec=aac" +
-                "&MaxStreamingBitrate=$bitrate&MaxHeight=$height&DeviceId=${account.deviceId.enc()}&PlaySessionId=${account.deviceId.enc()}", height = height, headers = h)
+                "&MaxStreamingBitrate=$bitrate&MaxHeight=$height&DeviceId=${account.deviceId.enc()}&PlaySessionId=${account.deviceId.enc()}", height = height, headers = h, subtitles = subtitles)
         }
         return listOf(original) + transcodes
+    }
+
+    /**
+     * External text subtitles the server exposes for an item (1.8.0), side-loaded as WebVTT that the server converts.
+     * Embedded subtitles in a direct-played file reach the player as normal Media3 text tracks instead.
+     */
+    internal fun subtitles(itemId: String, item: JSONObject): List<VodSubtitle> {
+        val source = item.optJSONArray("MediaSources").objs().firstOrNull() ?: return emptyList()
+        val sourceId = source.str("Id") ?: itemId
+        return source.optJSONArray("MediaStreams").objs()
+            .filter { it.optString("Type") == "Subtitle" && it.optBoolean("IsExternal") && it.optBoolean("IsTextSubtitleStream", true) && it.has("Index") }
+            .map {
+                val lang = it.str("Language")
+                VodSubtitle("$s/Videos/$itemId/$sourceId/Subtitles/${it.getInt("Index")}/0/Stream.vtt", lang,
+                    it.str("DisplayTitle") ?: it.str("Title") ?: lang ?: "Subtitles", "text/vtt")
+            }
+    }
+
+    /** Intro/recap/outro/preview spans (Jellyfin 10.10+ media segments). Empty when the server has none or is older. */
+    suspend fun segments(itemId: String): List<VodSegment> = runCatching {
+        parseSegments(http.json("$s/MediaSegments/${itemId.enc()}", auth))
+    }.getOrDefault(emptyList())
+
+    /** Marks an item played on the server; tries the 10.9+ route, then the older per-user route. */
+    suspend fun markPlayed(itemId: String): Boolean {
+        val id = itemId.enc()
+        return runCatching { http.post("$s/UserPlayedItems/$id?userId=${account.userId.enc()}", "{}", auth) }.isSuccess ||
+            runCatching { http.post("$s/Users/${account.userId.enc()}/PlayedItems/$id", "{}", auth) }.isSuccess
     }
 
     /** Progress sync (fire and forget; failures only cost the server-side resume point). */
@@ -129,7 +158,17 @@ class JellyfinSource(private val http: VodHttp, val account: JellyfinAccount) : 
 
     companion object {
         const val TICKS_PER_MS = 10_000L
-        const val CLIENT_VERSION = "1.6.0"
+        val CLIENT_VERSION: String = app.show.tv.BuildConfig.VERSION_NAME
+
+        internal fun parseSegments(o: JSONObject): List<VodSegment> = o.optJSONArray("Items").objs().mapNotNull {
+            val type = when (it.optString("Type")) {
+                "Intro" -> VodSegment.Type.INTRO; "Recap" -> VodSegment.Type.RECAP
+                "Outro" -> VodSegment.Type.OUTRO; "Preview" -> VodSegment.Type.PREVIEW
+                else -> return@mapNotNull null
+            }
+            val start = it.optLong("StartTicks") / TICKS_PER_MS; val end = it.optLong("EndTicks") / TICKS_PER_MS
+            if (end - start < 3_000) null else VodSegment(type, start, end)
+        }.sortedBy { it.startMs }
 
         fun authHeader(deviceId: String, token: String? = null) =
             "MediaBrowser Client=\"Show\", Device=\"Android\", DeviceId=\"$deviceId\", Version=\"$CLIENT_VERSION\"" + (token?.let { ", Token=\"$it\"" } ?: "")

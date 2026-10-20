@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 1.8.0 audit. Read automatically by AGP for :app:lint*. -->
+<lint>
+    <!-- False positive: PlayerActivity overrides ComponentActivity.dispatchKeyEvent and calls super, which lint flags as a
+         restricted androidx.core API. Overriding a public Activity callback is the documented way to handle TV remote keys.
+         Scoped to that one Live TV file so its behaviour stays untouched. -->
+    <issue id="RestrictedApi">
+        <ignore path="src/main/java/app/show/tv/player/PlayerActivity.kt" />
+    </issue>
+</lint>

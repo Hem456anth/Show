@@ -54,13 +54,13 @@ class VodLibrary(private val prefs: SharedPreferences, private val clock: () -> 
 
     fun toggle(title: VodTitle) {
         _list.value = if (inList(title.key)) _list.value.filterNot { it.key == title.key } else listOf(title) + _list.value
-        save()
+        saveList()
     }
 
     fun toggle(shortcut: VodShortcut) {
         val has = _shortcuts.value.any { it.key == shortcut.key }
         _shortcuts.value = if (has) _shortcuts.value.filterNot { it.key == shortcut.key } else listOf(shortcut) + _shortcuts.value
-        save()
+        saveShortcuts()
     }
 
     fun hasShortcut(s: VodShortcut) = _shortcuts.value.any { it.key == s.key }
@@ -78,23 +78,38 @@ class VodLibrary(private val prefs: SharedPreferences, private val clock: () -> 
         m[title.key] = p
         // Bound storage: keep the newest entries.
         _progress.value = m.entries.sortedByDescending { it.value.updatedAt }.take(MAX_PROGRESS).associate { it.key to it.value }
-        save()
+        saveProgress()
+    }
+
+    /** "Mark as watched" (1.8.0): stores the title (or episode) as finished, so it leaves Continue Watching. */
+    fun markWatched(title: VodTitle, episodeId: String? = null, episodeLabel: String? = null) {
+        val dur = (title.runtimeMin?.takeIf { it > 0 }?.times(60_000L)) ?: 1L
+        record(title, dur, dur, episodeId, episodeLabel)
+    }
+
+    fun isWatched(title: VodTitle, episodeId: String? = null): Boolean = (positionFor(title, episodeId)?.fraction ?: 0f) >= VodProgress.FINISHED
+
+    /** Adds titles that aren't in My List yet (Trakt watchlist import), keeping the current order first. Returns how many were new. */
+    fun importTitles(titles: List<VodTitle>): Int {
+        val have = _list.value.mapTo(HashSet()) { it.key }
+        val fresh = titles.filter { have.add(it.key) }
+        if (fresh.isEmpty()) return 0
+        _list.value = _list.value + fresh
+        saveList(); return fresh.size
     }
 
     fun removeProgress(key: String) {
         _progress.value = _progress.value.filterKeys { it != key && !it.startsWith("$key#") }
-        save()
+        saveProgress()
     }
 
-    fun clearHistory() { _progress.value = emptyMap(); save() }
+    fun clearHistory() { _progress.value = emptyMap(); saveProgress() }
 
-    private fun save() {
-        prefs.edit()
-            .putString(K_LIST, JSONArray(_list.value.map { it.toJson() }).toString())
-            .putString(K_SHORTCUTS, JSONArray(_shortcuts.value.map { it.toJson() }).toString())
-            .putString(K_PROGRESS, JSONObject().also { o -> _progress.value.forEach { (k, v) -> o.put(k, v.toJson()) } }.toString())
-            .apply()
-    }
+    // 1.8.0 audit: each change writes only its own blob (the 10 s progress tick used to re-serialise My List too).
+    private fun saveList() = prefs.edit().putString(K_LIST, JSONArray(_list.value.map { it.toJson() }).toString()).apply()
+    private fun saveShortcuts() = prefs.edit().putString(K_SHORTCUTS, JSONArray(_shortcuts.value.map { it.toJson() }).toString()).apply()
+    private fun saveProgress() = prefs.edit()
+        .putString(K_PROGRESS, JSONObject().also { o -> _progress.value.forEach { (k, v) -> o.put(k, v.toJson()) } }.toString()).apply()
 
     private fun readList() = runCatching { JSONArray(prefs.getString(K_LIST, "[]")).objs().mapNotNull(VodTitle::fromJson) }.getOrDefault(emptyList())
     private fun readShortcuts() = runCatching { JSONArray(prefs.getString(K_SHORTCUTS, "[]")).objs().mapNotNull(VodShortcut::fromJson) }.getOrDefault(emptyList())

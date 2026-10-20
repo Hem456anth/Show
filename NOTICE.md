@@ -25,6 +25,14 @@ Not affiliated with VideoLAN, Netflix, or iptv-org.
 * TVmaze (tvmaze.com): TV data under CC BY-SA 4.0.
 * Jellyfin (jellyfin.org): Show talks to the viewer's own server over its public API; no Jellyfin code is included.
 
+## Movies & Series additions (1.8.0)
+* TMDB collections and discover listings, plus studio and network logos: TMDB-hosted images, loaded at run time and shown
+  only to identify each studio or network (never bundled). Logos and names belong to their owners. Same TMDB attribution as above.
+* Trakt (trakt.tv): optional watchlist/history sync and scrobbling through Trakt's public API and OAuth device flow, with the
+  viewer's consent. "Watch history sync by Trakt. Not endorsed by Trakt." Trakt supplies no video.
+* Feature ideas were compared against other open listings of streaming-app features; no third-party app code, assets or strings are included.
+* No new libraries: token encryption uses the Android Keystore and `javax.crypto` from the platform.
+
 ## Third-party libraries (all Apache License 2.0)
 * AndroidX Media3 (ExoPlayer, HLS, DASH, SmoothStreaming, RTSP, OkHttp and RTMP data sources, UI): The Android Open Source Project
 * `media3-datasource-rtmp` bundles LibRtmp-Client-for-Android (Apache 2.0 wrapper of librtmp; librtmp is LGPL-2.1, dynamically loaded `.so`)

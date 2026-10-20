@@ -64,8 +64,32 @@ data class VodTitle(
 
 data class VodPerson(val name: String, val role: String?, val photoUrl: String?, val id: String? = null)
 
-/** One playable rendition. [height] null = original/unknown. */
-data class VodVideo(val label: String, val url: String, val height: Int? = null, val sizeBytes: Long? = null, val headers: Map<String, String> = emptyMap())
+/** One playable rendition. [height] null = original/unknown. [subtitles] are side-loaded text tracks (Jellyfin external subtitles). */
+data class VodVideo(
+    val label: String,
+    val url: String,
+    val height: Int? = null,
+    val sizeBytes: Long? = null,
+    val headers: Map<String, String> = emptyMap(),
+    val subtitles: List<VodSubtitle> = emptyList(),
+)
+
+/** A side-loaded subtitle file (1.8.0). [mimeType] is a Media3 MimeTypes text type, e.g. text/vtt. */
+data class VodSubtitle(val url: String, val language: String?, val label: String, val mimeType: String = "text/vtt")
+
+/** A skippable span (1.8.0), from Jellyfin media segments: intro, recap, outro, preview. */
+data class VodSegment(val type: Type, val startMs: Long, val endMs: Long) {
+    enum class Type(val action: String) { INTRO("Skip intro"), RECAP("Skip recap"), OUTRO("Skip credits"), PREVIEW("Skip preview") }
+    fun contains(positionMs: Long) = positionMs in startMs until (endMs - 1_000).coerceAtLeast(startMs + 1)
+}
+
+/** A TMDB collection a movie belongs to (1.8.0), e.g. "The Lord of the Rings Collection". */
+data class VodCollectionRef(val id: String, val name: String, val posterUrl: String? = null, val backdropUrl: String? = null)
+
+/** One page of a paged listing (TMDB discover). */
+data class VodPage(val items: List<VodTitle>, val page: Int = 1, val totalPages: Int = 1) {
+    val hasMore: Boolean get() = page < totalPages
+}
 
 data class VodEpisode(
     val id: String,
@@ -97,13 +121,17 @@ data class VodDetail(
     val sourcePage: String? = null,
     /** Server-side resume position (Jellyfin), ms. */
     val remotePositionMs: Long? = null,
+    /** TMDB collection (franchise) this movie belongs to, if any. */
+    val collection: VodCollectionRef? = null,
+    /** TMDB ids of [companies] and [networks] by name, so they open as browse pages without another request. */
+    val orgIds: Map<String, String> = emptyMap(),
 )
 
 data class VodRow(val id: String, val title: String, val items: List<VodTitle>, val provider: Provider)
 
 /** A My List shortcut that is not a title: a company, a network or a person. */
 data class VodShortcut(val type: Type, val name: String, val provider: Provider, val id: String?) {
-    enum class Type { COMPANY, NETWORK, PERSON }
+    enum class Type { COMPANY, NETWORK, PERSON, COLLECTION }
     val key get() = "${type.name}:${provider.name}:${id ?: name}"
     fun toJson() = JSONObject().put("type", type.name).put("name", name).put("p", provider.name).putOpt("id", id)
     companion object {
@@ -127,6 +155,8 @@ interface VodSource {
     suspend fun detail(title: VodTitle): VodDetail
     /** Loads a season's episodes when [VodDetail.seasons] came without them. */
     suspend fun season(title: VodTitle, season: VodSeason): VodSeason = season
-    /** Titles for a My List shortcut (a company, network or person). */
-    suspend fun browse(shortcut: VodShortcut): List<VodTitle> = emptyList()
+    /** Titles for a My List shortcut (a company, network, person or collection). */
+    suspend fun browse(shortcut: VodShortcut): List<VodTitle> = browsePage(shortcut, 1).items
+    /** A page of [browse]; providers with paging (TMDB discover) override this. */
+    suspend fun browsePage(shortcut: VodShortcut, page: Int): VodPage = VodPage(emptyList())
 }

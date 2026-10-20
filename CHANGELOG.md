@@ -1,5 +1,26 @@
 # Changelog
 
+## 1.8.0 (2026-10-20): Collections, Studios, track menus, picture modes, Trakt
+Version code 12. There is no 1.7.0. Live TV is unchanged. Details: `docs/MOVIES_1.8.md`; audit: `docs/AUDIT_1.8.md`.
+* **TMDB collections:** a movie that belongs to a collection shows its films in release order and opens a full collection page
+  (saveable to My List).
+* **Studios & networks:** a new Studios section with 22 studios and 21 TV networks (TMDB logos, black-and-white), each opening a
+  paged TMDB discover grid. Without a TMDB key it explains how to add one.
+* **VOD player:** Audio and Subtitles menus over Media3 tracks (embedded tracks and Jellyfin external subtitles), with the chosen
+  languages remembered; Fit / Fill / Zoom cycled from a button and remembered; playback speed 0.5×–2×; Skip intro / recap /
+  credits from Jellyfin media segments.
+* **Trakt (optional):** official OAuth device-code sign-in, token refresh, disconnect (revoke), My List ↔ watchlist sync,
+  "Recently watched on Trakt", Mark as watched → history, and scrobble start/pause/stop from the player. Client id/secret come
+  from `-PTRAKT_CLIENT_ID`/`-PTRAKT_CLIENT_SECRET`, env or CI secrets, or your own app in Movies settings; hidden otherwise.
+* **Also:** Mark as watched (movies and episodes, synced to Jellyfin), genre chips on Browse, a clearer offline state, D-pad focus
+  rings and better TalkBack labels.
+* **Audit fixes:** one TMDB request per detail page instead of two; Jellyfin library index trimmed to stay under the 4 MB cap;
+  studio/person pages no longer show stale saved state or mix up results when opened quickly; Jellyfin and Trakt tokens are
+  encrypted with an Android Keystore key (existing Jellyfin sign-ins migrate); http Jellyfin servers get a warning; the player
+  drops its view link and static request on exit; progress saves no longer rewrite My List every 10 s.
+* Tests: Release180Test (collections, discover paging, track selection, resize persistence, Trakt device flow / refresh /
+  scrobble / sync, Jellyfin subtitles, segments and played state, secret storage, settings) and Release180UiTest (Studios).
+
 ## 1.6.0 (2026-10-20): Movies & Series
 * **New Movies tab**, independent from Live TV (its own Browse / Search / My List, detail pages and players). Live TV is unchanged.
   See `docs/MOVIES_1.6.md` for the architecture audit, source research, rejected sources and credentials.

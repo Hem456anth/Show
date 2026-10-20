@@ -92,6 +92,7 @@ class TmdbSource(private val http: VodHttp, private val key: String, private val
             .filter { it.optString("site") == "YouTube" && it.optString("type") in setOf("Trailer", "Teaser") }
             .sortedWith(compareByDescending<JSONObject> { it.optBoolean("official") }.thenByDescending { it.optString("type") == "Trailer" })
             .firstOrNull()?.str("key")?.takeIf { it.matches(Regex("[A-Za-z0-9_-]{11}")) }
+        val orgs = o.optJSONArray("production_companies").objs() + o.optJSONArray("networks").objs()
         val seasons = o.optJSONArray("seasons").objs().filter { it.optInt("season_number") > 0 }
             .map { VodSeason(it.getInt("season_number"), it.str("name") ?: "Season ${it.getInt("season_number")}", episodeCount = it.optInt("episode_count")) }
         return VodDetail(
@@ -102,7 +103,28 @@ class TmdbSource(private val http: VodHttp, private val key: String, private val
             recommendations = list(o.optJSONObject("recommendations")?.optJSONArray("results"), null).take(20),
             seasons = seasons,
             sourcePage = "https://www.themoviedb.org/${if (title.kind == VodKind.MOVIE) "movie" else "tv"}/${title.providerId}",
+            collection = collectionRef(o.optJSONObject("belongs_to_collection")),
+            orgIds = orgs.filter { it.has("id") && it.str("name") != null }.associate { it.getString("name") to it.opt("id").toString() },
         )
+    }
+
+    internal fun collectionRef(c: JSONObject?): VodCollectionRef? {
+        val id = c?.opt("id")?.toString()?.takeIf { it.isNotBlank() && it != "null" } ?: return null
+        return VodCollectionRef(id, c.str("name") ?: "Collection", c.str("poster_path")?.let { "$IMG/w342$it" }, c.str("backdrop_path")?.let { "$IMG/w780$it" })
+    }
+
+    /** A collection's films in release order (undated parts last, then by title). */
+    suspend fun collection(id: String): List<VodTitle> = collectionParts(get("/collection/$id"))
+
+    internal fun collectionParts(o: JSONObject): List<VodTitle> =
+        o.optJSONArray("parts").objs().mapNotNull { parse(it, VodKind.MOVIE)?.let { t -> t to (it.str("release_date") ?: "") } }
+            .sortedWith(compareBy<Pair<VodTitle, String>>({ it.second.isEmpty() }, { it.second }, { it.first.title }))
+            .map { it.first }
+
+    /** One page of TMDB discover; TMDB caps discover at page 500. */
+    internal fun page(o: JSONObject, kind: VodKind): VodPage {
+        val p = o.optInt("page", 1).coerceAtLeast(1)
+        return VodPage(list(o.optJSONArray("results"), kind), p, o.optInt("total_pages", p).coerceIn(p, MAX_PAGE))
     }
 
     override suspend fun season(title: VodTitle, season: VodSeason): VodSeason {
@@ -114,27 +136,22 @@ class TmdbSource(private val http: VodHttp, private val key: String, private val
         return season.copy(episodes = eps, episodeCount = eps.size)
     }
 
-    /** Company / network / person shortcuts from My List. */
-    override suspend fun browse(shortcut: VodShortcut): List<VodTitle> {
-        val id = shortcut.id ?: return emptyList()
+    /** Company / network / person / collection pages (Studios browse and My List shortcuts). */
+    override suspend fun browsePage(shortcut: VodShortcut, page: Int): VodPage {
+        val id = shortcut.id ?: return VodPage(emptyList())
+        val n = page.coerceIn(1, MAX_PAGE).toString()
         return when (shortcut.type) {
-            VodShortcut.Type.COMPANY -> list(get("/discover/movie", "with_companies" to id, "sort_by" to "popularity.desc").optJSONArray("results"), VodKind.MOVIE)
-            VodShortcut.Type.NETWORK -> list(get("/discover/tv", "with_networks" to id, "sort_by" to "popularity.desc").optJSONArray("results"), VodKind.SHOW)
-            VodShortcut.Type.PERSON -> list(get("/person/$id/combined_credits").optJSONArray("cast"), null)
-                .distinctBy { it.key }.sortedByDescending { it.rating ?: 0.0 }.take(40)
+            VodShortcut.Type.COMPANY -> page(get("/discover/movie", "with_companies" to id, "sort_by" to "popularity.desc", "include_adult" to "false", "page" to n), VodKind.MOVIE)
+            VodShortcut.Type.NETWORK -> page(get("/discover/tv", "with_networks" to id, "sort_by" to "popularity.desc", "include_adult" to "false", "page" to n), VodKind.SHOW)
+            VodShortcut.Type.PERSON -> VodPage(list(get("/person/$id/combined_credits").optJSONArray("cast"), null)
+                .distinctBy { it.key }.sortedByDescending { it.rating ?: 0.0 }.take(40))
+            VodShortcut.Type.COLLECTION -> VodPage(collection(id))
         }
-    }
-
-    /** Ids for company/network names on a detail page, so they can be saved as shortcuts. */
-    suspend fun companyIds(title: VodTitle): Map<String, String> {
-        val path = if (title.kind == VodKind.MOVIE) "/movie/${title.providerId}" else "/tv/${title.providerId}"
-        val o = get(path)
-        return (o.optJSONArray("production_companies").objs() + o.optJSONArray("networks").objs())
-            .associate { it.getString("name") to (it.opt("id")?.toString() ?: "") }
     }
 
     companion object {
         const val IMG = "https://image.tmdb.org/t/p"
+        const val MAX_PAGE = 500
         const val ATTRIBUTION = "This product uses the TMDB API but is not endorsed or certified by TMDB."
         val GENRES = mapOf(
             28 to "Action", 12 to "Adventure", 16 to "Animation", 35 to "Comedy", 80 to "Crime", 99 to "Documentary", 18 to "Drama",

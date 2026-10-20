@@ -65,7 +65,19 @@ class VodRepository(
 
     suspend fun detail(t: VodTitle): VodDetail = (source(t.provider) ?: sourceFor(t)).detail(t)
     suspend fun season(t: VodTitle, s: VodSeason): VodSeason = (source(t.provider) ?: sourceFor(t)).season(t, s)
-    suspend fun browse(s: VodShortcut): List<VodTitle> = source(s.provider)?.browse(s) ?: emptyList()
+    suspend fun browse(s: VodShortcut): List<VodTitle> = browsePage(s, 1).items
+
+    /** One page of a studio, network, person or collection. TMDB pages need a key: without one this says so. */
+    suspend fun browsePage(s: VodShortcut, page: Int): VodPage {
+        val src = source(s.provider)
+        if (src == null && s.provider == Provider.TMDB) throw IllegalStateException(NEEDS_TMDB)
+        return src?.browsePage(s, page) ?: VodPage(emptyList())
+    }
+
+    /** A movie's TMDB collection, parts in release order. Empty without a TMDB key. */
+    suspend fun collection(ref: VodCollectionRef): List<VodTitle> = (source(Provider.TMDB) as? TmdbSource)?.collection(ref.id) ?: emptyList()
+
+    val hasTmdb: Boolean get() = config().tmdbKey != null
 
     /** Sources are rebuilt from config, but a saved title must still open if its provider is now off. */
     private fun sourceFor(t: VodTitle): VodSource = when (t.provider) {
@@ -90,6 +102,7 @@ class VodRepository(
 
     companion object {
         const val TTL_MS = 30 * 60 * 1000L
+        const val NEEDS_TMDB = "Studios, networks and collections come from TMDB. Add a free TMDB key in Movies settings to browse them."
 
         internal fun normTitle(s: String) = s.lowercase().replace(Regex("""[^\p{L}\p{N}]"""), "")
 
